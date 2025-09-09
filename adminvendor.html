@@ -219,6 +219,7 @@ th { font-size: .85rem; opacity: .7; }
   </div>
 </div>
 
+
 <div class="modal" id="vendorModal">
   <div class="modal-content">
     <h3 id="vendorModalTitle">Add Vendor</h3>
@@ -235,7 +236,7 @@ th { font-size: .85rem; opacity: .7; }
 </div>
 
 <script>
-const STORAGE_KEYS={vendors:"vendor_engagements"};
+const STORAGE_KEYS = { vendors:"vendor_engagements" };
 
 function renderStars(num){ return "★".repeat(num)+"☆".repeat(5-num); }
 
@@ -266,7 +267,6 @@ function loadVendors(){
   });
 }
 
-
 function saveVendors(vendors){ localStorage.setItem(STORAGE_KEYS.vendors, JSON.stringify(vendors)); }
 
 
@@ -289,7 +289,7 @@ function editVendor(i){
   vendorDue.value = v.due;
   vendorPayment.value = v.payment;
   vendorRating.value = v.rating || 0;
-  vendorModal.style.display = "flex";
+  vendorModal.style.display="flex";
 }
 
 function deleteVendor(i){
@@ -306,7 +306,6 @@ document.getElementById("addVendorBtn").onclick = ()=>{
   vendorModal.style.display="flex";
 }
 
-
 document.getElementById("saveVendorBtn").onclick = ()=>{
   const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors)||"[]");
   const v = {
@@ -318,14 +317,13 @@ document.getElementById("saveVendorBtn").onclick = ()=>{
     rating: parseInt(vendorRating.value)||0
   };
   if(vendorIndex.value==="") vendors.push(v);
-  else vendors[vendorIndex.value] = v;
+  else vendors[vendorIndex.value]=v;
   saveVendors(vendors);
   loadVendors();
   vendorModal.style.display="none";
 }
 
 document.getElementById("closeVendorBtn").onclick = ()=> vendorModal.style.display="none";
-
 
 document.getElementById("searchInput").addEventListener("keyup", function(){
   const filter = this.value.toLowerCase();
