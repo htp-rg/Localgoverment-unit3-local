@@ -205,6 +205,7 @@ function initComplaints() {
   const select = document.getElementById("complaintSelect");
   const viewBtn = document.getElementById("viewComplaintBtn");
 
+ 
   let defaultComplaints = {
     "RPT-001": "Vendor delayed chicken delivery",
     "RPT-002": "Incomplete Takoyaki supplies",
@@ -212,10 +213,15 @@ function initComplaints() {
     "RPT-004": "Rental items missing on arrival"
   };
 
-  let complaints = JSON.parse(localStorage.getItem("complaints")) || defaultComplaints;
-  localStorage.setItem("complaints", JSON.stringify(complaints));
-
  
+  let complaints = JSON.parse(localStorage.getItem("complaints"));
+  const isValid = complaints && Object.keys(complaints).some(k => k.startsWith("RPT-"));
+  if (!isValid) {
+    complaints = defaultComplaints;
+    localStorage.setItem("complaints", JSON.stringify(complaints));
+  }
+
+  
   select.innerHTML = `<option value="">-- Select Complaint Ref No. --</option>`;
   Object.keys(complaints).forEach(ref => {
     const opt = document.createElement("option");
@@ -239,16 +245,19 @@ function initComplaints() {
   }
   container.style.display = "block";
 
- 
+
   viewBtn.onclick = () => {
     const ref = select.value;
     if (ref && complaints[ref]) {
-      message.textContent = `(${ref}) ${complaints[ref]}`;
+      const keys = Object.keys(complaints);
+      const number = keys.indexOf(ref) + 1;
+      message.textContent = `${number}. (${ref}) ${complaints[ref]}`;
     } else {
       alert("Please select a complaint Ref No. first.");
     }
   };
 }
+  
 function initReports() {
 
   const ctx = document.getElementById("vendorChart");
