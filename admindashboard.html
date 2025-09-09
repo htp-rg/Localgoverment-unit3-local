@@ -126,6 +126,23 @@ th { font-size: .85rem; opacity: .7; }
   .dropdown.show {
   display: block;
 }
+  #taskList li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.3rem 0;
+}
+
+.task-icons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.task-icons .edit-icon,
+.task-icons .delete-icon {
+  cursor: pointer;
+  font-size: 1rem;
+}
 </style>
 </head>
 <body>
@@ -212,6 +229,25 @@ th { font-size: .85rem; opacity: .7; }
       </div>
     </div>
   </section>
+</div>
+  
+<div class="modal" id="taskModal">
+  <div class="modal-content">
+    <h3 id="taskModalTitle">Add Task</h3>
+    <input type="hidden" id="taskIndex">
+    <label>Task:<br><input id="taskInput" type="text"></label><br>
+    <button id="saveTaskBtn" class="btn" style="margin-top:.5rem;">Save</button>
+    <button id="closeTaskBtn" class="btn" style="margin-top:.5rem;">Cancel</button>
+  </div>
+</div>
+
+<div class="modal" id="deleteTaskModal">
+  <div class="modal-content">
+    <h3>Confirm Delete</h3>
+    <p>Are you sure you want to delete this task?</p>
+    <button id="confirmDeleteTaskBtn" class="btn" style="margin-top:.5rem;">Delete</button>
+    <button id="cancelDeleteTaskBtn" class="btn" style="margin-top:.5rem;">Cancel</button>
+  </div>
 </div>
 
 <div class="modal" id="vendorModal">
@@ -325,6 +361,112 @@ window.addEventListener("DOMContentLoaded", () => {
 });
   
 window.onload=()=>{loadVendors();initDashboard();};
+
+  const STORAGE_TASKS = "dashboard_tasks";
+
+
+function loadTasks() {
+  const tasks = JSON.parse(localStorage.getItem(STORAGE_TASKS) || "[]");
+  const taskList = document.getElementById("taskList");
+  taskList.innerHTML = "";
+  tasks.forEach((t, i) => {
+    const li = document.createElement("li");
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.checked = t.completed || false;
+    checkbox.onchange = () => {
+      t.completed = checkbox.checked;
+      localStorage.setItem(STORAGE_TASKS, JSON.stringify(tasks));
+    };
+
+    const spanText = document.createElement("span");
+    spanText.textContent = " " + t.text;
+
+    const iconContainer = document.createElement("div");
+    iconContainer.className = "task-icons";
+
+    const editIcon = document.createElement("span");
+    editIcon.className = "edit-icon";
+    editIcon.textContent = "✏️";
+    editIcon.onclick = () => openTaskModal(i);
+
+    const deleteIcon = document.createElement("span");
+    deleteIcon.className = "delete-icon";
+    deleteIcon.textContent = "🗑️";
+    deleteIcon.onclick = () => openDeleteModal(i);
+
+    iconContainer.appendChild(editIcon);
+    iconContainer.appendChild(deleteIcon);
+
+    li.appendChild(checkbox);
+    li.appendChild(spanText);
+    li.appendChild(iconContainer);
+
+    taskList.appendChild(li);
+  });
+}
+
+
+const taskModal = document.getElementById("taskModal");
+const taskInput = document.getElementById("taskInput");
+const taskIndexInput = document.getElementById("taskIndex");
+const taskModalTitle = document.getElementById("taskModalTitle");
+
+document.getElementById("addTaskBtn").onclick = () => openTaskModal();
+
+function openTaskModal(index = null) {
+  const tasks = JSON.parse(localStorage.getItem(STORAGE_TASKS) || "[]");
+  if (index !== null) {
+    taskModalTitle.textContent = "Edit Task";
+    taskInput.value = tasks[index].text;
+    taskIndexInput.value = index;
+  } else {
+    taskModalTitle.textContent = "Add Task";
+    taskInput.value = "";
+    taskIndexInput.value = "";
+  }
+  taskModal.style.display = "flex";
+}
+
+document.getElementById("saveTaskBtn").onclick = () => {
+  const tasks = JSON.parse(localStorage.getItem(STORAGE_TASKS) || "[]");
+  const index = taskIndexInput.value;
+  if (index === "") {
+    tasks.push({ text: taskInput.value, completed: false });
+  } else {
+    tasks[index].text = taskInput.value;
+  }
+  localStorage.setItem(STORAGE_TASKS, JSON.stringify(tasks));
+  taskModal.style.display = "none";
+  loadTasks();
+};
+
+document.getElementById("closeTaskBtn").onclick = () => taskModal.style.display = "none";
+
+let taskToDelete = null;
+const deleteModal = document.getElementById("deleteTaskModal");
+
+function openDeleteModal(index) {
+  taskToDelete = index;
+  deleteModal.style.display = "flex";
+}
+
+document.getElementById("confirmDeleteTaskBtn").onclick = () => {
+  const tasks = JSON.parse(localStorage.getItem(STORAGE_TASKS) || "[]");
+  tasks.splice(taskToDelete, 1);
+  localStorage.setItem(STORAGE_TASKS, JSON.stringify(tasks));
+  deleteModal.style.display = "none";
+  loadTasks();
+};
+
+document.getElementById("cancelDeleteTaskBtn").onclick = () => deleteModal.style.display = "none";
+
+window.onclick = (e) => {
+  if (e.target === taskModal) taskModal.style.display = "none";
+  if (e.target === deleteModal) deleteModal.style.display = "none";
+};
+window.onload = loadTasks;
 </script>
 </body>
 </html>
