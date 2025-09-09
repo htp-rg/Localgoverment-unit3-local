@@ -1,1 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vendor Management</title>
+<style>
+:root {
+  --text: #111111;
+  --blue: #0a53c1;
+  --ink-20: #f4f6f8;
+  --white: #ffffff;
+  --border: #e6e8eb;
+  --shadow: 0 6px 24px rgba(0, 0, 0, .06);
+}
 
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Inter, system-ui, sans-serif;
+  background: var(--white);
+  color: var(--text);
+}
+.app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+
+.sidebar {
+  border-right: 1px solid var(--border);
+  background: var(--white);
+}
+.brand {
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+nav { padding: 1rem; }
+.nav-item {
+  display: block; padding: .6rem;
+  border-radius: 8px; text-decoration: none; color: var(--text);
+}
+.nav-item:hover, .nav-item.active { background: var(--ink-20); }
+
+.main { display: grid; grid-template-rows: 64px 1fr; min-width: 0; }
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 1rem; border-bottom: 1px solid var(--border);
+}
+.btn {
+  border: 1px solid var(--text);
+  background: transparent; padding: .4rem .8rem;
+  border-radius: 8px; cursor: pointer;
+}
+.content { padding: 1rem; overflow: auto; }
+.card {
+  border: 1px solid var(--border);
+  border-radius: 12px; padding: 1rem;
+  box-shadow: var(--shadow);
+}
+
+table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+th, td {
+  border-bottom: 1px solid var(--border);
+  padding: .6rem; text-align: left;
+}
+th { font-size: .85rem; opacity: .7; }
+
+.star { color: gold; font-size: 1.2rem; }
+
+.menu-container {
+  position: relative;
+  display: inline-block;
+}
+.dropdown {
+  display: none;
+  position: absolute;
+  top: 110%;
+  right: 0;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  min-width: 220px;
+  z-index: 1000;
+}
+.dropdown p {
+  margin: 0;
+  padding: 0.8rem;
+  font-weight: bold;
+  border-bottom: 1px solid var(--border);
+}
+.dropdown a {
+  display: block;
+  padding: 0.8rem;
+  text-decoration: none;
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+}
+.dropdown a:hover { background: var(--ink-20); }
+.dropdown a:last-child { border-bottom: none; }
+.dropdown.show { display: block; }
+
+.search { margin-bottom: 1rem; }
+.search input { width: 90%; padding: .5rem; border-radius: 8px; border: 1px solid var(--border); }
+.modal {
+  display: none; 
+  position: fixed; 
+  z-index: 10000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4); 
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: var(--white);
+  padding: 1.5rem;
+  border-radius: 12px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: var(--shadow);
+}
+</style>
+</head>
+<body>
+<div class="app">
+  
+  <aside class="sidebar">
+    <div class="brand">LGU 3 ADMIN SYSTEM</div>
+    <nav>
+      <a href="admindashboard.html" class="nav-item">Dashboard</a>
+      <a href="adminvendor.html" class="nav-item active">Vendor Management</a>
+      <a href="admincommodity.html" class="nav-item">Commodity & Price Monitoring</a>
+      <a href="adminsupply.html" class="nav-item">Supply Monitoring</a>
+      <a href="admininspection.html" class="nav-item">Inspection & Compliance</a>
+      <a href="reports.html" class="nav-item">Reports & Analytics</a>
+      <a href="adminsettings.html" class="nav-item">Settings</a>
+      <a href="loginadmin.html" class="nav-item" style="margin-top:2rem; font-weight:bold;">Logout</a>
+    </nav>
+  </aside>
+
+  <section class="main">
+    <header class="topbar">
+      <div style="display:flex; align-items:center; gap:0.5rem;">
+        <button class="btn" id="backBtn">← Back</button>
+        <div class="menu-container">
+          <button class="btn" id="menuBtn">☰</button>
+          <div class="dropdown" id="menuDropdown">
+            <p id="adminName">Admin</p>
+            <a href="upgrade.html">Upgrade Personal Details</a>
+            <a href="adminpassword.html">Password and Security</a>
+            <a href="#" id="deleteAccount">Delete Account</a>
+            <a href="terms.html">Terms of Service</a>
+            <a href="adminreport.html">Report a Problem</a>
+            <a href="main.html" id="signOut">Sign Out</a>
+          </div>
+        </div>
+      </div>
+      <div>
+        <button class="btn" id="exportBtn">Export</button>
+      </div>
+    </header>
+
+    <div class="content">
+<div class="card">
+  <h1>Supply Monitoring</h1>
+  <input type="text" id="supplySearch" placeholder="Search Supply…" style="margin-bottom:1rem;width:100%;padding:.5rem;">
+  <table id="supplyTable">
+    <thead>
+      <tr>
+        <th>Ref No.</th>
+        <th>Business Name</th>
+        <th>Business Category</th>
+        <th>Supplier</th>
+        <th>Pick-up</th>
+        <th>Drop-off</th>
+        <th>Delivery Time</th>
+        <th>Report</th>
+        <th>Contact No.</th>
+        <th>Item Value</th>
+        <th>Quality</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <button id="addSupplyBtn" class="btn" style="margin-top:1rem;">➕ New Supply</button>
+</div>
+
+<script>
+const SUPPLY_KEY = "supply_data";
+const supplyTableBody = document.querySelector("#supplyTable tbody");
+
+
+if (!localStorage.getItem(SUPPLY_KEY)) {
+  localStorage.setItem(SUPPLY_KEY, JSON.stringify([
+    { business: "Daisy Poultry", category: "MEAT SHOP", supplier: "James", pickup: "Quezon City", dropoff: "Muñoz", time: "12:00 am - 2:00 pm", report: "Filed", contact: "0970-567-1136", value: "₱4,000.00", quality: 5, status: "⛔ Delayed" },
+    { business: "Takoyaki Supplier", category: "SUPPLIES SHOP", supplier: "Maria", pickup: "Makati", dropoff: "Muñoz", time: "7:00 am - 9:00 am", report: "Filed", contact: "0917-888-9999", value: "₱2,500.00", quality: 5, status: "✅ Completed" },
+    { business: "Catering Supplies", category: "CATERING", supplier: "Sofia", pickup: "Taguig", dropoff: "Muñoz", time: "10:00 am - 12:00 pm", report: "Filed", contact: "0920-555-4444", value: "₱3,200.00", quality: 5, status: "✏ In progress" },
+    { business: "Party Rental", category: "RENTAL SHOP", supplier: "Ramon", pickup: "Manila", dropoff: "Muñoz", time: "3:00 am - 5:00 am", report: "Filed", contact: "0998-222-3333", value: "₱5,000.00", quality: 5, status: "✅ Completed" }
+  ]));
+}
+
+
+function loadSupplies() {
+  const data = JSON.parse(localStorage.getItem(SUPPLY_KEY) || "[]");
+  supplyTableBody.innerHTML = "";
+  data.forEach((supply, i) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>RPT-${String(i+1).padStart(3,'0')}</td>
+      <td>${supply.business}</td>
+      <td>${supply.category}</td>
+      <td>${supply.supplier}</td>
+      <td>${supply.pickup}</td>
+      <td>${supply.dropoff}</td>
+      <td>${supply.time}</td>
+      <td>${supply.report}</td>
+      <td>${supply.contact}</td>
+      <td>${supply.value}</td>
+      <td>${"★".repeat(supply.quality)+"☆".repeat(5-supply.quality)}</td>
+      <td>${supply.status}</td>
+    `;
+    supplyTableBody.appendChild(tr);
+  });
+}
+
+
+document.getElementById("supplySearch").addEventListener("keyup", function() {
+  const filter = this.value.toLowerCase();
+  document.querySelectorAll("#supplyTable tbody tr").forEach(r => {
+    r.style.display = r.innerText.toLowerCase().includes(filter) ? "" : "none";
+  });
+});
+
+window.onload = () => loadSupplies();
+</script>
