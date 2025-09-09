@@ -59,7 +59,6 @@ nav { padding: 1rem; }
   box-shadow: var(--shadow);
 }
 
-/* Colored cards */
 .card.yellow { background: #ffeb3b; color: #111; }
 .card.green { background: #4caf50; color: #fff; }
 .card.red { background: #f44336; color: #fff; }
@@ -75,7 +74,6 @@ th { font-size: .85rem; opacity: .7; }
 .star { font-size: 1.2rem; color: gold; }
 .edit-icon, .delete-icon { cursor: pointer; margin-left: 6px; }
 
-/* Modal */
 .modal {
   display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
   background: rgba(0,0,0,0.5); justify-content: center; align-items: center;
@@ -157,7 +155,6 @@ th { font-size: .85rem; opacity: .7; }
     </div>
   </section>
 </div>
-
 
 <div class="modal" id="vendorModal">
   <div class="modal-content">
@@ -246,7 +243,15 @@ function initDashboard(){
     }
   });
 }
-
+document.getElementById("searchInput").addEventListener("keyup", function() {
+  const filter = this.value.toLowerCase();
+  const rows = document.querySelectorAll("#vendorEngagementsTable tbody tr");
+  rows.forEach(row => {
+    const text = row.innerText.toLowerCase();
+    row.style.display = text.includes(filter) ? "" : "none";
+  });
+});
+  
 window.onload=()=>{loadVendors();initDashboard();};
 </script>
 </body>
