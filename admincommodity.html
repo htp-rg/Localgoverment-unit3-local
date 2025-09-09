@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Commodity & Price Monitoring</title>
+<style>
+:root {
+  --text: #111111;
+  --blue: #0a53c1;
+  --ink-20: #f4f6f8;
+  --white: #ffffff;
+  --border: #e6e8eb;
+  --shadow: 0 6px 24px rgba(0, 0, 0, .06);
+}
+* { box-sizing: border-box; }
+body { margin:0; font-family:Inter,sans-serif; background:var(--white); color:var(--text); }
+.app { display:grid; grid-template-columns:240px 1fr; min-height:100vh; }
+
+.sidebar { border-right:1px solid var(--border); background:var(--white); }
+.brand { font-weight:800; text-transform:uppercase; padding:1rem; border-bottom:1px solid var(--border); }
+nav { padding:1rem; }
+.nav-item { display:block; padding:.6rem; border-radius:8px; text-decoration:none; color:var(--text); }
+.nav-item:hover, .nav-item.active { background:var(--ink-20); }
+
+.main { display:grid; grid-template-rows:64px 1fr; min-width:0; }
+.topbar { display:flex; align-items:center; justify-content:space-between; padding:0 1rem; border-bottom:1px solid var(--border); }
+.btn { border:1px solid var(--text); background:transparent; padding:.4rem .8rem; border-radius:8px; cursor:pointer; }
+.content { padding:1rem; overflow:auto; }
+.card { border:1px solid var(--border); border-radius:12px; padding:1rem; box-shadow:var(--shadow); }
+
+table { width:100%; border-collapse:collapse; margin-top:1rem; }
+th, td { border-bottom:1px solid var(--border); padding:.6rem; text-align:left; }
+th { font-size:.85rem; opacity:.7; }
+
+.modal {
+  display:none; position:fixed; z-index:10000; left:0; top:0; width:100%; height:100%;
+  background-color:rgba(0,0,0,0.4); justify-content:center; align-items:center;
+}
+.modal-content { background-color:var(--white); padding:1.5rem; border-radius:12px; max-width:600px; width:90%; box-shadow:var(--shadow); }
+
+.search { margin-bottom:1rem; }
+.search input { width:90%; padding:.5rem; border-radius:8px; border:1px solid var(--border); }
+
+.card-container { display:flex; gap:1rem; flex-wrap:wrap; margin-top:1rem; }
+.card-container .card { flex:1 1 150px; padding:1rem; border:1px solid var(--border); border-radius:12px; box-shadow:var(--shadow); cursor:pointer; }
+.view-btn { margin-top:.5rem; border:1px solid var(--text); padding:.3rem .5rem; border-radius:8px; background:transparent; cursor:pointer; }
+
+.close { float:right; cursor:pointer; font-size:20px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">LGU 3 ADMIN SYSTEM</div>
+    <nav>
+      <a href="admindashboard.html" class="nav-item">Dashboard</a>
+      <a href="adminvendor.html" class="nav-item">Vendor Management</a>
+      <a href="admincommodity.html" class="nav-item active">Commodity & Price Monitoring</a>
+      <a href="adminsupply.html" class="nav-item">Supply Monitoring</a>
+      <a href="admininspection.html" class="nav-item">Inspection & Compliance</a>
+      <a href="reports.html" class="nav-item">Reports & Analytics</a>
+      <a href="adminsettings.html" class="nav-item">Settings</a>
+      <a href="loginadmin.html" class="nav-item" style="margin-top:2rem; font-weight:bold;">Logout</a>
+    </nav>
+  </aside>
+
+  <section class="main">
+    <header class="topbar">
+      <div style="display:flex; align-items:center; gap:.5rem;">
+        <button class="btn" id="backBtn">← Back</button>
+        <div class="menu-container">
+          <button class="btn" id="menuBtn">☰</button>
+          <div class="dropdown" id="menuDropdown">
+            <p id="adminName">Admin</p>
+            <a href="upgrade.html">Upgrade Personal Details</a>
+            <a href="adminpassword.html">Password and Security</a>
+            <a href="#" id="deleteAccount">Delete Account</a>
+            <a href="terms.html">Terms of Service</a>
+            <a href="adminreport.html">Report a Problem</a>
+            <a href="main.html" id="signOut">Sign Out</a>
+          </div>
+        </div>
+      </div>
+      <div><button class="btn" id="exportBtn">Export</button></div>
+    </header>
+
+    <div class="content">
+      <div class="card">
+        <h1>COMMODITY & PRICE MONITORING</h1>
+        <div class="search">🔎 <input id="searchInput" type="search" placeholder="Search…"></div>
+        <table id="commodityTable">
+          <thead>
+            <tr>
+              <th>Type of Business</th>
+              <th>Previous Price</th>
+              <th>Current Price</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td contenteditable="true">Takoyaki store</td>
+              <td contenteditable="true">50</td>
+              <td contenteditable="true">55</td>
+              <td contenteditable="true">Stable</td>
+            </tr>
+            <tr>
+              <td contenteditable="true">Sound equipment</td>
+              <td contenteditable="true">200</td>
+              <td contenteditable="true">250</td>
+              <td contenteditable="true">High</td>
+            </tr>
+            <tr>
+              <td contenteditable="true">Tables and chairs</td>
+              <td contenteditable="true">100</td>
+              <td contenteditable="true">90</td>
+              <td contenteditable="true">Low</td>
+            </tr>
+            <tr>
+              <td contenteditable="true">Atan's Meat Shop</td>
+              <td contenteditable="true">150</td>
+              <td contenteditable="true">180</td>
+              <td contenteditable="true">High</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="card-container">
+          <div class="card" onclick="openDataModal('Takoyaki store')">
+            Takoyaki store<br>
+            <button class="view-btn">View Data</button>
+          </div>
+          <div class="card" onclick="openDataModal('Sound equipment')">
+            Sound equipment<br>
+            <button class="view-btn">View Data</button>
+          </div>
+          <div class="card" onclick="openDataModal('Tables and chairs')">
+            Tables and chairs<br>
+            <button class="view-btn">View Data</button>
+          </div>
+          <div class="card" onclick="openDataModal('Atan Meat Shop')">
+            Atan Meat Shop<br>
+            <button class="view-btn">View Data</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div id="dataModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeDataModal()">&times;</span>
+    <h3 id="dataModalTitle"></h3>
+    <canvas id="lineChart" width="500" height="250"></canvas>
+  </div>
+</div>
+
+<script>
+const menuBtn = document.getElementById("menuBtn");
+const menuDropdown = document.getElementById("menuDropdown");
+menuBtn.addEventListener("click", ()=> menuDropdown.classList.toggle("show"));
+document.addEventListener("click", e => { if(!e.target.closest(".menu-container")) menuDropdown.classList.remove("show"); });
+
+
+document.getElementById("searchInput").addEventListener("keyup", function(){
+  const filter = this.value.toLowerCase();
+  document.querySelectorAll("#commodityTable tbody tr").forEach(r=>{
+    r.style.display = r.innerText.toLowerCase().includes(filter) ? "" : "none";
+  });
+});
+
+
+const dataModal = document.getElementById("dataModal");
+function openDataModal(name){
+  document.getElementById("dataModalTitle").textContent = name;
+  dataModal.style.display = "flex";
+}
+function closeDataModal(){ dataModal.style.display = "none"; }
+dataModal.addEventListener("click", e=>{ if(e.target===dataModal) closeDataModal(); });
+
+window.onload = ()=>{
+  document.getElementById("adminName").textContent = localStorage.getItem("adminName")||"Admin";
+}
+</script>
+</body>
+</html>
