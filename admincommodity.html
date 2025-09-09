@@ -217,8 +217,14 @@ th { font-size: .85rem; opacity: .7; }
       </thead>
       <tbody></tbody>
     </table>
+    <div style="margin-top:0.5rem; display:flex; gap:0.5rem;">
+      <button class="btn" id="editDataBtn">Edit</button>
+      <button class="btn" id="saveDataBtn" style="display:none;">Save</button>
+      <button class="btn" id="deleteDataBtn">Delete</button>
+    </div>
   </div>
 </div>
+
 
 <script>
 const COMMODITY_KEY = "commodity_data";
@@ -385,6 +391,77 @@ function openDataModal(name) {
 function closeDataModal() {
   dataModal.style.display = "none";
 }
+let currentDataIndex = null;
+let currentData = null;
 
+function openDataModal(name) {
+  const data = JSON.parse(localStorage.getItem(COMMODITY_KEY) || "[]");
+  const itemIndex = data.findIndex(d => d.type === name);
+  if (itemIndex === -1) return;
+
+  currentDataIndex = itemIndex;
+  currentData = data[itemIndex];
+
+  dataModalTitle.textContent = `${name} - Past 6 Weeks`;
+  lineTableBody.innerHTML = "";
+
+  const weeks = ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5", "Week 6"];
+  const values = [
+    currentData.prev,
+    currentData.prev + (currentData.curr - currentData.prev) * 0.2,
+    currentData.prev + (currentData.curr - currentData.prev) * 0.4,
+    currentData.prev + (currentData.curr - currentData.prev) * 0.6,
+    currentData.prev + (currentData.curr - currentData.prev) * 0.8,
+    currentData.curr
+  ];
+
+  values.forEach((v, i) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${weeks[i]}</td><td><input type="number" value="${v.toFixed(2)}" disabled></td>`;
+    lineTableBody.appendChild(tr);
+  });
+
+
+  document.getElementById("editDataBtn").style.display = "inline-block";
+  document.getElementById("saveDataBtn").style.display = "none";
+  dataModal.style.display = "flex";
+}
+
+document.getElementById("editDataBtn").onclick = () => {
+  lineTableBody.querySelectorAll("input").forEach(input => input.disabled = false);
+  document.getElementById("editDataBtn").style.display = "none";
+  document.getElementById("saveDataBtn").style.display = "inline-block";
+};
+
+
+document.getElementById("saveDataBtn").onclick = () => {
+  const inputs = lineTableBody.querySelectorAll("input");
+  const newValues = Array.from(inputs).map(input => parseFloat(input.value) || 0);
+
+
+  if (currentDataIndex !== null) {
+    const data = JSON.parse(localStorage.getItem(COMMODITY_KEY) || "[]");
+    data[currentDataIndex].prev = newValues[0];
+    data[currentDataIndex].curr = newValues[newValues.length - 1];
+    saveCommodities(data);
+    loadCommodities();
+  }
+
+  inputs.forEach(input => input.disabled = true);
+  document.getElementById("editDataBtn").style.display = "inline-block";
+  document.getElementById("saveDataBtn").style.display = "none";
+};
+
+
+document.getElementById("deleteDataBtn").onclick = () => {
+  if (currentDataIndex !== null) {
+    const data = JSON.parse(localStorage.getItem(COMMODITY_KEY) || "[]");
+    data.splice(currentDataIndex, 1);
+    saveCommodities(data);
+    loadCommodities();
+    closeDataModal();
+  }
+};
+</script>
 window.onload = () => { loadCommodities(); }
 </script>
