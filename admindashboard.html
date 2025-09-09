@@ -102,7 +102,8 @@ th { font-size: .85rem; opacity: .7; }
   </aside>
 
   <section class="main">
-     <div style="display:flex; align-items:center; gap:0.5rem;">
+    <header class="topbar">
+      <div style="display:flex; align-items:center; gap:0.5rem;">
         <button class="btn" id="menuBtn">☰</button>
       </div>
       <div>
@@ -134,7 +135,7 @@ th { font-size: .85rem; opacity: .7; }
             <li><input type="checkbox" /> Update compliance checklist <span class="edit-icon">✏️</span> <span class="delete-icon">🗑️</span></li>
             <li><input type="checkbox" /> Evaluate supplier pricing <span class="edit-icon">✏️</span> <span class="delete-icon">🗑️</span></li>
           </ul>
-        <button id="addVendorBtn" class="btn">➕ New Vendor</button>
+        
           <<div class="card" style="margin-top:1rem;">
            <h3>Recent Vendor Engagements</h3>
         <table id="vendorEngagementsTable">
@@ -151,6 +152,7 @@ th { font-size: .85rem; opacity: .7; }
             <tr><td>Atan's Meat Shop</td><td>⛔ Blocked</td><td>Dacoco, Jonathan</td><td>12 Mar 2025</td><td>1,870</td><td data-stars="3"></td></tr>
           </tbody>
         </table>
+            <button id="addVendorBtn" class="btn">➕ New Vendor</button>
       </div>
     </div>
   </section>
