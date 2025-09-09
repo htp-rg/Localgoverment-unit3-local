@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Reports & Analytics</title>
@@ -152,6 +153,11 @@ th { font-size: .85rem; opacity: .7; }
   margin-top: 2px;
   text-align: right;
 }
+  .grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
 
 </style>
 </head>
@@ -237,6 +243,41 @@ th { font-size: .85rem; opacity: .7; }
   </div>
 </div>
 <script>
+  function initComplaints(refNo) {
+  const container = document.getElementById("complaintsContainer");
+  const message = document.getElementById("complaintMessage");
+  const select = document.getElementById("complaintSelect");
+  const viewBtn = document.getElementById("viewComplaintBtn");
+
+ 
+  let complaints = JSON.parse(localStorage.getItem("complaints")) || {};
+
+ 
+  select.innerHTML = `<option value="">-- Select Complaint Ref No. --</option>`;
+  Object.keys(complaints).forEach(ref => {
+    const opt = document.createElement("option");
+    opt.value = ref;
+    opt.textContent = ref;
+    select.appendChild(opt);
+  });
+
+  viewBtn.onclick = () => {
+    const ref = select.value;
+    if (ref && complaints[ref]) {
+      container.style.display = "block";
+      message.textContent = `(${ref}) ${complaints[ref]}`;
+    } else {
+      alert("Please select a complaint Ref No. first.");
+    }
+  };
+
+ 
+  if (refNo && complaints[refNo]) {
+    container.style.display = "block";
+    message.textContent = `(${refNo}) ${complaints[refNo]}`;
+    select.value = refNo;
+  }
+}
  function initReports(refNo) {
  
   const ctx = document.getElementById("vendorChart");
@@ -323,7 +364,7 @@ th { font-size: .85rem; opacity: .7; }
   }
 
   chatInput.addEventListener("keypress", e => {
-    if (e.key === "Enter") chatSendBtn.click(); // send on Enter key
+    if (e.key === "Enter") chatSendBtn.click(); 
   });
 }
   function saveComplaint(refNo, message) {
@@ -333,7 +374,9 @@ th { font-size: .85rem; opacity: .7; }
 }
 
 window.onload = () => {
-  initReports(); // optionally pass a complaint Ref No, e.g., "RPT-002"
+  initReports();
+  initComplaints(); 
   document.getElementById("adminName").textContent = localStorage.getItem("adminName") || "Admin";
+};
 };
 </script>
