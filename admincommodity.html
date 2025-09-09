@@ -254,30 +254,32 @@ function loadCommodities() {
 
   const colors = ["#ff4d4d", "#ffd966", "#9fff80", "#4da6ff"]; 
 
-  data.forEach((item, i) => {
-  
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${item.type}</td>
-      <td>${item.prev}</td>
-      <td>${item.curr}</td>
-      <td>${item.status}</td>
-      <td>
-        <span class="edit-icon" style="cursor:pointer;" onclick="editCommodity(${i})">✏️</span>
-        <span class="delete-icon" style="cursor:pointer;" onclick="deleteCommodity(${i})">🗑️</span>
-      </td>`;
-    tableBody.appendChild(tr);
+data.forEach((item, i) => {
+  const tr = document.createElement("tr");
+  tr.innerHTML = `
+    <td>${item.type}</td>
+    <td>${item.prev}</td>
+    <td>${item.curr}</td>
+    <td>${item.status}</td>
+    <td>
+      <span class="edit-icon" style="cursor:pointer;" onclick="editCommodity(${i})">✏️</span>
+      <span class="delete-icon" style="cursor:pointer;" onclick="deleteCommodity(${i})">🗑️</span>
+    </td>`;
+  tableBody.appendChild(tr);
 
-    
-    const card = document.createElement("div");
-    card.className = "card";
-    card.style.backgroundColor = colors[i % colors.length];
-    card.style.color = (colors[i % colors.length] === "#ffd966") ? "#111" : "#fff";
-    card.innerHTML = `${item.type}<br><button class="view-btn">View Data</button>`;
-    
-    card.onclick = () => openDataModal(item.type);
-    cardsDiv.appendChild(card);
-  });
+  const card = document.createElement("div");
+  card.className = "card";
+  card.style.backgroundColor = colors[i % colors.length];
+  card.style.color = (colors[i % colors.length] === "#ffd966") ? "#111" : "#fff";
+  card.innerHTML = `${item.type}<br><button class="view-btn">View Data</button>`;
+
+  card.querySelector(".view-btn").onclick = (e) => {
+    e.stopPropagation(); 
+    openDataModal(item.type);
+  };
+
+  cardsDiv.appendChild(card);
+});
 
   updatePieChart();
 }
@@ -394,10 +396,6 @@ function openDataModal(name) {
 function closeDataModal() {
   dataModal.style.display = "none";
 }
-card.querySelector(".view-btn").onclick = (e) => {
-  e.stopPropagation(); // prevent card click if needed
-  openDataModal(item.type);
-};
 
 window.onload = () => { loadCommodities(); }
 </script>
