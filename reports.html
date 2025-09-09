@@ -200,46 +200,38 @@ th { font-size: .85rem; opacity: .7; }
       </div>
     </header>
 
-    <div class="content">
-      <h1>Reports and Dashboard with AI Analytic</h1>
-    <div class="grid">
-      <div class="card">
-        <h3>Vendor Performance Dashboard</h3>
-        <canvas id="vendorChart" height="120"></canvas>
+   <div class="content">
+  <h1>Reports and Dashboard with AI Analytic</h1>
+  <div class="grid">
+    <div class="card">
+      <h3>Vendor Performance Dashboard</h3>
+      <canvas id="vendorChart" height="120"></canvas>
+    </div>
+    <div class="card">
+      <h3>Recent Complaints</h3>
+      <div id="complaintsContainer" style="display:none;">
+        <p id="complaintMessage" style="background:#fce8b2;padding:.5rem;border-radius:6px;"></p>
       </div>
-      <div class="card">
-        <h3>Recent Complaints</h3>
-        <div id="complaintsContainer" style="display:none;">
-          <p id="complaintMessage" style="background:#fce8b2;padding:.5rem;border-radius:6px;"></p>
-        </div>
-        <select id="complaintSelect" style="margin-top:.5rem;width:100%;padding:.4rem;">
-          <option value="">-- Select Complaint Ref No. --</option>
-          <option value="RPT-001">RPT-001</option>
-          <option value="RPT-002">RPT-002</option>
-          <option value="RPT-003">RPT-003</option>
-          <option value="RPT-004">RPT-004</option>
-        </select>
-        <button id="viewComplaintBtn" class="btn" style="margin-top:.5rem;">View Complaint</button>
-      </div>
-   <div class="card">
-  <h3>AI Chat Support</h3>
-  <div id="chatboxContainer" style="
-       border:1px solid #ccc;
-       padding:10px;
-       border-radius:8px;
-       height:300px;
-       overflow-y:auto;
-       display:flex;
-       flex-direction:column;
-       gap:6px;
-       background:#f9f9f9;"></div>
-  <div style="margin-top:.5rem;display:flex;gap:.5rem;">
-    <input id="chatInput" type="text" placeholder="Type your question..." style="
-           flex:1;
-           padding:.5rem;
+      <select id="complaintSelect" style="margin-top:.5rem;width:100%;padding:.4rem;"></select>
+      <button id="viewComplaintBtn" class="btn" style="margin-top:.5rem;">View Complaint</button>
+    </div>
+    <div class="card">
+      <h3>AI Chat Support</h3>
+      <div id="chatboxContainer" style="
            border:1px solid #ccc;
-           border-radius:6px;">
-    <button id="chatSendBtn" class="btn">Send</button>
+           padding:10px;
+           border-radius:8px;
+           height:300px;
+           overflow-y:auto;
+           display:flex;
+           flex-direction:column;
+           gap:.5rem;
+           background:#f9f9f9;"></div>
+      <div style="margin-top:.5rem;display:flex;gap:.5rem;">
+        <input id="chatInput" type="text" placeholder="Type your question..." style="flex:1;padding:.5rem;border:1px solid #ccc;border-radius:6px;">
+        <button id="chatSendBtn" class="btn">Send</button>
+      </div>
+    </div>
   </div>
 </div>
 <script>
