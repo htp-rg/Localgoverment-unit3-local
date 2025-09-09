@@ -144,6 +144,25 @@ th {
   cursor: pointer;
   margin-left: 4px;
 }
+
+  .modal {
+  display: none; /* hidden by default */
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: var(--white);
+  padding: 1rem;
+  border-radius: 12px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: var(--shadow);
+}
 </style>
 </head>
 <body>
@@ -253,7 +272,7 @@ const STORAGE_KEYS = {
 
 function loadVendors(){
   const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
-  const vendorTable = document.querySelector("#vendorTable tbody");
+  const vendorTable = document.querySelector("#vendorEngagementsTable tbody"); // fixed ID
   if(!vendorTable) return;
   vendorTable.innerHTML = "";
   vendors.forEach((v,i)=>{
@@ -266,6 +285,7 @@ function loadVendors(){
     vendorTable.appendChild(row);
   });
 }
+  
 function saveVendors(vendors){
   localStorage.setItem(STORAGE_KEYS.vendors, JSON.stringify(vendors));
 }
