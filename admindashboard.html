@@ -83,11 +83,11 @@ th { font-size: .85rem; opacity: .7; }
   background: var(--white); padding: 1rem;
   border-radius: 12px; max-width: 400px; width: 100%; box-shadow: var(--shadow);
 }
-  .menu-container {
+
+.menu-container {
   position: relative;
   display: inline-block;
 }
-
 .dropdown {
   display: none;
   position: absolute;
@@ -100,14 +100,12 @@ th { font-size: .85rem; opacity: .7; }
   min-width: 220px;
   z-index: 1000;
 }
-
 .dropdown p {
   margin: 0;
   padding: 0.8rem;
   font-weight: bold;
   border-bottom: 1px solid var(--border);
 }
-
 .dropdown a {
   display: block;
   padding: 0.8rem;
@@ -115,29 +113,20 @@ th { font-size: .85rem; opacity: .7; }
   color: var(--text);
   border-bottom: 1px solid var(--border);
 }
+.dropdown a:hover { background: var(--ink-20); }
+.dropdown a:last-child { border-bottom: none; }
+.dropdown.show { display: block; }
 
-.dropdown a:hover {
-  background: var(--ink-20);
-}
-
-.dropdown a:last-child {
-  border-bottom: none;
-}
-  .dropdown.show {
-  display: block;
-}
-  #taskList li {
+#taskList li {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0.3rem 0;
 }
-
 .task-icons {
   display: flex;
   gap: 0.5rem;
 }
-
 .task-icons .edit-icon,
 .task-icons .delete-icon {
   cursor: pointer;
@@ -163,27 +152,27 @@ th { font-size: .85rem; opacity: .7; }
 
   <section class="main">
     <header class="topbar">
-  <div style="display:flex; align-items:center; gap:0.5rem;">
-    <button class="btn" id="backBtn">← Back</button>
-    <div class="menu-container">
-      <button class="btn" id="menuBtn">☰</button>
-      <div class="dropdown" id="menuDropdown">
-        <p id="adminName">Admin</p>
-        <a href="upgrade.html">Upgrade Personal Details</a>
-        <a href="adminpassword.html">Password and Security</a>
-        <a href="#" id="deleteAccount">Delete Account</a>
-        <a href="terms.html">Terms of Service</a>
-        <a href="adminreport.html">Report a Problem</a>
-        <a href="main.html" id="signOut">Sign Out</a>
+      <div style="display:flex; align-items:center; gap:0.5rem;">
+        <button class="btn" id="backBtn">← Back</button>
+        <div class="menu-container">
+          <button class="btn" id="menuBtn">☰</button>
+          <div class="dropdown" id="menuDropdown">
+            <p id="adminName">Admin</p>
+            <a href="upgrade.html">Upgrade Personal Details</a>
+            <a href="adminpassword.html">Password and Security</a>
+            <a href="#" id="deleteAccount">Delete Account</a>
+            <a href="terms.html">Terms of Service</a>
+            <a href="adminreport.html">Report a Problem</a>
+            <a href="main.html" id="signOut">Sign Out</a>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-  <div>
-    <button class="btn" id="exportBtn">Export</button>
-  </div>
-</header>
+      <div>
+        <button class="btn" id="exportBtn">Export</button>
+      </div>
+    </header>
 
-     <div class="content" id="contentArea">
+    <div class="content" id="contentArea">
       <h1>Dashboard</h1>
       <div class="grid">
         <div class="card yellow"><h3>Price Variance / Cost Savings</h3><p>₱12,500</p><small>+8% vs last month</small></div>
@@ -192,7 +181,7 @@ th { font-size: .85rem; opacity: .7; }
         <div class="card blue"><h3>Vendor Performance Score</h3><p>87/100</p><small>Stable</small></div>
       </div>
 
-      <div class="grid">
+   <div class="grid">
         <div class="card">
           <h3>Supply Chain Flow (Last 6 Weeks)</h3>
           <canvas id="pipelineChart" height="100"></canvas>
@@ -230,7 +219,8 @@ th { font-size: .85rem; opacity: .7; }
     </div>
   </section>
 </div>
-  
+
+
 <div class="modal" id="taskModal">
   <div class="modal-content">
     <h3 id="taskModalTitle">Add Task</h3>
@@ -241,6 +231,7 @@ th { font-size: .85rem; opacity: .7; }
   </div>
 </div>
 
+
 <div class="modal" id="deleteTaskModal">
   <div class="modal-content">
     <h3>Confirm Delete</h3>
@@ -249,6 +240,7 @@ th { font-size: .85rem; opacity: .7; }
     <button id="cancelDeleteTaskBtn" class="btn" style="margin-top:.5rem;">Cancel</button>
   </div>
 </div>
+
 
 <div class="modal" id="vendorModal">
   <div class="modal-content">
@@ -268,10 +260,11 @@ th { font-size: .85rem; opacity: .7; }
 <script>
 let pipelineChart=null;
 const STORAGE_KEYS={vendors:"vendor_engagements"};
+const STORAGE_TASKS="dashboard_tasks";
 
-function renderStars(num){
-  return "★".repeat(num)+"☆".repeat(5-num);
-}
+
+function renderStars(num){ return "★".repeat(num)+"☆".repeat(5-num); }
+
 
 function loadVendors(){
   const vendors=JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors)||"[]");
@@ -294,179 +287,107 @@ function loadVendors(){
   });
 }
 function saveVendors(vendors){localStorage.setItem(STORAGE_KEYS.vendors,JSON.stringify(vendors));}
-
-function editVendor(index){
-  const vendors=JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors)||"[]");
-  const v=vendors[index];
+function editVendor(i){
+  const v=JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors)||"[]")[i];
   document.getElementById("vendorModalTitle").textContent="Edit Vendor";
-  document.getElementById("vendorIndex").value=index;
+  document.getElementById("vendorIndex").value=i;
   vendorType.value=v.type; vendorStatus.value=v.status; vendorOwner.value=v.owner;
   vendorDue.value=v.due; vendorPayment.value=v.payment; vendorRating.value=v.rating||0;
   document.getElementById("vendorModal").style.display="flex";
 }
-function deleteVendor(index){
+function deleteVendor(i){
   const vendors=JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors)||"[]");
-  vendors.splice(index,1); saveVendors(vendors); loadVendors();
+  vendors.splice(i,1); saveVendors(vendors); loadVendors();
 }
 
-document.getElementById("addVendorBtn").onclick=()=>{
-  document.getElementById("vendorModalTitle").textContent="Add Vendor";
-  document.getElementById("vendorIndex").value="";
-  document.querySelectorAll("#vendorModal input").forEach(i=>i.value="");
-  document.getElementById("vendorModal").style.display="flex";
+
+addVendorBtn.onclick=()=>{
+  vendorModalTitle.textContent="Add Vendor";
+  vendorIndex.value=""; document.querySelectorAll("#vendorModal input").forEach(i=>i.value="");
+  vendorModal.style.display="flex";
 };
-document.getElementById("saveVendorBtn").onclick=()=>{
+saveVendorBtn.onclick=()=>{
   const vendors=JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors)||"[]");
   const v={type:vendorType.value,status:vendorStatus.value,owner:vendorOwner.value,
            due:vendorDue.value,payment:vendorPayment.value,rating:parseInt(vendorRating.value)||0};
-  const index=document.getElementById("vendorIndex").value;
+  const index=vendorIndex.value;
   if(index==="") vendors.push(v); else vendors[index]=v;
-  saveVendors(vendors); loadVendors();
-  document.getElementById("vendorModal").style.display="none";
+  saveVendors(vendors); loadVendors(); vendorModal.style.display="none";
 };
-document.getElementById("closeVendorBtn").onclick=()=>document.getElementById("vendorModal").style.display="none";
-
-function initDashboard(){
-  const ctx=document.getElementById("pipelineChart").getContext("2d");
-  if(pipelineChart) pipelineChart.destroy();
-  pipelineChart=new Chart(ctx,{
-    type:"line",
-    data:{
-      labels:["Week 1","Week 2","Week 3","Week 4","Week 5","Week 6"],
-      datasets:[{label:"Deliveries",data:[5,8,6,10,7,9],borderColor:"#0a53c1",fill:false}]
-    }
-  });
-}
-document.getElementById("searchInput").addEventListener("keyup", function() {
-  const filter = this.value.toLowerCase();
-  const rows = document.querySelectorAll("#vendorEngagementsTable tbody tr");
-  rows.forEach(row => {
-    const text = row.innerText.toLowerCase();
-    row.style.display = text.includes(filter) ? "" : "none";
-  });
-});
-  document.getElementById("menuBtn").addEventListener("click", () => {
-  document.getElementById("menuDropdown").classList.toggle("show");
-});
-
-document.addEventListener("click", (e) => {
-  if (!e.target.closest(".menu-container")) {
-    document.getElementById("menuDropdown").classList.remove("show");
-  }
-});
-
-window.addEventListener("DOMContentLoaded", () => {
-  const admin = localStorage.getItem("adminName") || "Admin";
-  document.getElementById("adminName").textContent = admin;
-});
-  
-window.onload=()=>{loadVendors();initDashboard();};
-
-  const STORAGE_TASKS = "dashboard_tasks";
+closeVendorBtn.onclick=()=>vendorModal.style.display="none";
 
 
-function loadTasks() {
-  const tasks = JSON.parse(localStorage.getItem(STORAGE_TASKS) || "[]");
-  const taskList = document.getElementById("taskList");
-  taskList.innerHTML = "";
-  tasks.forEach((t, i) => {
-    const li = document.createElement("li");
-
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.checked = t.completed || false;
-    checkbox.onchange = () => {
-      t.completed = checkbox.checked;
-      localStorage.setItem(STORAGE_TASKS, JSON.stringify(tasks));
-    };
-
-    const spanText = document.createElement("span");
-    spanText.textContent = " " + t.text;
-
-    const iconContainer = document.createElement("div");
-    iconContainer.className = "task-icons";
-
-    const editIcon = document.createElement("span");
-    editIcon.className = "edit-icon";
-    editIcon.textContent = "✏️";
-    editIcon.onclick = () => openTaskModal(i);
-
-    const deleteIcon = document.createElement("span");
-    deleteIcon.className = "delete-icon";
-    deleteIcon.textContent = "🗑️";
-    deleteIcon.onclick = () => openDeleteModal(i);
-
-    iconContainer.appendChild(editIcon);
-    iconContainer.appendChild(deleteIcon);
-
-    li.appendChild(checkbox);
-    li.appendChild(spanText);
-    li.appendChild(iconContainer);
-
+function loadTasks(){
+  const tasks=JSON.parse(localStorage.getItem(STORAGE_TASKS)||"[]");
+  const taskList=document.getElementById("taskList");
+  taskList.innerHTML="";
+  tasks.forEach((t,i)=>{
+    const li=document.createElement("li");
+    const checkbox=document.createElement("input");
+    checkbox.type="checkbox"; checkbox.checked=t.completed||false;
+    checkbox.onchange=()=>{ t.completed=checkbox.checked; localStorage.setItem(STORAGE_TASKS,JSON.stringify(tasks)); };
+    const spanText=document.createElement("span"); spanText.textContent=" "+t.text;
+    const iconContainer=document.createElement("div"); iconContainer.className="task-icons";
+    const editIcon=document.createElement("span"); editIcon.className="edit-icon"; editIcon.textContent="✏️";
+    editIcon.onclick=()=>openTaskModal(i);
+    const deleteIcon=document.createElement("span"); deleteIcon.className="delete-icon"; deleteIcon.textContent="🗑️";
+    deleteIcon.onclick=()=>openDeleteModal(i);
+    iconContainer.appendChild(editIcon); iconContainer.appendChild(deleteIcon);
+    li.appendChild(checkbox); li.appendChild(spanText); li.appendChild(iconContainer);
     taskList.appendChild(li);
   });
 }
 
+const taskModal=document.getElementById("taskModal"), taskInput=document.getElementById("taskInput"),
+      taskIndexInput=document.getElementById("taskIndex"), taskModalTitle=document.getElementById("taskModalTitle"),
+      deleteModal=document.getElementById("deleteTaskModal");
+let taskToDelete=null;
 
-const taskModal = document.getElementById("taskModal");
-const taskInput = document.getElementById("taskInput");
-const taskIndexInput = document.getElementById("taskIndex");
-const taskModalTitle = document.getElementById("taskModalTitle");
+addTaskBtn.onclick=()=>openTaskModal();
+function openTaskModal(index=null){
+  const tasks=JSON.parse(localStorage.getItem(STORAGE_TASKS)||"[]");
+  if(index!==null){ taskModalTitle.textContent="Edit Task"; taskInput.value=tasks[index].text; taskIndexInput.value=index; }
+  else{ taskModalTitle.textContent="Add Task"; taskInput.value=""; taskIndexInput.value=""; }
+  taskModal.style.display="flex";
+}
+saveTaskBtn.onclick=()=>{
+  const tasks=JSON.parse(localStorage.getItem(STORAGE_TASKS)||"[]"); const index=taskIndexInput.value;
+  if(index==="") tasks.push({text:taskInput.value,completed:false}); else tasks[index].text=taskInput.value;
+  localStorage.setItem(STORAGE_TASKS,JSON.stringify(tasks)); taskModal.style.display="none"; loadTasks();
+};
+closeTaskBtn.onclick=()=>taskModal.style.display="none";
+function openDeleteModal(i){ taskToDelete=i; deleteModal.style.display="flex"; }
+confirmDeleteTaskBtn.onclick=()=>{
+  const tasks=JSON.parse(localStorage.getItem(STORAGE_TASKS)||"[]"); tasks.splice(taskToDelete,1);
+  localStorage.setItem(STORAGE_TASKS,JSON.stringify(tasks)); deleteModal.style.display="none"; loadTasks();
+};
+cancelDeleteTaskBtn.onclick=()=>deleteModal.style.display="none";
+window.onclick=(e)=>{ if(e.target===taskModal) taskModal.style.display="none"; if(e.target===deleteModal) deleteModal.style.display="none"; };
 
-document.getElementById("addTaskBtn").onclick = () => openTaskModal();
 
-function openTaskModal(index = null) {
-  const tasks = JSON.parse(localStorage.getItem(STORAGE_TASKS) || "[]");
-  if (index !== null) {
-    taskModalTitle.textContent = "Edit Task";
-    taskInput.value = tasks[index].text;
-    taskIndexInput.value = index;
-  } else {
-    taskModalTitle.textContent = "Add Task";
-    taskInput.value = "";
-    taskIndexInput.value = "";
-  }
-  taskModal.style.display = "flex";
+function initDashboard(){
+  const ctx=document.getElementById("pipelineChart").getContext("2d");
+  if(pipelineChart) pipelineChart.destroy();
+  pipelineChart=new Chart(ctx,{ type:"line", data:{ labels:["Week 1","Week 2","Week 3","Week 4","Week 5","Week 6"], datasets:[{label:"Deliveries",data:[5,8,6,10,7,9],borderColor:"#0a53c1",fill:false}] } });
 }
 
-document.getElementById("saveTaskBtn").onclick = () => {
-  const tasks = JSON.parse(localStorage.getItem(STORAGE_TASKS) || "[]");
-  const index = taskIndexInput.value;
-  if (index === "") {
-    tasks.push({ text: taskInput.value, completed: false });
-  } else {
-    tasks[index].text = taskInput.value;
-  }
-  localStorage.setItem(STORAGE_TASKS, JSON.stringify(tasks));
-  taskModal.style.display = "none";
-  loadTasks();
+
+searchInput.addEventListener("keyup",function(){
+  const filter=this.value.toLowerCase();
+  document.querySelectorAll("#vendorEngagementsTable tbody tr").forEach(r=>{ r.style.display=r.innerText.toLowerCase().includes(filter)?"":"none"; });
+});
+
+
+menuBtn.addEventListener("click",()=>menuDropdown.classList.toggle("show"));
+document.addEventListener("click",e=>{ if(!e.target.closest(".menu-container")) menuDropdown.classList.remove("show"); });
+
+
+window.addEventListener("DOMContentLoaded",()=>{ adminName.textContent=localStorage.getItem("adminName")||"Admin"; });
+
+
+window.onload=()=>{
+  loadVendors(); loadTasks(); initDashboard();
 };
-
-document.getElementById("closeTaskBtn").onclick = () => taskModal.style.display = "none";
-
-let taskToDelete = null;
-const deleteModal = document.getElementById("deleteTaskModal");
-
-function openDeleteModal(index) {
-  taskToDelete = index;
-  deleteModal.style.display = "flex";
-}
-
-document.getElementById("confirmDeleteTaskBtn").onclick = () => {
-  const tasks = JSON.parse(localStorage.getItem(STORAGE_TASKS) || "[]");
-  tasks.splice(taskToDelete, 1);
-  localStorage.setItem(STORAGE_TASKS, JSON.stringify(tasks));
-  deleteModal.style.display = "none";
-  loadTasks();
-};
-
-document.getElementById("cancelDeleteTaskBtn").onclick = () => deleteModal.style.display = "none";
-
-window.onclick = (e) => {
-  if (e.target === taskModal) taskModal.style.display = "none";
-  if (e.target === deleteModal) deleteModal.style.display = "none";
-};
-window.onload = loadTasks;
 </script>
 </body>
 </html>
