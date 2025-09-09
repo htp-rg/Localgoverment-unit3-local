@@ -14,8 +14,12 @@
   --shadow: 0 6px 24px rgba(0, 0, 0, .06);
 }
 * { box-sizing: border-box; }
-body { margin:0; font-family:Inter,sans-serif; background:var(--white); color:var(--text); }
-.app { display:grid; grid-template-columns:240px 1fr; min-height:100vh; }
+body {
+  margin: 0;
+  font-family: Inter, system-ui, sans-serif;
+  background: var(--white);
+  color: var(--text);
+}
 
 .sidebar { border-right:1px solid var(--border); background:var(--white); }
 .brand { font-weight:800; text-transform:uppercase; padding:1rem; border-bottom:1px solid var(--border); }
@@ -47,6 +51,38 @@ th { font-size:.85rem; opacity:.7; }
 .view-btn { margin-top:.5rem; border:1px solid var(--text); padding:.3rem .5rem; border-radius:8px; background:transparent; cursor:pointer; }
 
 .close { float:right; cursor:pointer; font-size:20px; }
+  .menu-container {
+  position: relative;
+  display: inline-block;
+}
+.dropdown {
+  display: none;
+  position: absolute;
+  top: 110%;
+  right: 0;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  min-width: 220px;
+  z-index: 1000;
+}
+.dropdown p {
+  margin: 0;
+  padding: 0.8rem;
+  font-weight: bold;
+  border-bottom: 1px solid var(--border);
+}
+.dropdown a {
+  display: block;
+  padding: 0.8rem;
+  text-decoration: none;
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+}
+.dropdown a:hover { background: var(--ink-20); }
+.dropdown a:last-child { border-bottom: none; }
+.dropdown.show { display: block; }
 </style>
 </head>
 <body>
@@ -125,7 +161,11 @@ th { font-size:.85rem; opacity:.7; }
             </tr>
           </tbody>
         </table>
-
+        
+  <div style="display:flex;gap:2rem;margin-top:1rem;align-items:flex-start;">
+      <div style="flex:0 0 auto;">
+        <canvas id="pieChart" width="300" height="300"></canvas>
+      </div>
         <div class="card-container">
           <div class="card" onclick="openDataModal('Takoyaki store')">
             Takoyaki store<br>
@@ -157,11 +197,95 @@ th { font-size:.85rem; opacity:.7; }
   </div>
 </div>
 
-<script>
-const menuBtn = document.getElementById("menuBtn");
-const menuDropdown = document.getElementById("menuDropdown");
-menuBtn.addEventListener("click", ()=> menuDropdown.classList.toggle("show"));
-document.addEventListener("click", e => { if(!e.target.closest(".menu-container")) menuDropdown.classList.remove("show"); });
+  <script>
+const STORAGE_KEY = "commodityData";
+const commodityTableBody = document.querySelector("#commodityTable tbody");
+const businessCardsDiv = document.getElementById("businessCards");
+let lineChart;
+
+
+const defaultData = [
+  { name:"Takoyaki store", prev:50, curr:55, status:"Stable" },
+  { name:"Sound equipment", prev:200, curr:250, status:"High" },
+  { name:"Tables and chairs", prev:100, curr:90, status:"Low" },
+  { name:"Atan's Meat Shop", prev:150, curr:180, status:"High" }
+];
+
+
+function loadData(){
+  let data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null") || defaultData;
+  commodityTableBody.innerHTML = "";
+  businessCardsDiv.innerHTML = "";
+  data.forEach(item=>{
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td contenteditable="true">${item.name}</td>
+                    <td contenteditable="true">${item.prev}</td>
+                    <td contenteditable="true">${item.curr}</td>
+                    <td contenteditable="true">${item.status}</td>`;
+    commodityTableBody.appendChild(tr);
+
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `${item.name}<br><button class="view-btn">View Data</button>`;
+    card.onclick = ()=>openDataModal(item.name);
+    businessCardsDiv.appendChild(card);
+  });
+  updatePieChart();
+}
+
+
+function saveData(){
+  const rows = [...commodityTableBody.rows];
+  const data = rows.map(r=>({
+    name: r.cells[0].innerText.trim(),
+    prev: parseFloat(r.cells[1].innerText) || 0,
+    curr: parseFloat(r.cells[2].innerText) || 0,
+    status: r.cells[3].innerText.trim()
+  }));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  updatePieChart();
+}
+
+let pieChart;
+function updatePieChart(){
+  const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+  const counts = {High:0, Low:0, Stable:0};
+  data.forEach(d=>{ if(counts[d.status]!==undefined) counts[d.status]++; });
+  const pieData = {
+    labels:["High","Low","Stable"],
+    datasets:[{data:[counts.High,counts.Low,counts.Stable], backgroundColor:['#ff4d4d','#9fff80','#ffd966'] }]
+  };
+  const ctx = document.getElementById("pieChart").getContext("2d");
+  if(pieChart) pieChart.destroy();
+  pieChart = new Chart(ctx, {type:"pie", data:pieData});
+}
+
+
+const dataModal = document.getElementById("dataModal");
+function openDataModal(name){
+  document.getElementById("dataModalTitle").textContent = name + " - Past 6 Months";
+  dataModal.style.display = "flex";
+
+  const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+  const item = data.find(d=>d.name===name);
+  if(!item) return;
+
+  const ctxLine = document.getElementById("lineChart").getContext("2d");
+  if(lineChart) lineChart.destroy();
+  const exampleLabels = ["Jan","Feb","Mar","Apr","May","Jun"];
+  const exampleData = [item.prev, item.prev+((item.curr-item.prev)/5), item.prev+((item.curr-item.prev)/3), (item.prev+item.curr)/2, item.curr-((item.curr-item.prev)/5), item.curr];
+
+  lineChart = new Chart(ctxLine,{
+    type:"line",
+    data:{ labels:exampleLabels, datasets:[{ label:item.name + " Prices", data:exampleData, borderColor:"black", backgroundColor:"rgba(0,0,0,0.1)", fill:false, tension:0.2 }] }
+  });
+}
+function closeDataModal(){ dataModal.style.display="none"; }
+dataModal.addEventListener("click", e=>{ if(e.target===dataModal) closeDataModal(); });
+
+
+document.getElementById("menuBtn").addEventListener("click", ()=> document.getElementById("menuDropdown").classList.toggle("show"));
+document.addEventListener("click", e=>{ if(!e.target.closest(".menu-container")) document.getElementById("menuDropdown").classList.remove("show"); });
 
 
 document.getElementById("searchInput").addEventListener("keyup", function(){
@@ -172,17 +296,13 @@ document.getElementById("searchInput").addEventListener("keyup", function(){
 });
 
 
-const dataModal = document.getElementById("dataModal");
-function openDataModal(name){
-  document.getElementById("dataModalTitle").textContent = name;
-  dataModal.style.display = "flex";
-}
-function closeDataModal(){ dataModal.style.display = "none"; }
-dataModal.addEventListener("click", e=>{ if(e.target===dataModal) closeDataModal(); });
+commodityTableBody.addEventListener("input", saveData);
+
 
 window.onload = ()=>{
   document.getElementById("adminName").textContent = localStorage.getItem("adminName")||"Admin";
-}
+  loadData();
+};
 </script>
 </body>
 </html>
