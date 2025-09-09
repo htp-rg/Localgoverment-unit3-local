@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Vendor Management</title>
+<title>Supply Monitoringt</title>
 <style>
 :root {
   --text: #111111;
@@ -189,7 +189,27 @@ th { font-size: .85rem; opacity: .7; }
   </table>
   <button id="addSupplyBtn" class="btn" style="margin-top:1rem;">➕ New Supply</button>
 </div>
-
+<div class="modal" id="supplyModal">
+  <div class="modal-content">
+    <h3 id="supplyModalTitle">Add Supply</h3>
+    <input type="hidden" id="supplyIndex">
+    
+    <label>Business Name:<br><input id="supplyBusiness" type="text"></label><br>
+    <label>Business Category:<br><input id="supplyCategory" type="text"></label><br>
+    <label>Supplier:<br><input id="supplySupplier" type="text"></label><br>
+    <label>Pick-up:<br><input id="supplyPickup" type="text"></label><br>
+    <label>Drop-off:<br><input id="supplyDropoff" type="text"></label><br>
+    <label>Delivery Time:<br><input id="supplyTime" type="text"></label><br>
+    <label>Report:<br><input id="supplyReport" type="text"></label><br>
+    <label>Contact No.:<br><input id="supplyContact" type="text"></label><br>
+    <label>Item Value:<br><input id="supplyValue" type="text"></label><br>
+    <label>Quality (0-5):<br><input id="supplyQuality" type="number" min="0" max="5"></label><br>
+    <label>Status:<br><input id="supplyStatus" type="text"></label><br>
+    
+    <button id="saveSupplyBtn" class="btn" style="margin-top:.5rem;">Save</button>
+    <button id="closeSupplyBtn" class="btn" style="margin-top:.5rem;">Cancel</button>
+  </div>
+</div>
 <script>
 const SUPPLY_KEY = "supply_data";
 const supplyTableBody = document.querySelector("#supplyTable tbody");
