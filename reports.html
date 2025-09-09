@@ -205,7 +205,6 @@ function initComplaints() {
   const select = document.getElementById("complaintSelect");
   const viewBtn = document.getElementById("viewComplaintBtn");
 
- 
   let defaultComplaints = {
     "RPT-001": "Vendor delayed chicken delivery",
     "RPT-002": "Incomplete Takoyaki supplies",
@@ -213,7 +212,6 @@ function initComplaints() {
     "RPT-004": "Rental items missing on arrival"
   };
 
- 
   let complaints = JSON.parse(localStorage.getItem("complaints"));
   const isValid = complaints && Object.keys(complaints).some(k => k.startsWith("RPT-"));
   if (!isValid) {
@@ -221,7 +219,7 @@ function initComplaints() {
     localStorage.setItem("complaints", JSON.stringify(complaints));
   }
 
-  
+ 
   select.innerHTML = `<option value="">-- Select Complaint Ref No. --</option>`;
   Object.keys(complaints).forEach(ref => {
     const opt = document.createElement("option");
@@ -230,27 +228,28 @@ function initComplaints() {
     select.appendChild(opt);
   });
 
- 
-  container.innerHTML = ""; 
-  let i = 1;
-  for (const ref in complaints) {
-    const p = document.createElement("p");
-    p.style.background = "#fce8b2";
-    p.style.padding = ".5rem";
-    p.style.borderRadius = "6px";
-    p.style.marginBottom = ".5rem";
-    p.textContent = `${i}. (${ref}) ${complaints[ref]}`;
-    container.appendChild(p);
-    i++;
-  }
-  container.style.display = "block";
 
+  container.innerHTML = ""; 
+  container.style.display = "none";
 
   viewBtn.onclick = () => {
     const ref = select.value;
     if (ref && complaints[ref]) {
+     
+      container.innerHTML = "";
       const keys = Object.keys(complaints);
       const number = keys.indexOf(ref) + 1;
+
+      const p = document.createElement("p");
+      p.style.background = "#fce8b2";
+      p.style.padding = ".5rem";
+      p.style.borderRadius = "6px";
+      p.style.marginBottom = ".5rem";
+      p.textContent = `${number}. (${ref}) ${complaints[ref]}`;
+
+      container.appendChild(p);
+      container.style.display = "block";
+
       message.textContent = `${number}. (${ref}) ${complaints[ref]}`;
     } else {
       alert("Please select a complaint Ref No. first.");
