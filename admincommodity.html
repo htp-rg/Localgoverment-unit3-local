@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Commodity & Price Monitoring</title>
@@ -260,6 +261,19 @@ function loadCommodities(){
   });
   updatePieChart();
 }
+  const colors = ["#ff4d4d", "#ffd966", "#9fff80", "#4da6ff"]; 
+
+data.forEach((item, i) => {
+  const card = document.createElement("div");
+  card.className = "card";
+  card.style.backgroundColor = colors[i % colors.length];
+  card.style.color = "#111"; 
+  if(colors[i % colors.length] === "#ffd966") card.style.color = "#111";
+  else card.style.color = "#fff"; 
+  card.innerHTML = `${item.type}<br><button class="view-btn">View Data</button>`;
+  card.onclick = () => openDataModal(item.type);
+  cardsDiv.appendChild(card);
+});
 
 function saveCommodities(data){ localStorage.setItem(COMMODITY_KEY, JSON.stringify(data)); }
 
