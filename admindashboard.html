@@ -219,19 +219,127 @@ th {
     </div>
   </section>
 </div>
+  
+<div class="modal" id="vendorModal">
+  <div class="modal-content">
+    <h3 id="vendorModalTitle">Add Vendor</h3>
+    <input type="hidden" id="vendorIndex">
+    <label>Type:<br><input id="vendorType"></label><br>
+    <label>Status:<br><input id="vendorStatus"></label><br>
+    <label>Owner:<br><input id="vendorOwner"></label><br>
+    <label>Due Date:<br><input id="vendorDue" type="date"></label><br>
+    <label>Payment:<br><input id="vendorPayment"></label><br>
+    <button id="saveVendorBtn" class="btn" style="margin-top:.5rem;">Save</button>
+    <button id="closeVendorBtn" class="btn" style="margin-top:.5rem;">Cancel</button>
+  </div>
+</div>
+
+<div class="modal" id="taskModal">
+  <div class="modal-content">
+    <h3>Add Task</h3>
+    <label>Task:<br><input id="taskInput"></label><br>
+    <button id="saveTaskBtn" class="btn" style="margin-top:.5rem;">Save</button>
+    <button id="closeTaskBtn" class="btn" style="margin-top:.5rem;">Cancel</button>
+  </div>
+</div>
 
 <script>
-let pipelineChart=null;
-
+let pipelineChart = null;
 
 const STORAGE_KEYS = {
   tasks: "dashboard_tasks",
   vendors: "vendor_engagements"
 };
 
+function loadVendors(){
+  const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
+  const vendorTable = document.querySelector("#vendorTable tbody");
+  if(!vendorTable) return;
+  vendorTable.innerHTML = "";
+  vendors.forEach((v,i)=>{
+    const row=document.createElement("tr");
+    row.innerHTML=`
+      <td>${v.type}</td><td>${v.status}</td><td>${v.owner}</td>
+      <td>${v.due}</td><td>${v.payment}</td>
+      <td><span class="edit-icon" onclick="editVendor(${i})">✏️</span>
+          <span class="delete-icon" onclick="deleteVendor(${i})">🗑️</span></td>`;
+    vendorTable.appendChild(row);
+  });
+}
+function saveVendors(vendors){
+  localStorage.setItem(STORAGE_KEYS.vendors, JSON.stringify(vendors));
+}
+function editVendor(index){
+  const vendors=JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors)||"[]");
+  const v=vendors[index];
+  document.getElementById("vendorModalTitle").textContent="Edit Vendor";
+  document.getElementById("vendorIndex").value=index;
+  vendorType.value=v.type;
+  vendorStatus.value=v.status;
+  vendorOwner.value=v.owner;
+  vendorDue.value=v.due;
+  vendorPayment.value=v.payment;
+  document.getElementById("vendorModal").style.display="flex";
+}
+function deleteVendor(index){
+  const vendors=JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors)||"[]");
+  vendors.splice(index,1);
+  saveVendors(vendors);
+  loadVendors();
+}
+document.getElementById("addVendorBtn").onclick=()=>{
+  document.getElementById("vendorModalTitle").textContent="Add Vendor";
+  document.getElementById("vendorIndex").value="";
+  document.querySelectorAll("#vendorModal input").forEach(i=>i.value="");
+  document.getElementById("vendorModal").style.display="flex";
+};
+document.getElementById("saveVendorBtn").onclick=()=>{
+  const vendors=JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors)||"[]");
+  const v={
+    type:vendorType.value,
+    status:vendorStatus.value,
+    owner:vendorOwner.value,
+    due:vendorDue.value,
+    payment:vendorPayment.value
+  };
+  const index=document.getElementById("vendorIndex").value;
+  if(index==="") vendors.push(v); else vendors[index]=v;
+  saveVendors(vendors);loadVendors();
+  document.getElementById("vendorModal").style.display="none";
+};
+document.getElementById("closeVendorBtn").onclick=()=>document.getElementById("vendorModal").style.display="none";
+
+function loadTasks(){
+  const tasks=JSON.parse(localStorage.getItem(STORAGE_KEYS.tasks)||"[]");
+  const taskList=document.getElementById("taskList");
+  if(!taskList) return;
+  taskList.innerHTML="";
+  tasks.forEach((t,i)=>{
+    const li=document.createElement("li");
+    li.textContent=t.text;
+    const del=document.createElement("span");
+    del.textContent=" 🗑️";
+    del.className="delete-icon";
+    del.onclick=()=>{
+      tasks.splice(i,1);
+      localStorage.setItem(STORAGE_KEYS.tasks,JSON.stringify(tasks));
+      loadTasks();
+    };
+    li.appendChild(del);
+    taskList.appendChild(li);
+  });
+}
+document.getElementById("addTaskBtn").onclick=()=>document.getElementById("taskModal").style.display="flex";
+document.getElementById("saveTaskBtn").onclick=()=>{
+  const tasks=JSON.parse(localStorage.getItem(STORAGE_KEYS.tasks)||"[]");
+  tasks.push({text:taskInput.value});
+  localStorage.setItem(STORAGE_KEYS.tasks,JSON.stringify(tasks));
+  loadTasks();
+  document.getElementById("taskModal").style.display="none";
+};
+document.getElementById("closeTaskBtn").onclick=()=>document.getElementById("taskModal").style.display="none";
 
 function initDashboard(){
-
   const ctx=document.getElementById("pipelineChart");
   if(ctx){
     if(pipelineChart) pipelineChart.destroy();
@@ -243,146 +351,11 @@ function initDashboard(){
       }
     });
   }
+}
 
- 
-  document.querySelectorAll("[data-stars]").forEach((cell,rowIndex)=>{
-    const rating=+cell.dataset.stars||0;
-    cell.innerHTML="";
-    for(let i=1;i<=5;i++){
-      const star=document.createElement("span");
-      star.textContent="★";
-      star.className="star"+(i<=rating?" active":"");
-      star.onclick=()=>{
-        cell.dataset.stars=i;
-        saveVendors();
-        initDashboard();
-      };
-      cell.appendChild(star);
-    }
-  });
-
-  
-  setupTasks();
+window.onload=()=>{
+  loadVendors();
   loadTasks();
-}
-
-
-function setupTasks(){
-  const taskList=document.getElementById("taskList");
-  if(!taskList) return;
-
-  taskList.querySelectorAll(".edit-icon").forEach(icon=>{
-    icon.onclick=()=>{
-      const li=icon.parentElement;
-      const spanText=li.childNodes[1].textContent.trim();
-      const newTask=prompt("Edit task:",spanText);
-      if(newTask!==null){
-        li.childNodes[1].textContent=" "+newTask+" ";
-        saveTasks();
-      }
-    };
-  });
-
-  taskList.querySelectorAll(".delete-icon").forEach(icon=>{
-    icon.onclick=()=>{
-      icon.parentElement.remove();
-      saveTasks();
-    };
-  });
-
-  const addBtn=document.getElementById("addTaskBtn");
-  if(addBtn){
-    addBtn.onclick=()=>{
-      const task=prompt("New Task:");
-      if(task){
-        const li=document.createElement("li");
-        li.innerHTML=`<input type="checkbox" /> ${task} <span class="edit-icon">✏️</span> <span class="delete-icon">🗑️</span>`;
-        taskList.appendChild(li);
-        setupTasks(); 
-        saveTasks();
-      }
-    };
-  }
-
-  taskList.querySelectorAll("input[type=checkbox]").forEach(cb=>{
-    cb.onchange=saveTasks;
-  });
-}
-
-function saveTasks(){
-  const taskList=document.getElementById("taskList");
-  if(!taskList) return;
-  const tasks=[...taskList.children].map(li=>({
-    text: li.childNodes[1].textContent.trim(),
-    checked: li.querySelector("input").checked
-  }));
-  localStorage.setItem(STORAGE_KEYS.tasks, JSON.stringify(tasks));
-}
-
-function loadTasks(){
-  const taskList=document.getElementById("taskList");
-  if(!taskList) return;
-  const tasks=JSON.parse(localStorage.getItem(STORAGE_KEYS.tasks) || "[]");
-  if(tasks.length){
-    taskList.innerHTML="";
-    tasks.forEach(t=>{
-      const li=document.createElement("li");
-      li.innerHTML=`<input type="checkbox" ${t.checked?"checked":""}/> ${t.text} <span class="edit-icon">✏️</span> <span class="delete-icon">🗑️</span>`;
-      taskList.appendChild(li);
-    });
-    setupTasks();
-  }
-}
-
-
-function saveVendors(){
-  const table=document.querySelector("#vendorEngagementsTable tbody");
-  if(!table) return;
-  const vendors=[...table.rows].map(row=>({
-    type: row.cells[0].innerText,
-    status: row.cells[1].innerText,
-    owner: row.cells[2].innerText,
-    due: row.cells[3].innerText,
-    payment: row.cells[4].innerText,
-    stars: row.cells[5].dataset.stars
-  }));
-  localStorage.setItem(STORAGE_KEYS.vendors, JSON.stringify(vendors));
-}
-
-function loadVendors(){
-  const table=document.querySelector("#vendorEngagementsTable tbody");
-  if(!table) return;
-  const vendors=JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
-  if(vendors.length){
-    table.innerHTML="";
-    vendors.forEach(v=>{
-      const row=document.createElement("tr");
-      row.innerHTML=`
-        <td>${v.type}</td>
-        <td>${v.status}</td>
-        <td>${v.owner}</td>
-        <td>${v.due}</td>
-        <td>${v.payment}</td>
-        <td data-stars="${v.stars}"></td>
-      `;
-      table.appendChild(row);
-    });
-  }
-}
-
-
-document.getElementById("menuBtn").onclick=()=>document.getElementById("sidebar").classList.toggle("open");
-document.getElementById("exportBtn").onclick=()=>{
-  const table=document.querySelector("#vendorEngagementsTable");
-  if(!table){alert("No table to export.");return;}
-  const rows=[...table.rows].map(tr=>[...tr.cells].map(td=>`"${td.innerText.replaceAll('"','""')}"`).join(",")).join("\n");
-  const blob=new Blob([rows],{type:"text/csv"});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement("a");
-  a.href=url;a.download="export.csv";a.click();
-  URL.revokeObjectURL(url);
+  initDashboard();
 };
-
-loadVendors();
-initDashboard();
 </script>
