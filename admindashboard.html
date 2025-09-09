@@ -6,45 +6,160 @@
 <title>Admin Dashboard</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-:root{
-  --text:#111111; --blue:#0a53c1; --ink-20:#f4f6f8;
-  --white:#ffffff; --border:#e6e8eb;
-  --shadow:0 6px 24px rgba(0,0,0,.06);
+:root {
+  --text: #111111;
+  --blue: #0a53c1;
+  --ink-20: #f4f6f8;
+  --white: #ffffff;
+  --border: #e6e8eb;
+  --shadow: 0 6px 24px rgba(0, 0, 0, .06);
 }
-*{box-sizing:border-box}
-body{margin:0;font-family:Inter,system-ui,sans-serif;background:var(--white);color:var(--text);}
-.app{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
-.sidebar{border-right:1px solid var(--border);background:var(--white);transition:transform .3s}
-.sidebar.open{transform:translateX(0)}
-.sidebar:not(.open){transform:translateX(-100%)}
-.brand{font-weight:800;text-transform:uppercase;padding:1rem;border-bottom:1px solid var(--border);}
-nav{padding:1rem}
-.nav-item{display:block;padding:.6rem;border-radius:8px;text-decoration:none;color:var(--text);}
-.nav-item:hover,.nav-item.active{background:var(--ink-20)}
-.main{display:grid;grid-template-rows:64px 1fr;min-width:0}
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 1rem;border-bottom:1px solid var(--border);}
-.search{display:flex;align-items:center;border:1px solid var(--border);border-radius:12px;padding:.4rem .7rem}
-.search input{border:none;outline:none}
-.btn{border:1px solid var(--text);background:transparent;padding:.4rem .8rem;border-radius:8px;cursor:pointer}
-.content{padding:1rem;overflow:auto}
-.grid{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
-.card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:1rem;box-shadow:var(--shadow)}
-table{width:100%;border-collapse:collapse}
-th,td{border-bottom:1px solid var(--border);padding:.6rem;text-align:left;vertical-align:middle}
-th{font-size:.85rem;opacity:.7}
-.star{cursor:pointer;font-size:1.2rem;color:#ccc}
-.star.active{color:gold}
-.edit-icon,.delete-icon{cursor:pointer;margin-left:4px}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, system-ui, sans-serif;
+  background: var(--white);
+  color: var(--text);
+}
+
+.app {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: 100vh;
+}
+
+.sidebar {
+  border-right: 1px solid var(--border);
+  background: var(--white);
+  transition: transform .3s;
+}
+.sidebar.open {
+  transform: translateX(0);
+}
+.sidebar:not(.open) {
+  transform: translateX(-100%);
+}
+
+.main {
+  display: grid;
+  grid-template-rows: 64px 1fr;
+  min-width: 0;
+}
+
+.brand {
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+nav {
+  padding: 1rem;
+}
+.nav-item {
+  display: block;
+  padding: .6rem;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--text);
+}
+.nav-item:hover,
+.nav-item.active {
+  background: var(--ink-20);
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  border-bottom: 1px solid var(--border);
+}
+.search {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: .4rem .7rem;
+}
+.search input {
+  border: none;
+  outline: none;
+}
+
+.btn {
+  border: 1px solid var(--text);
+  background: transparent;
+  padding: .4rem .8rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.content {
+  padding: 1rem;
+  overflow: auto;
+}
+.grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+.card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: var(--shadow);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th,
+td {
+  border-bottom: 1px solid var(--border);
+  padding: .6rem;
+  text-align: left;
+  vertical-align: middle;
+}
+th {
+  font-size: .85rem;
+  opacity: .7;
+}
+
+.star {
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: #ccc;
+}
+.star.active {
+  color: gold;
+}
+.edit-icon,
+.delete-icon {
+  cursor: pointer;
+  margin-left: 4px;
+}
 </style>
 </head>
 <body>
 <div class="app">
   <aside class="sidebar open" id="sidebar">
     <div class="brand">LGU 3 ADMIN SYSTEM</div>
-    <nav>
-      <a href="#" class="nav-item active" data-page="dashboard">Dashboard</a>
-      <a href="main.html" class="nav-item logout-btn" style="margin-top: 2rem; font-weight: bold;">Logout</a>
-    </nav>
+   <nav>
+  <a href="admindashboard.html" class="nav-item active" data-page="dashboard">Dashboard</a>
+  <a href="adminvendor.html" class="nav-item" data-page="vendor">Vendor Management</a>
+  <a href="admincommodity.html" class="nav-item" data-page="commodity">Commodity and Price Monitoring</a>
+  <a href="adminsupply.html" class="nav-item" data-page="supply">Supply Monitoring</a>
+  <a href="admininspection.html" class="nav-item" data-page="inspection">Inspection and Compliance</a>
+  <a href="reports.html" class="nav-item" data-page="reports">Reports and Dashboard with AI Analytic</a>
+  <a href="adminsettings.html" class="nav-item" data-page="settings">Settings</a>
+  <a href="loginadmin.html" class="nav-item logout-btn" style="margin-top: 2rem; font-weight: bold;">Logout</a>
+</nav>
   </aside>
 
   <section class="main">
