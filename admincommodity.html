@@ -225,13 +225,11 @@ th { font-size: .85rem; opacity: .7; }
   </div>
 </div>
 
-
 <script>
 const COMMODITY_KEY = "commodity_data";
 const tableBody = document.querySelector("#commodityTable tbody");
 const cardsDiv = document.getElementById("commodityCards");
 let pieChart;
-
 
 const menuBtn = document.getElementById("menuBtn");
 const menuDropdown = document.getElementById("menuDropdown");
@@ -242,7 +240,6 @@ window.addEventListener("click", (e) => {
   }
 });
 
-
 if (!localStorage.getItem(COMMODITY_KEY)) {
   localStorage.setItem(COMMODITY_KEY, JSON.stringify([
     { type:"Takoyaki store", prev:50, curr:55, status:"Stable" },
@@ -252,33 +249,36 @@ if (!localStorage.getItem(COMMODITY_KEY)) {
   ]));
 }
 
-function loadCommodities() { const data = JSON.parse(localStorage.getItem(COMMODITY_KEY) || "[]");
-tableBody.innerHTML = "";
-cardsDiv.innerHTML = ""; 
-const colors = ["#ff4d4d", "#ffd966", "#9fff80", "#4da6ff"]; 
-data.forEach((item, i) => { const tr = document.createElement("tr");
-tr.innerHTML = 
-  <td>${item.type}</td> 
-  <td>${item.prev}</td> 
-  <td>${item.curr}</td> 
-  <td>${item.status}</td> 
-  <td> 
-  <span class="edit-icon" style="cursor:pointer;" onclick="editCommodity(${i})">✏️</span>
-  <span class="delete-icon" style="cursor:pointer;" onclick="deleteCommodity(${i})">🗑️</span>
-</td>
-  ; 
-  tableBody.appendChild(tr); 
-  const card = document.createElement("div"); 
-  card.className = "card"; 
-  card.style.backgroundColor = colors[i % colors.length]; 
-  card.style.color = (colors[i % colors.length] === "#ffd966") ? "#111" : "#fff"; 
-  card.innerHTML = ${item.type}<br><button class="view-btn">View Data</button>; 
-  card.querySelector(".view-btn").onclick = (e) => { e.stopPropagation(); openDataModal(item.type); }; 
-  cardsDiv.appendChild(card); });
+function loadCommodities() {
+  const data = JSON.parse(localStorage.getItem(COMMODITY_KEY) || "[]");
+  tableBody.innerHTML = "";
+  cardsDiv.innerHTML = ""; 
+  const colors = ["#ff4d4d", "#ffd966", "#9fff80", "#4da6ff"]; 
+  data.forEach((item, i) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${item.type}</td> 
+      <td>${item.prev}</td> 
+      <td>${item.curr}</td> 
+      <td>${item.status}</td> 
+      <td> 
+        <span class="edit-icon" style="cursor:pointer;" onclick="editCommodity(${i})">✏️</span>
+        <span class="delete-icon" style="cursor:pointer;" onclick="deleteCommodity(${i})">🗑️</span>
+      </td>
+    `; 
+    tableBody.appendChild(tr); 
+
+    const card = document.createElement("div"); 
+    card.className = "card"; 
+    card.style.backgroundColor = colors[i % colors.length]; 
+    card.style.color = (colors[i % colors.length] === "#ffd966") ? "#111" : "#fff"; 
+    card.innerHTML = `${item.type}<br><button class="view-btn">View Data</button>`; 
+    card.querySelector(".view-btn").onclick = (e) => { e.stopPropagation(); openDataModal(item.type); }; 
+    cardsDiv.appendChild(card); 
+  });
 
   updatePieChart();
 }
-
 
 function saveCommodities(data) { localStorage.setItem(COMMODITY_KEY, JSON.stringify(data)); }
 
@@ -340,7 +340,6 @@ document.getElementById("commoditySearch").addEventListener("keyup", function() 
   });
 });
 
-
 function updatePieChart() {
   const data = JSON.parse(localStorage.getItem(COMMODITY_KEY) || "[]");
   const counts = { High: 0, Low: 0, Stable: 0 };
@@ -358,39 +357,10 @@ function updatePieChart() {
     }
   });
 }
+
 const dataModal = document.getElementById("dataModal");
 const dataModalTitle = document.getElementById("dataModalTitle");
 const lineTableBody = document.querySelector("#lineTable tbody");
-
-function openDataModal(name) {
-  const data = JSON.parse(localStorage.getItem(COMMODITY_KEY) || "[]").find(d => d.type === name);
-  if (!data) return;
-
-  dataModalTitle.textContent = `${name} - Past 6 Weeks`;
-  lineTableBody.innerHTML = "";
-
-  const weeks = ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5", "Week 6"];
-  const values = [
-    data.prev,
-    data.prev + (data.curr - data.prev) * 0.2,
-    data.prev + (data.curr - data.prev) * 0.4,
-    data.prev + (data.curr - data.prev) * 0.6,
-    data.prev + (data.curr - data.prev) * 0.8,
-    data.curr
-  ];
-
-  weeks.forEach((w, i) => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `<td>${w}</td><td>${values[i].toFixed(2)}</td>`;
-    lineTableBody.appendChild(tr);
-  });
-
-  dataModal.style.display = "flex";
-}
-
-function closeDataModal() {
-  dataModal.style.display = "none";
-}
 let currentDataIndex = null;
 let currentData = null;
 
@@ -421,7 +391,6 @@ function openDataModal(name) {
     lineTableBody.appendChild(tr);
   });
 
-
   document.getElementById("editDataBtn").style.display = "inline-block";
   document.getElementById("saveDataBtn").style.display = "none";
   dataModal.style.display = "flex";
@@ -433,11 +402,9 @@ document.getElementById("editDataBtn").onclick = () => {
   document.getElementById("saveDataBtn").style.display = "inline-block";
 };
 
-
 document.getElementById("saveDataBtn").onclick = () => {
   const inputs = lineTableBody.querySelectorAll("input");
   const newValues = Array.from(inputs).map(input => parseFloat(input.value) || 0);
-
 
   if (currentDataIndex !== null) {
     const data = JSON.parse(localStorage.getItem(COMMODITY_KEY) || "[]");
@@ -452,16 +419,16 @@ document.getElementById("saveDataBtn").onclick = () => {
   document.getElementById("saveDataBtn").style.display = "none";
 };
 
-
 document.getElementById("deleteDataBtn").onclick = () => {
   if (currentDataIndex !== null) {
     const data = JSON.parse(localStorage.getItem(COMMODITY_KEY) || "[]");
     data.splice(currentDataIndex, 1);
     saveCommodities(data);
     loadCommodities();
-    closeDataModal();
+    dataModal.style.display = "none";
   }
 };
-</script>
-window.onload = () => { loadCommodities(); }
+
+
+window.onload = () => { loadCommodities(); };
 </script>
