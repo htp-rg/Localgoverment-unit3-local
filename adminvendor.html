@@ -106,7 +106,7 @@ th { font-size: .85rem; opacity: .7; }
 </head>
 <body>
 <div class="app">
-  <!-- Sidebar -->
+  
   <aside class="sidebar">
     <div class="brand">LGU 3 ADMIN SYSTEM</div>
     <nav>
@@ -121,7 +121,6 @@ th { font-size: .85rem; opacity: .7; }
     </nav>
   </aside>
 
-  <!-- Main Section -->
   <section class="main">
     <header class="topbar">
       <div style="display:flex; align-items:center; gap:0.5rem;">
@@ -199,6 +198,25 @@ th { font-size: .85rem; opacity: .7; }
       </div>
     </div>
   </section>
+</div>
+<div class="modal" id="taskModal">
+  <div class="modal-content">
+    <h3 id="taskModalTitle">Add Task</h3>
+    <input type="hidden" id="taskIndex">
+    <label>Task:<br><input id="taskInput" type="text"></label><br>
+    <button id="saveTaskBtn" class="btn" style="margin-top:.5rem;">Save</button>
+    <button id="closeTaskBtn" class="btn" style="margin-top:.5rem;">Cancel</button>
+  </div>
+</div>
+
+
+<div class="modal" id="deleteTaskModal">
+  <div class="modal-content">
+    <h3>Confirm Delete</h3>
+    <p>Are you sure you want to delete this task?</p>
+    <button id="confirmDeleteTaskBtn" class="btn" style="margin-top:.5rem;">Delete</button>
+    <button id="cancelDeleteTaskBtn" class="btn" style="margin-top:.5rem;">Cancel</button>
+  </div>
 </div>
 
 <div class="modal" id="vendorModal">
