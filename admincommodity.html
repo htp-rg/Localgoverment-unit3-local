@@ -246,65 +246,29 @@ if (!localStorage.getItem(COMMODITY_KEY)) {
   ]));
 }
 
-function loadCommodities() {
-  const data = JSON.parse(localStorage.getItem(COMMODITY_KEY) || "[]");
-  tableBody.innerHTML = "";
-  cardsDiv.innerHTML = "";
-
-  const colors = ["#ff4d4d", "#ffd966", "#9fff80", "#4da6ff"]; 
-
-  data.forEach((item, i) => {
-    const tr = document.createElement("tr");
-
-    tr.innerHTML = `
-      <td><input type="text" value="${item.type}" id="type-${i}" disabled></td>
-      <td><input type="number" value="${item.prev}" id="prev-${i}" disabled></td>
-      <td><input type="number" value="${item.curr}" id="curr-${i}" disabled></td>
-      <td><input type="text" value="${item.status}" id="status-${i}" disabled></td>
-      <td>
-        <button class="btn" id="edit-${i}">Edit</button>
-        <button class="btn" id="save-${i}" style="display:none;">Save</button>
-        <button class="btn" id="delete-${i}">Delete</button>
-      </td>
-    `;
-    tableBody.appendChild(tr);
-
-    document.getElementById(`edit-${i}`).onclick = () => {
-      document.getElementById(`type-${i}`).disabled = false;
-      document.getElementById(`prev-${i}`).disabled = false;
-      document.getElementById(`curr-${i}`).disabled = false;
-      document.getElementById(`status-${i}`).disabled = false;
-      document.getElementById(`edit-${i}`).style.display = "none";
-      document.getElementById(`save-${i}`).style.display = "inline-block";
-    };
-
-    document.getElementById(`save-${i}`).onclick = () => {
-      data[i].type = document.getElementById(`type-${i}`).value;
-      data[i].prev = parseFloat(document.getElementById(`prev-${i}`).value) || 0;
-      data[i].curr = parseFloat(document.getElementById(`curr-${i}`).value) || 0;
-      data[i].status = document.getElementById(`status-${i}`).value;
-      saveCommodities(data);
-      loadCommodities();
-    };
-
-    document.getElementById(`delete-${i}`).onclick = () => {
-      data.splice(i, 1);
-      saveCommodities(data);
-      loadCommodities();
-    };
-
-    const card = document.createElement("div");
-    card.className = "card";
-    card.style.backgroundColor = colors[i % colors.length];
-    card.style.color = (colors[i % colors.length] === "#ffd966") ? "#111" : "#fff";
-    card.innerHTML = `${item.type}<br><button class="view-btn">View Data</button>`;
-    card.querySelector(".view-btn").onclick = (e) => {
-      e.stopPropagation();
-      openDataModal(item.type);
-    };
-    cardsDiv.appendChild(card);
-  });
-
+function loadCommodities() { const data = JSON.parse(localStorage.getItem(COMMODITY_KEY) || "[]");
+tableBody.innerHTML = "";
+cardsDiv.innerHTML = ""; 
+const colors = ["#ff4d4d", "#ffd966", "#9fff80", "#4da6ff"]; 
+data.forEach((item, i) => { const tr = document.createElement("tr");
+tr.innerHTML = 
+  <td>${item.type}</td> 
+  <td>${item.prev}</td> 
+  <td>${item.curr}</td> 
+  <td>${item.status}</td> 
+  <td> 
+  <span class="edit-icon" style="cursor:pointer;" onclick="editCommodity(${i})">✏️</span>
+  <span class="delete-icon" style="cursor:pointer;" onclick="deleteCommodity(${i})">🗑️</span>
+</td>
+  ; 
+  tableBody.appendChild(tr); 
+  const card = document.createElement("div"); 
+  card.className = "card"; 
+  card.style.backgroundColor = colors[i % colors.length]; 
+  card.style.color = (colors[i % colors.length] === "#ffd966") ? "#111" : "#fff"; 
+  card.innerHTML = ${item.type}<br><button class="view-btn">View Data</button>; 
+  card.querySelector(".view-btn").onclick = (e) => { e.stopPropagation(); openDataModal(item.type); }; 
+  cardsDiv.appendChild(card); });
 
   updatePieChart();
 }
