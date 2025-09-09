@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Vendor Management</title>
+<title>Reports & Analytics</title>
 <style>
 :root {
   --text: #111111;
@@ -236,42 +236,104 @@ th { font-size: .85rem; opacity: .7; }
     <button id="chatSendBtn" class="btn">Send</button>
   </div>
 </div>
+<script>
+ function initReports(refNo) {
+ 
+  const ctx = document.getElementById("vendorChart");
+  if (ctx) {
+    new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: ["Takoyaki", "Meat Shop", "Catering", "Rental"],
+        datasets: [{
+          label: "Performance",
+          data: [87, 65, 72, 90],
+          backgroundColor: "#0a53c1"
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: { y: { beginAtZero: true, max: 100 } }
+      }
+    });
+  }
 
-  <script>
-    const chatBox = document.getElementById("chatboxContainer");
-const chatInput = document.getElementById("chatInput");
-const chatSendBtn = document.getElementById("chatSendBtn");
-
-function addMessage(sender, text) {
-  const div = document.createElement("div");
-  const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  div.className = `chat-message ${sender === "You" ? "chat-user" : "chat-bot"}`;
-  div.innerHTML = `${text}<div class="chat-timestamp">${time}</div>`;
-  chatBox.appendChild(div);
-  chatBox.scrollTop = chatBox.scrollHeight; // auto scroll
-}
-
-function botReply(msg) {
-  msg = msg.toLowerCase();
-  if (msg.includes("status")) return "📊 Current reports show most vendors are on track, with 2 pending complaints.";
-  if (msg.includes("performance")) return "✅ Vendor performance is averaging 85%, with rentals leading at 90%.";
-  if (msg.includes("complaint")) return "⚠️ There are 4 active complaints. Select a Ref No. to view details.";
-  if (msg.includes("hello") || msg.includes("hi")) return "👋 Hello! How can I assist you today?";
-  return "🤖 Sorry, I don’t have an answer for that. Try asking about 'status', 'performance', or 'complaints'.";
-}
-
-if (chatSendBtn) {
-  chatSendBtn.onclick = () => {
-    const text = chatInput.value.trim();
-    if (text) {
-      addMessage("You", text);
-      setTimeout(() => addMessage("Bot", botReply(text)), 500); // simulate typing delay
-      chatInput.value = "";
-    }
+  const complaints = {
+    "RPT-001": "Vendor delayed chicken delivery",
+    "RPT-002": "Incomplete Takoyaki supplies",
+    "RPT-003": "Catering delivery arrived late",
+    "RPT-004": "Rental items missing on arrival"
   };
+
+  const container = document.getElementById("complaintsContainer");
+  const message = document.getElementById("complaintMessage");
+  const select = document.getElementById("complaintSelect");
+  const viewBtn = document.getElementById("viewComplaintBtn");
+
+  if (viewBtn) {
+    viewBtn.onclick = () => {
+      const ref = select.value;
+      if (ref && complaints[ref]) {
+        container.style.display = "block";
+        message.textContent = `(${ref}) ${complaints[ref]}`;
+      } else {
+        alert("Please select a complaint Ref No. first.");
+      }
+    };
+  }
+
+  if (refNo && complaints[refNo]) {
+    container.style.display = "block";
+    message.textContent = `(${refNo}) ${complaints[refNo]}`;
+    select.value = refNo;
+  }
+
+  const chatBox = document.getElementById("chatboxContainer");
+  const chatInput = document.getElementById("chatInput");
+  const chatSendBtn = document.getElementById("chatSendBtn");
+
+  function addMessage(sender, text) {
+    const div = document.createElement("div");
+    const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    div.className = `chat-message ${sender === "You" ? "chat-user" : "chat-bot"}`;
+    div.innerHTML = `${text}<div class="chat-timestamp">${time}</div>`;
+    chatBox.appendChild(div);
+    chatBox.scrollTop = chatBox.scrollHeight; // auto scroll
+  }
+
+  function botReply(msg) {
+    msg = msg.toLowerCase();
+    if (msg.includes("status")) return "📊 Current reports show most vendors are on track, with 2 pending complaints.";
+    if (msg.includes("performance")) return "✅ Vendor performance is averaging 85%, with rentals leading at 90%.";
+    if (msg.includes("complaint")) return "⚠️ There are 4 active complaints. Select a Ref No. to view details.";
+    if (msg.includes("hello") || msg.includes("hi")) return "👋 Hello! How can I assist you today?";
+    return "🤖 Sorry, I don’t have an answer for that. Try asking about 'status', 'performance', or 'complaints'.";
+  }
+
+  if (chatSendBtn) {
+    chatSendBtn.onclick = () => {
+      const text = chatInput.value.trim();
+      if (text) {
+        addMessage("You", text);
+     
+        setTimeout(() => addMessage("Bot", botReply(text)), 500);
+        chatInput.value = "";
+      }
+    };
+  }
+
+  chatInput.addEventListener("keypress", e => {
+    if (e.key === "Enter") chatSendBtn.click(); // send on Enter key
+  });
+}
+  function saveComplaint(refNo, message) {
+  let complaints = JSON.parse(localStorage.getItem("complaints")) || {};
+  complaints[refNo] = message;
+  localStorage.setItem("complaints", JSON.stringify(complaints));
 }
 
-chatInput.addEventListener("keypress", e => {
-  if (e.key === "Enter") chatSendBtn.click(); // send on Enter key
-});
-  </script>
+window.onload = () => {
+  initReports(); // optionally pass a complaint Ref No, e.g., "RPT-002"
+  document.getElementById("adminName").textContent = localStorage.getItem("adminName") || "Admin";
+};
+</script>
