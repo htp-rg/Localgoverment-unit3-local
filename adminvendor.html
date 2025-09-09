@@ -245,6 +245,14 @@ const menuDropdown = document.getElementById("menuDropdown");
 menuBtn.addEventListener("click", ()=> menuDropdown.classList.toggle("show"));
 document.addEventListener("click", e => { if(!e.target.closest(".menu-container")) menuDropdown.classList.remove("show"); });
 
+  if (!localStorage.getItem("vendor_engagements")) {
+  localStorage.setItem("vendor_engagements", JSON.stringify([
+    { type: "Takoyaki store", status: "✅ Completed", owner: "Gacusan, Aira Jane", due: "2025-09-03", payment: "3,785.00", rating: 5 },
+    { type: "Sound equipment", status: "✏ In progress", owner: "Furigay, Neri Jane", due: "2025-09-10", payment: "2,345", rating: 0 },
+    { type: "Tables and chairs", status: "⏳ Not started", owner: "Pena, Rona Mae", due: "2025-11-04", payment: "5,199", rating: 0 },
+    { type: "Atan's Meat Shop", status: "⛔ Blocked", owner: "Dacoco, Jonathan", due: "2025-03-12", payment: "1,870", rating: 3 }
+  ]));
+}
 
 function loadVendors(){
   const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
