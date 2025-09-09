@@ -196,9 +196,8 @@ th { font-size: .85rem; opacity: .7; }
 <script>
 const STORAGE_KEY_INSPECTIONS = "inspection_compliance_data";
 
-
 if (!localStorage.getItem(STORAGE_KEY_INSPECTIONS)) {
-  localStorage.setItem(STORAGE_KEY_INSPECTIONS, JSON.stringify([
+  const sampleData = [
     {
       business: "Atan's Meat Shop",
       interior: "Good",
@@ -247,17 +246,10 @@ if (!localStorage.getItem(STORAGE_KEY_INSPECTIONS)) {
       hygiene: "Fair",
       policy: "Good"
     }
-  ]));
+  ];
+  localStorage.setItem(STORAGE_KEY_INSPECTIONS, JSON.stringify(sampleData));
 }
 
-const menuBtn = document.getElementById("menuBtn");
-const menuDropdown = document.getElementById("menuDropdown");
-
-menuBtn.addEventListener("click", () => menuDropdown.classList.toggle("show"));
-
-document.addEventListener("click", e => {
-  if (!e.target.closest(".menu-container")) menuDropdown.classList.remove("show");
-});
 
 function loadInspections() {
   const inspections = JSON.parse(localStorage.getItem(STORAGE_KEY_INSPECTIONS) || "[]");
@@ -282,12 +274,5 @@ function loadInspections() {
   });
 }
 
-
-document.getElementById("inspectionSearch").addEventListener("keyup", function() {
-  const filter = this.value.toLowerCase();
-  document.querySelectorAll("#inspectionTable tbody tr").forEach(row => {
-    row.style.display = row.innerText.toLowerCase().includes(filter) ? "" : "none";
-  });
-});
-
 window.onload = loadInspections;
+</script>
