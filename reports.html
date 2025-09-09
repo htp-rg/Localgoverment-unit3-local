@@ -205,12 +205,19 @@ function initComplaints() {
   const select = document.getElementById("complaintSelect");
   const viewBtn = document.getElementById("viewComplaintBtn");
 
-  let complaints = JSON.parse(localStorage.getItem("complaints")) || {
+  let defaultComplaints = {
     "RPT-001": "Vendor delayed chicken delivery",
     "RPT-002": "Incomplete Takoyaki supplies",
     "RPT-003": "Catering delivery arrived late",
     "RPT-004": "Rental items missing on arrival"
   };
+
+  let complaints = JSON.parse(localStorage.getItem("complaints"));
+  if (!complaints) {
+    complaints = defaultComplaints;
+    localStorage.setItem("complaints", JSON.stringify(complaints));
+  }
+
 
   select.innerHTML = `<option value="">-- Select Complaint Ref No. --</option>`;
   Object.keys(complaints).forEach(ref => {
