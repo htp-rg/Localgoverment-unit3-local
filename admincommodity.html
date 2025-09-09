@@ -238,6 +238,8 @@ function loadCommodities(){
   tableBody.innerHTML = "";
   cardsDiv.innerHTML = "";
   
+  const colors = ["#ff4d4d", "#ffd966", "#9fff80", "#4da6ff"]; 
+
   data.forEach((item,i)=>{
 
     const tr = document.createElement("tr");
@@ -252,16 +254,18 @@ function loadCommodities(){
       </td>`;
     tableBody.appendChild(tr);
 
-  
+
     const card = document.createElement("div");
     card.className = "card";
+    card.style.backgroundColor = colors[i % colors.length];
+    card.style.color = (colors[i % colors.length] === "#ffd966") ? "#111" : "#fff"; // black for yellow, white otherwise
     card.innerHTML = `${item.type}<br><button class="view-btn">View Data</button>`;
     card.onclick = ()=> openDataModal(item.type);
     cardsDiv.appendChild(card);
   });
+
   updatePieChart();
 }
-  const colors = ["#ff4d4d", "#ffd966", "#9fff80", "#4da6ff"]; 
 
 data.forEach((item, i) => {
   const card = document.createElement("div");
