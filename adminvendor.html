@@ -59,11 +59,6 @@ nav { padding: 1rem; }
   box-shadow: var(--shadow);
 }
 
-.card.yellow { background: #ffeb3b; color: #111; }
-.card.green { background: #4caf50; color: #fff; }
-.card.red { background: #f44336; color: #fff; }
-.card.blue { background: #0a53c1; color: #fff; }
-
 table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; }
 th, td {
   border-bottom: 1px solid var(--border);
@@ -174,7 +169,7 @@ th { font-size: .85rem; opacity: .7; }
 
     <div class="content" id="contentArea">
           <div class="card" style="margin-top:1rem;">
-           <h3>Vendor Management</h3>
+           <h1>Vendor Management</h1>
         <table id="vendorEngagementsTable">
           <div class="search">🔎 <input id="searchInput" type="search" placeholder="Search…"></div>
           <thead>
@@ -194,7 +189,6 @@ th { font-size: .85rem; opacity: .7; }
     </div>
   </section>
 </div>
-
 
 <div class="modal" id="taskModal">
   <div class="modal-content">
@@ -237,7 +231,12 @@ const STORAGE_KEYS={vendors:"vendor_engagements"};
 const STORAGE_TASKS="dashboard_tasks";
 
 
-function renderStars(num){ return "★".repeat(num)+"☆".repeat(5-num); }
+function renderStarsFromData() {
+  document.querySelectorAll("#vendorEngagementsTable tbody td[data-stars]").forEach(td => {
+    const num = parseInt(td.getAttribute("data-stars")) || 0;
+    td.innerHTML = `<span class="star">${"★".repeat(num)+"☆".repeat(5-num)}</span>`;
+  });
+}
 
 
 function loadVendors(){
@@ -352,8 +351,10 @@ document.addEventListener("click",e=>{ if(!e.target.closest(".menu-container")) 
 window.addEventListener("DOMContentLoaded",()=>{ adminName.textContent=localStorage.getItem("adminName")||"Admin"; });
 
 
-window.onload=()=>{
-  loadVendors(); loadTasks();
+window.onload = () => {
+  loadVendors(); 
+  loadTasks();
+  renderStarsFromData();
 };
 </script>
 </body>
