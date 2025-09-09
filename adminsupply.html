@@ -214,7 +214,6 @@ th { font-size: .85rem; opacity: .7; }
 const SUPPLY_KEY = "supply_data";
 const supplyTableBody = document.querySelector("#supplyTable tbody");
 
-
 if (!localStorage.getItem(SUPPLY_KEY)) {
   localStorage.setItem(SUPPLY_KEY, JSON.stringify([
     { business: "Daisy Poultry", category: "MEAT SHOP", supplier: "James", pickup: "Quezon City", dropoff: "Muñoz", time: "12:00 am - 2:00 pm", report: "Filed", contact: "0970-567-1136", value: "₱4,000.00", quality: 5, status: "⛔ Delayed" },
@@ -224,6 +223,22 @@ if (!localStorage.getItem(SUPPLY_KEY)) {
   ]));
 }
 
+const supplyModal = document.getElementById("supplyModal");
+const supplyIndex = document.getElementById("supplyIndex");
+const supplyBusiness = document.getElementById("supplyBusiness");
+const supplyCategory = document.getElementById("supplyCategory");
+const supplySupplier = document.getElementById("supplySupplier");
+const supplyPickup = document.getElementById("supplyPickup");
+const supplyDropoff = document.getElementById("supplyDropoff");
+const supplyTime = document.getElementById("supplyTime");
+const supplyReport = document.getElementById("supplyReport");
+const supplyContact = document.getElementById("supplyContact");
+const supplyValue = document.getElementById("supplyValue");
+const supplyQuality = document.getElementById("supplyQuality");
+const supplyStatus = document.getElementById("supplyStatus");
+const saveSupplyBtn = document.getElementById("saveSupplyBtn");
+const closeSupplyBtn = document.getElementById("closeSupplyBtn");
+const addSupplyBtn = document.getElementById("addSupplyBtn");
 
 function loadSupplies() {
   const data = JSON.parse(localStorage.getItem(SUPPLY_KEY) || "[]");
@@ -243,11 +258,77 @@ function loadSupplies() {
       <td>${supply.value}</td>
       <td>${"★".repeat(supply.quality)+"☆".repeat(5-supply.quality)}</td>
       <td>${supply.status}</td>
-    `;
+      <td>
+        <span class="edit-icon" style="cursor:pointer" onclick="editSupply(${i})">✏️</span>
+        <span class="delete-icon" style="cursor:pointer" onclick="deleteSupply(${i})">🗑️</span>
+      </td>`;
     supplyTableBody.appendChild(tr);
   });
 }
 
+function saveSupplies(data) {
+  localStorage.setItem(SUPPLY_KEY, JSON.stringify(data));
+}
+
+addSupplyBtn.onclick = () => {
+  document.getElementById("supplyModalTitle").textContent = "Add Supply";
+  supplyIndex.value = "";
+  [supplyBusiness, supplyCategory, supplySupplier, supplyPickup, supplyDropoff, supplyTime, supplyReport, supplyContact, supplyValue, supplyQuality, supplyStatus].forEach(i => i.value = "");
+  supplyModal.style.display = "flex";
+};
+
+saveSupplyBtn.onclick = () => {
+  const data = JSON.parse(localStorage.getItem(SUPPLY_KEY) || "[]");
+  const s = {
+    business: supplyBusiness.value,
+    category: supplyCategory.value,
+    supplier: supplySupplier.value,
+    pickup: supplyPickup.value,
+    dropoff: supplyDropoff.value,
+    time: supplyTime.value,
+    report: supplyReport.value,
+    contact: supplyContact.value,
+    value: supplyValue.value,
+    quality: parseInt(supplyQuality.value) || 0,
+    status: supplyStatus.value
+  };
+  if (supplyIndex.value === "") data.push(s);
+  else data[supplyIndex.value] = s;
+  saveSupplies(data);
+  loadSupplies();
+  supplyModal.style.display = "none";
+};
+
+
+function editSupply(i) {
+  const data = JSON.parse(localStorage.getItem(SUPPLY_KEY) || "[]")[i];
+  document.getElementById("supplyModalTitle").textContent = "Edit Supply";
+  supplyIndex.value = i;
+  supplyBusiness.value = data.business;
+  supplyCategory.value = data.category;
+  supplySupplier.value = data.supplier;
+  supplyPickup.value = data.pickup;
+  supplyDropoff.value = data.dropoff;
+  supplyTime.value = data.time;
+  supplyReport.value = data.report;
+  supplyContact.value = data.contact;
+  supplyValue.value = data.value;
+  supplyQuality.value = data.quality;
+  supplyStatus.value = data.status;
+  supplyModal.style.display = "flex";
+}
+
+function deleteSupply(i) {
+  if(confirm("Are you sure you want to delete this supply?")) {
+    const data = JSON.parse(localStorage.getItem(SUPPLY_KEY) || "[]");
+    data.splice(i,1);
+    saveSupplies(data);
+    loadSupplies();
+  }
+}
+
+closeSupplyBtn.onclick = () => supplyModal.style.display = "none";
+supplyModal.addEventListener("click", e => { if(e.target === supplyModal) supplyModal.style.display = "none"; });
 
 document.getElementById("supplySearch").addEventListener("keyup", function() {
   const filter = this.value.toLowerCase();
@@ -258,3 +339,4 @@ document.getElementById("supplySearch").addEventListener("keyup", function() {
 
 window.onload = () => loadSupplies();
 </script>
+
