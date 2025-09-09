@@ -273,6 +273,18 @@ function loadInspections() {
     tbody.appendChild(row);
   });
 }
+const menuBtn = document.getElementById("menuBtn");
+const menuDropdown = document.getElementById("menuDropdown");
 
+
+menuBtn.addEventListener("click", () => {
+  menuDropdown.classList.toggle("show");
+});
+
+document.addEventListener("click", (e) => {
+  if (!e.target.closest(".menu-container")) {
+    menuDropdown.classList.remove("show");
+  }
+});
 window.onload = loadInspections;
 </script>
