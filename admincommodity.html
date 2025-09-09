@@ -394,11 +394,10 @@ function openDataModal(name) {
 function closeDataModal() {
   dataModal.style.display = "none";
 }
-
-dataModal.addEventListener("click", e => { if(e.target === dataModal) closeDataModal(); });
-function openDataModal(name){
-  alert(name + " - Data modal not implemented");
-}
+card.querySelector(".view-btn").onclick = (e) => {
+  e.stopPropagation(); // prevent card click if needed
+  openDataModal(item.type);
+};
 
 window.onload = () => { loadCommodities(); }
 </script>
