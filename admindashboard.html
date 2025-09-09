@@ -83,6 +83,49 @@ th { font-size: .85rem; opacity: .7; }
   background: var(--white); padding: 1rem;
   border-radius: 12px; max-width: 400px; width: 100%; box-shadow: var(--shadow);
 }
+  .menu-container {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown {
+  display: none;
+  position: absolute;
+  top: 110%;
+  right: 0;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  min-width: 220px;
+  z-index: 1000;
+}
+
+.dropdown p {
+  margin: 0;
+  padding: 0.8rem;
+  font-weight: bold;
+  border-bottom: 1px solid var(--border);
+}
+
+.dropdown a {
+  display: block;
+  padding: 0.8rem;
+  text-decoration: none;
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+}
+
+.dropdown a:hover {
+  background: var(--ink-20);
+}
+
+.dropdown a:last-child {
+  border-bottom: none;
+}
+  .dropdown.show {
+  display: block;
+}
 </style>
 </head>
 <body>
@@ -103,14 +146,25 @@ th { font-size: .85rem; opacity: .7; }
 
   <section class="main">
     <header class="topbar">
-      <div style="display:flex; align-items:center; gap:0.5rem;">
-         <button class="btn" id="backBtn">← Back</button>
-        <button class="btn" id="menuBtn">☰</button>
+  <div style="display:flex; align-items:center; gap:0.5rem;">
+    <button class="btn" id="backBtn">← Back</button>
+    <div class="menu-container">
+      <button class="btn" id="menuBtn">☰</button>
+      <div class="dropdown" id="menuDropdown">
+        <p id="adminName">Admin</p>
+        <a href="upgrade.html">Upgrade Personal Details</a>
+        <a href="adminpassword.html">Password and Security</a>
+        <a href="#" id="deleteAccount">Delete Account</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="adminreport.html">Report a Problem</a>
+        <a href="main.html" id="signOut">Sign Out</a>
       </div>
-      <div>
-        <button class="btn" id="exportBtn">Export</button>
-      </div>
-    </header>
+    </div>
+  </div>
+  <div>
+    <button class="btn" id="exportBtn">Export</button>
+  </div>
+</header>
 
      <div class="content" id="contentArea">
       <h1>Dashboard</h1>
@@ -254,6 +308,20 @@ document.getElementById("searchInput").addEventListener("keyup", function() {
     const text = row.innerText.toLowerCase();
     row.style.display = text.includes(filter) ? "" : "none";
   });
+});
+  document.getElementById("menuBtn").addEventListener("click", () => {
+  document.getElementById("menuDropdown").classList.toggle("show");
+});
+
+document.addEventListener("click", (e) => {
+  if (!e.target.closest(".menu-container")) {
+    document.getElementById("menuDropdown").classList.remove("show");
+  }
+});
+
+window.addEventListener("DOMContentLoaded", () => {
+  const admin = localStorage.getItem("adminName") || "Admin";
+  document.getElementById("adminName").textContent = admin;
 });
   
 window.onload=()=>{loadVendors();initDashboard();};
