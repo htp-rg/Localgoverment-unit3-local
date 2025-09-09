@@ -231,13 +231,18 @@ const STORAGE_KEYS={vendors:"vendor_engagements"};
 const STORAGE_TASKS="dashboard_tasks";
 
 
-function renderStarsFromData() {
-  document.querySelectorAll("#vendorEngagementsTable tbody td[data-stars]").forEach(td => {
-    const num = parseInt(td.getAttribute("data-stars")) || 0;
-    td.innerHTML = `<span class="star">${"★".repeat(num)+"☆".repeat(5-num)}</span>`;
-  });
+function renderStars(num){
+  return "★".repeat(num) + "☆".repeat(5 - num);
 }
+  const menuBtn = document.getElementById("menuBtn");
+const menuDropdown = document.getElementById("menuDropdown");
+menuBtn.addEventListener("click", () => menuDropdown.classList.toggle("show"));
 
+document.addEventListener("click", e => {
+  if (!e.target.closest(".menu-container")) {
+    menuDropdown.classList.remove("show");
+  }
+});
 
 function loadVendors(){
   const vendors=JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors)||"[]");
@@ -355,6 +360,7 @@ window.onload = () => {
   loadVendors(); 
   loadTasks();
   renderStarsFromData();
+adminName.textContent = localStorage.getItem("adminName") || "Admin";
 };
 </script>
 </body>
