@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Reports & Analytics</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 :root {
   --text: #111111;
@@ -14,7 +14,6 @@
   --border: #e6e8eb;
   --shadow: 0 6px 24px rgba(0, 0, 0, .06);
 }
-
 * { box-sizing: border-box; }
 body {
   margin: 0;
@@ -57,16 +56,6 @@ nav { padding: 1rem; }
   border-radius: 12px; padding: 1rem;
   box-shadow: var(--shadow);
 }
-
-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
-th, td {
-  border-bottom: 1px solid var(--border);
-  padding: .6rem; text-align: left;
-}
-th { font-size: .85rem; opacity: .7; }
-
-.star { color: gold; font-size: 1.2rem; }
-
 .menu-container {
   position: relative;
   display: inline-block;
@@ -100,31 +89,7 @@ th { font-size: .85rem; opacity: .7; }
 .dropdown a:last-child { border-bottom: none; }
 .dropdown.show { display: block; }
 
-.search { margin-bottom: 1rem; }
-.search input { width: 90%; padding: .5rem; border-radius: 8px; border: 1px solid var(--border); }
-.modal {
-  display: none; 
-  position: fixed; 
-  z-index: 10000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0,0,0,0.4); 
-  justify-content: center;
-  align-items: center;
-}
-
-.modal-content {
-  background-color: var(--white);
-  padding: 1.5rem;
-  border-radius: 12px;
-  max-width: 400px;
-  width: 90%;
-  box-shadow: var(--shadow);
-}
-  .chat-message {
+.chat-message {
   max-width: 70%;
   padding: .5rem .8rem;
   border-radius: 12px;
@@ -132,47 +97,43 @@ th { font-size: .85rem; opacity: .7; }
   font-size: 0.9rem;
   position: relative;
 }
-
 .chat-user {
   align-self: flex-end;
   background: #0a53c1;
   color: white;
   border-bottom-right-radius: 0;
 }
-
 .chat-bot {
   align-self: flex-start;
   background: #e6e6e6;
   color: #111;
   border-bottom-left-radius: 0;
 }
-
 .chat-timestamp {
   font-size: 0.7rem;
   opacity: 0.6;
   margin-top: 2px;
   text-align: right;
 }
-  .grid {
+
+.grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1rem;
 }
-
 </style>
 </head>
 <body>
 <div class="app">
-  
   <aside class="sidebar">
     <div class="brand">LGU 3 ADMIN SYSTEM</div>
     <nav>
       <a href="admindashboard.html" class="nav-item">Dashboard</a>
-      <a href="adminvendor.html" class="nav-item active">Vendor Management</a>
+      <a href="adminvendor.html" class="nav-item ">Vendor Management</a>
       <a href="admincommodity.html" class="nav-item">Commodity & Price Monitoring</a>
       <a href="adminsupply.html" class="nav-item">Supply Monitoring</a>
       <a href="admininspection.html" class="nav-item">Inspection & Compliance</a>
-      <a href="reports.html" class="nav-item">Reports & Analytics</a>
+      <a href="reports.html" class="nav-item active">Reports & Analytics</a>
       <a href="adminsettings.html" class="nav-item">Settings</a>
       <a href="loginadmin.html" class="nav-item" style="margin-top:2rem; font-weight:bold;">Logout</a>
     </nav>
@@ -180,7 +141,7 @@ th { font-size: .85rem; opacity: .7; }
 
   <section class="main">
     <header class="topbar">
-      <div style="display:flex; align-items:center; gap:0.5rem;">
+      <div style="display:flex; align-items:center; gap:.5rem;">
         <button class="btn" id="backBtn">← Back</button>
         <div class="menu-container">
           <button class="btn" id="menuBtn">☰</button>
@@ -200,51 +161,57 @@ th { font-size: .85rem; opacity: .7; }
       </div>
     </header>
 
-   <div class="content">
-  <h1>Reports and Dashboard with AI Analytic</h1>
-  <div class="grid">
-    <div class="card">
-      <h3>Vendor Performance Dashboard</h3>
-      <canvas id="vendorChart" height="120"></canvas>
-    </div>
-    <div class="card">
-      <h3>Recent Complaints</h3>
-      <div id="complaintsContainer" style="display:none;">
-        <p id="complaintMessage" style="background:#fce8b2;padding:.5rem;border-radius:6px;"></p>
+    <div class="content">
+      <h1>Reports and Dashboard with AI Analytic</h1>
+      <div class="grid">
+        <div class="card">
+          <h3>Vendor Performance Dashboard</h3>
+          <canvas id="vendorChart" height="120"></canvas>
+        </div>
+        <div class="card">
+          <h3>Recent Complaints</h3>
+          <div id="complaintsContainer" style="display:none;">
+            <p id="complaintMessage" style="background:#fce8b2;padding:.5rem;border-radius:6px;"></p>
+          </div>
+          <select id="complaintSelect" style="margin-top:.5rem;width:100%;padding:.4rem;"></select>
+          <button id="viewComplaintBtn" class="btn" style="margin-top:.5rem;">View Complaint</button>
+        </div>
+        <div class="card">
+          <h3>AI Chat Support</h3>
+          <div id="chatboxContainer" style="
+               border:1px solid #ccc;
+               padding:10px;
+               border-radius:8px;
+               height:300px;
+               overflow-y:auto;
+               display:flex;
+               flex-direction:column;
+               gap:.5rem;
+               background:#f9f9f9;"></div>
+          <div style="margin-top:.5rem;display:flex;gap:.5rem;">
+            <input id="chatInput" type="text" placeholder="Type your question..." style="flex:1;padding:.5rem;border:1px solid #ccc;border-radius:6px;">
+            <button id="chatSendBtn" class="btn">Send</button>
+          </div>
+        </div>
       </div>
-      <select id="complaintSelect" style="margin-top:.5rem;width:100%;padding:.4rem;"></select>
-      <button id="viewComplaintBtn" class="btn" style="margin-top:.5rem;">View Complaint</button>
     </div>
-    <div class="card">
-      <h3>AI Chat Support</h3>
-      <div id="chatboxContainer" style="
-           border:1px solid #ccc;
-           padding:10px;
-           border-radius:8px;
-           height:300px;
-           overflow-y:auto;
-           display:flex;
-           flex-direction:column;
-           gap:.5rem;
-           background:#f9f9f9;"></div>
-      <div style="margin-top:.5rem;display:flex;gap:.5rem;">
-        <input id="chatInput" type="text" placeholder="Type your question..." style="flex:1;padding:.5rem;border:1px solid #ccc;border-radius:6px;">
-        <button id="chatSendBtn" class="btn">Send</button>
-      </div>
-    </div>
-  </div>
+  </section>
 </div>
+
 <script>
-  function initComplaints(refNo) {
+function initComplaints() {
   const container = document.getElementById("complaintsContainer");
   const message = document.getElementById("complaintMessage");
   const select = document.getElementById("complaintSelect");
   const viewBtn = document.getElementById("viewComplaintBtn");
 
- 
-  let complaints = JSON.parse(localStorage.getItem("complaints")) || {};
+  let complaints = JSON.parse(localStorage.getItem("complaints")) || {
+    "RPT-001": "Vendor delayed chicken delivery",
+    "RPT-002": "Incomplete Takoyaki supplies",
+    "RPT-003": "Catering delivery arrived late",
+    "RPT-004": "Rental items missing on arrival"
+  };
 
- 
   select.innerHTML = `<option value="">-- Select Complaint Ref No. --</option>`;
   Object.keys(complaints).forEach(ref => {
     const opt = document.createElement("option");
@@ -262,16 +229,10 @@ th { font-size: .85rem; opacity: .7; }
       alert("Please select a complaint Ref No. first.");
     }
   };
-
- 
-  if (refNo && complaints[refNo]) {
-    container.style.display = "block";
-    message.textContent = `(${refNo}) ${complaints[refNo]}`;
-    select.value = refNo;
-  }
 }
- function initReports(refNo) {
- 
+
+function initReports() {
+
   const ctx = document.getElementById("vendorChart");
   if (ctx) {
     new Chart(ctx, {
@@ -284,42 +245,10 @@ th { font-size: .85rem; opacity: .7; }
           backgroundColor: "#0a53c1"
         }]
       },
-      options: {
-        responsive: true,
-        scales: { y: { beginAtZero: true, max: 100 } }
-      }
+      options: { responsive: true, scales: { y: { beginAtZero:true, max:100 } } }
     });
   }
 
-  const complaints = {
-    "RPT-001": "Vendor delayed chicken delivery",
-    "RPT-002": "Incomplete Takoyaki supplies",
-    "RPT-003": "Catering delivery arrived late",
-    "RPT-004": "Rental items missing on arrival"
-  };
-
-  const container = document.getElementById("complaintsContainer");
-  const message = document.getElementById("complaintMessage");
-  const select = document.getElementById("complaintSelect");
-  const viewBtn = document.getElementById("viewComplaintBtn");
-
-  if (viewBtn) {
-    viewBtn.onclick = () => {
-      const ref = select.value;
-      if (ref && complaints[ref]) {
-        container.style.display = "block";
-        message.textContent = `(${ref}) ${complaints[ref]}`;
-      } else {
-        alert("Please select a complaint Ref No. first.");
-      }
-    };
-  }
-
-  if (refNo && complaints[refNo]) {
-    container.style.display = "block";
-    message.textContent = `(${refNo}) ${complaints[refNo]}`;
-    select.value = refNo;
-  }
 
   const chatBox = document.getElementById("chatboxContainer");
   const chatInput = document.getElementById("chatInput");
@@ -327,48 +256,41 @@ th { font-size: .85rem; opacity: .7; }
 
   function addMessage(sender, text) {
     const div = document.createElement("div");
-    const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    div.className = `chat-message ${sender === "You" ? "chat-user" : "chat-bot"}`;
+    const time = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+    div.className = `chat-message ${sender==="You"?"chat-user":"chat-bot"}`;
     div.innerHTML = `${text}<div class="chat-timestamp">${time}</div>`;
     chatBox.appendChild(div);
-    chatBox.scrollTop = chatBox.scrollHeight; // auto scroll
+    chatBox.scrollTop = chatBox.scrollHeight;
   }
 
   function botReply(msg) {
     msg = msg.toLowerCase();
-    if (msg.includes("status")) return "📊 Current reports show most vendors are on track, with 2 pending complaints.";
-    if (msg.includes("performance")) return "✅ Vendor performance is averaging 85%, with rentals leading at 90%.";
-    if (msg.includes("complaint")) return "⚠️ There are 4 active complaints. Select a Ref No. to view details.";
-    if (msg.includes("hello") || msg.includes("hi")) return "👋 Hello! How can I assist you today?";
+    if(msg.includes("status")) return "📊 Current reports show most vendors are on track, with 2 pending complaints.";
+    if(msg.includes("performance")) return "✅ Vendor performance is averaging 85%, with rentals leading at 90%.";
+    if(msg.includes("complaint")) return "⚠️ There are 4 active complaints. Select a Ref No. to view details.";
+    if(msg.includes("hello")||msg.includes("hi")) return "👋 Hello! How can I assist you today?";
     return "🤖 Sorry, I don’t have an answer for that. Try asking about 'status', 'performance', or 'complaints'.";
   }
 
-  if (chatSendBtn) {
-    chatSendBtn.onclick = () => {
-      const text = chatInput.value.trim();
-      if (text) {
-        addMessage("You", text);
-     
-        setTimeout(() => addMessage("Bot", botReply(text)), 500);
-        chatInput.value = "";
-      }
-    };
-  }
+  chatSendBtn.onclick = () => {
+    const text = chatInput.value.trim();
+    if(text){
+      addMessage("You", text);
+      setTimeout(()=>addMessage("Bot", botReply(text)),500);
+      chatInput.value="";
+    }
+  };
 
-  chatInput.addEventListener("keypress", e => {
-    if (e.key === "Enter") chatSendBtn.click(); 
+  chatInput.addEventListener("keypress", e=>{
+    if(e.key==="Enter") chatSendBtn.click();
   });
-}
-  function saveComplaint(refNo, message) {
-  let complaints = JSON.parse(localStorage.getItem("complaints")) || {};
-  complaints[refNo] = message;
-  localStorage.setItem("complaints", JSON.stringify(complaints));
 }
 
 window.onload = () => {
-  initReports();
-  initComplaints(); 
   document.getElementById("adminName").textContent = localStorage.getItem("adminName") || "Admin";
-};
+  initReports();
+  initComplaints();
 };
 </script>
+</body>
+</html>
