@@ -210,7 +210,19 @@ const tableBody = document.querySelector("#commodityTable tbody");
 const cardsDiv = document.getElementById("commodityCards");
 let pieChart;
 
-// Default data if localStorage empty
+  const menuBtn = document.getElementById("menuBtn");
+const menuDropdown = document.getElementById("menuDropdown");
+
+menuBtn.addEventListener("click", () => {
+  menuDropdown.classList.toggle("show");
+});
+
+window.addEventListener("click", (e) => {
+  if (!menuBtn.contains(e.target) && !menuDropdown.contains(e.target)) {
+    menuDropdown.classList.remove("show");
+  }
+});
+
 if(!localStorage.getItem(COMMODITY_KEY)) {
   localStorage.setItem(COMMODITY_KEY, JSON.stringify([
     { type:"Takoyaki store", prev:50, curr:55, status:"Stable" },
