@@ -203,6 +203,22 @@ th { font-size: .85rem; opacity: .7; }
     <button id="closeCommodityBtn" class="btn" style="margin-top:.5rem;">Cancel</button>
   </div>
 </div>
+        
+<div class="modal" id="dataModal">
+  <div class="modal-content">
+    <span class="close" onclick="closeDataModal()">&times;</span>
+    <h3 id="dataModalTitle"></h3>
+    <table id="lineTable">
+      <thead>
+        <tr>
+          <th>Week</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
 
 <script>
 const COMMODITY_KEY = "commodity_data";
@@ -345,8 +361,41 @@ function updatePieChart() {
     }
   });
 }
+const dataModal = document.getElementById("dataModal");
+const dataModalTitle = document.getElementById("dataModalTitle");
+const lineTableBody = document.querySelector("#lineTable tbody");
 
+function openDataModal(name) {
+  const data = JSON.parse(localStorage.getItem(COMMODITY_KEY) || "[]").find(d => d.type === name);
+  if (!data) return;
 
+  dataModalTitle.textContent = `${name} - Past 6 Weeks`;
+  lineTableBody.innerHTML = "";
+
+  const weeks = ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5", "Week 6"];
+  const values = [
+    data.prev,
+    data.prev + (data.curr - data.prev) * 0.2,
+    data.prev + (data.curr - data.prev) * 0.4,
+    data.prev + (data.curr - data.prev) * 0.6,
+    data.prev + (data.curr - data.prev) * 0.8,
+    data.curr
+  ];
+
+  weeks.forEach((w, i) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${w}</td><td>${values[i].toFixed(2)}</td>`;
+    lineTableBody.appendChild(tr);
+  });
+
+  dataModal.style.display = "flex";
+}
+
+function closeDataModal() {
+  dataModal.style.display = "none";
+}
+
+dataModal.addEventListener("click", e => { if(e.target === dataModal) closeDataModal(); });
 function openDataModal(name){
   alert(name + " - Data modal not implemented");
 }
