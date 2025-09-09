@@ -187,7 +187,7 @@ th { font-size: .85rem; opacity: .7; }
         </tr>
       </thead>
       <tbody>
-        <!-- Dynamic rows will be inserted here -->
+    
       </tbody>
     </table>
   </div>
@@ -196,7 +196,7 @@ th { font-size: .85rem; opacity: .7; }
 <script>
 const STORAGE_KEY_INSPECTIONS = "inspection_compliance_data";
 
-// Sample data if nothing is in localStorage yet
+
 if (!localStorage.getItem(STORAGE_KEY_INSPECTIONS)) {
   localStorage.setItem(STORAGE_KEY_INSPECTIONS, JSON.stringify([
     {
@@ -250,6 +250,15 @@ if (!localStorage.getItem(STORAGE_KEY_INSPECTIONS)) {
   ]));
 }
 
+const menuBtn = document.getElementById("menuBtn");
+const menuDropdown = document.getElementById("menuDropdown");
+
+menuBtn.addEventListener("click", () => menuDropdown.classList.toggle("show"));
+
+document.addEventListener("click", e => {
+  if (!e.target.closest(".menu-container")) menuDropdown.classList.remove("show");
+});
+
 function loadInspections() {
   const inspections = JSON.parse(localStorage.getItem(STORAGE_KEY_INSPECTIONS) || "[]");
   const tbody = document.querySelector("#inspectionTable tbody");
@@ -272,12 +281,9 @@ function loadInspections() {
     tbody.appendChild(row);
   });
 }
-  
-document.getElemeconst menuBtn = document.getElementById("menuBtn");
-const menuDropdown = document.getElementById("menuDropdown");
-menuBtn.addEventListener("click", ()=> menuDropdown.classList.toggle("show"));
-document.addEventListener("click", e => { if(!e.target.closest(".menu-container")) menuDropdown.classList.remove("show"); });
-ntById("inspectionSearch").addEventListener("keyup", function() {
+
+
+document.getElementById("inspectionSearch").addEventListener("keyup", function() {
   const filter = this.value.toLowerCase();
   document.querySelectorAll("#inspectionTable tbody tr").forEach(row => {
     row.style.display = row.innerText.toLowerCase().includes(filter) ? "" : "none";
@@ -285,4 +291,3 @@ ntById("inspectionSearch").addEventListener("keyup", function() {
 });
 
 window.onload = loadInspections;
-</script>
