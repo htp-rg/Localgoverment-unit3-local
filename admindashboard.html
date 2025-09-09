@@ -125,9 +125,7 @@ th { font-size: .85rem; opacity: .7; }
           <h3>Supply Chain Flow (Last 6 Weeks)</h3>
           <canvas id="pipelineChart" height="100"></canvas>
         </div>
-      </div>
-
-       <div class="card" id="tasksCard">
+        <div class="card" id="tasksCard">
           <h3>Tasks</h3>
           <ul id="taskList" style="list-style:none;padding:0;margin:0;">
             <li><input type="checkbox" /> Review vendor contracts <span class="edit-icon">✏️</span> <span class="delete-icon">🗑️</span></li>
@@ -135,7 +133,10 @@ th { font-size: .85rem; opacity: .7; }
             <li><input type="checkbox" /> Update compliance checklist <span class="edit-icon">✏️</span> <span class="delete-icon">🗑️</span></li>
             <li><input type="checkbox" /> Evaluate supplier pricing <span class="edit-icon">✏️</span> <span class="delete-icon">🗑️</span></li>
           </ul>
-        
+          <button id="addTaskBtn" class="btn" style="margin-top:.5rem;">➕</button>
+        </div>
+      </div>
+       
           <<div class="card" style="margin-top:1rem;">
            <h3>Recent Vendor Engagements</h3>
         <table id="vendorEngagementsTable">
