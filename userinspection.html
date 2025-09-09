@@ -1,1 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Inspection & Compliance</title>
+<style>
+:root {
+  --text: #111111;
+  --blue: #0a53c1;
+  --ink-20: #f4f6f8;
+  --white: #ffffff;
+  --border: #e6e8eb;
+  --shadow: 0 6px 24px rgba(0, 0, 0, .06);
+}
 
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Inter, system-ui, sans-serif;
+  background: var(--white);
+  color: var(--text);
+}
+.app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+
+.sidebar {
+  border-right: 1px solid var(--border);
+  background: var(--white);
+}
+.brand {
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+nav { padding: 1rem; }
+.nav-item {
+  display: block; padding: .6rem;
+  border-radius: 8px; text-decoration: none; color: var(--text);
+}
+.nav-item:hover, .nav-item.active { background: var(--ink-20); }
+
+.main { display: grid; grid-template-rows: 64px 1fr; min-width: 0; }
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 1rem; border-bottom: 1px solid var(--border);
+}
+.btn {
+  border: 1px solid var(--text);
+  background: transparent; padding: .4rem .8rem;
+  border-radius: 8px; cursor: pointer;
+}
+.content { padding: 1rem; overflow: auto; }
+.card {
+  border: 1px solid var(--border);
+  border-radius: 12px; padding: 1rem;
+  box-shadow: var(--shadow);
+}
+
+table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+th, td {
+  border-bottom: 1px solid var(--border);
+  padding: .6rem; text-align: left;
+}
+th { font-size: .85rem; opacity: .7; }
+
+.star { color: gold; font-size: 1.2rem; }
+
+.menu-container {
+  position: relative;
+  display: inline-block;
+}
+.dropdown {
+  display: none;
+  position: absolute;
+  top: 110%;
+  right: 0;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  min-width: 220px;
+  z-index: 1000;
+}
+.dropdown p {
+  margin: 0;
+  padding: 0.8rem;
+  font-weight: bold;
+  border-bottom: 1px solid var(--border);
+}
+.dropdown a {
+  display: block;
+  padding: 0.8rem;
+  text-decoration: none;
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+}
+.dropdown a:hover { background: var(--ink-20); }
+.dropdown a:last-child { border-bottom: none; }
+.dropdown.show { display: block; }
+
+.search { margin-bottom: 1rem; }
+.search input { width: 90%; padding: .5rem; border-radius: 8px; border: 1px solid var(--border); }
+.modal {
+  display: none; 
+  position: fixed; 
+  z-index: 10000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4); 
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: var(--white);
+  padding: 1.5rem;
+  border-radius: 12px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: var(--shadow);
+}
+</style>
+</head>
+<body>
+<div class="app">
+  
+  <aside class="sidebar">
+    <div class="brand">LGU 3 ADMIN SYSTEM</div>
+    <nav>
+      <a href="admindashboard.html" class="nav-item">Dashboard</a>
+      <a href="adminvendor.html" class="nav-item ">Vendor Management</a>
+      <a href="admincommodity.html" class="nav-item">Commodity & Price Monitoring</a>
+      <a href="adminsupply.html" class="nav-item">Supply Monitoring</a>
+      <a href="admininspection.html" class="nav-item active">Inspection & Compliance</a>
+      <a href="reports.html" class="nav-item">Reports & Analytics</a>
+      <a href="adminsettings.html" class="nav-item">Settings</a>
+      <a href="loginadmin.html" class="nav-item" style="margin-top:2rem; font-weight:bold;">Logout</a>
+    </nav>
+  </aside>
+
+  <section class="main">
+    <header class="topbar">
+      <div style="display:flex; align-items:center; gap:0.5rem;">
+        <button class="btn" id="backBtn">← Back</button>
+        <div class="menu-container">
+          <button class="btn" id="menuBtn">☰</button>
+          <div class="dropdown" id="menuDropdown">
+            <p id="adminName">Admin</p>
+            <a href="upgrade.html">Upgrade Personal Details</a>
+            <a href="adminpassword.html">Password and Security</a>
+            <a href="#" id="deleteAccount">Delete Account</a>
+            <a href="terms.html">Terms of Service</a>
+            <a href="adminreport.html">Report a Problem</a>
+            <a href="main.html" id="signOut">Sign Out</a>
+          </div>
+        </div>
+      </div>
+      <div>
+        <button class="btn" id="exportBtn">Export</button>
+      </div>
+    </header>
+
+    <div class="content">
+      <div class="content">
+  <div class="card">
+    <h1>Inspection and Compliance Survey</h1>
+
+    <input type="text" id="inspectionSearch" placeholder="Search Supply…" style="margin-bottom:1rem;width:100%;padding:.5rem;">
+
+    <table id="inspectionTable">
+      <thead>
+        <tr>
+          <th>Business Name</th>
+          <th>Interior Inspection</th>
+          <th>Merchandise Display</th>
+          <th>Fire Safety</th>
+          <th>Health Compliance</th>
+          <th>Hand Sanitizers & Masks</th>
+          <th>Social Distancing</th>
+          <th>Adequate Staffing</th>
+          <th>Employee Hygiene</th>
+          <th>Policy & Dress Code</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Dynamic rows will be inserted here -->
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY_INSPECTIONS = "inspection_compliance_data";
+
+// Sample data if nothing is in localStorage yet
+if (!localStorage.getItem(STORAGE_KEY_INSPECTIONS)) {
+  localStorage.setItem(STORAGE_KEY_INSPECTIONS, JSON.stringify([
+    {
+      business: "Atan's Meat Shop",
+      interior: "Good",
+      display: "Very Good",
+      fire: "Fair",
+      health: "Good",
+      sanitizers: "Very Good",
+      distancing: "Good",
+      staffing: "Good",
+      hygiene: "Very Good",
+      policy: "Good"
+    },
+    {
+      business: "Takoyaki Store",
+      interior: "Very Good",
+      display: "Good",
+      fire: "Good",
+      health: "Very Good",
+      sanitizers: "Good",
+      distancing: "Fair",
+      staffing: "Good",
+      hygiene: "Good",
+      policy: "Very Good"
+    },
+    {
+      business: "Sound Equipment",
+      interior: "Fair",
+      display: "Good",
+      fire: "Fair",
+      health: "Fair",
+      sanitizers: "Good",
+      distancing: "Good",
+      staffing: "Fair",
+      hygiene: "Good",
+      policy: "Fair"
+    },
+    {
+      business: "Tables and Chairs",
+      interior: "Good",
+      display: "Fair",
+      fire: "Good",
+      health: "Good",
+      sanitizers: "Fair",
+      distancing: "Good",
+      staffing: "Good",
+      hygiene: "Fair",
+      policy: "Good"
+    }
+  ]));
+}
+
+function loadInspections() {
+  const inspections = JSON.parse(localStorage.getItem(STORAGE_KEY_INSPECTIONS) || "[]");
+  const tbody = document.querySelector("#inspectionTable tbody");
+  tbody.innerHTML = "";
+
+  inspections.forEach(i => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${i.business}</td>
+      <td>${i.interior}</td>
+      <td>${i.display}</td>
+      <td>${i.fire}</td>
+      <td>${i.health}</td>
+      <td>${i.sanitizers}</td>
+      <td>${i.distancing}</td>
+      <td>${i.staffing}</td>
+      <td>${i.hygiene}</td>
+      <td>${i.policy}</td>
+    `;
+    tbody.appendChild(row);
+  });
+}
+  
+document.getElemeconst menuBtn = document.getElementById("menuBtn");
+const menuDropdown = document.getElementById("menuDropdown");
+menuBtn.addEventListener("click", ()=> menuDropdown.classList.toggle("show"));
+document.addEventListener("click", e => { if(!e.target.closest(".menu-container")) menuDropdown.classList.remove("show"); });
+ntById("inspectionSearch").addEventListener("keyup", function() {
+  const filter = this.value.toLowerCase();
+  document.querySelectorAll("#inspectionTable tbody tr").forEach(row => {
+    row.style.display = row.innerText.toLowerCase().includes(filter) ? "" : "none";
+  });
+});
+
+window.onload = loadInspections;
+</script>
