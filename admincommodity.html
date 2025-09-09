@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Commodity & Price Monitoring</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vendor Management</title>
 <style>
 :root {
   --text: #111111;
@@ -13,6 +14,7 @@
   --border: #e6e8eb;
   --shadow: 0 6px 24px rgba(0, 0, 0, .06);
 }
+
 * { box-sizing: border-box; }
 body {
   margin: 0;
@@ -20,38 +22,52 @@ body {
   background: var(--white);
   color: var(--text);
 }
+.app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
 
-.sidebar { border-right:1px solid var(--border); background:var(--white); }
-.brand { font-weight:800; text-transform:uppercase; padding:1rem; border-bottom:1px solid var(--border); }
-nav { padding:1rem; }
-.nav-item { display:block; padding:.6rem; border-radius:8px; text-decoration:none; color:var(--text); }
-.nav-item:hover, .nav-item.active { background:var(--ink-20); }
-
-.main { display:grid; grid-template-rows:64px 1fr; min-width:0; }
-.topbar { display:flex; align-items:center; justify-content:space-between; padding:0 1rem; border-bottom:1px solid var(--border); }
-.btn { border:1px solid var(--text); background:transparent; padding:.4rem .8rem; border-radius:8px; cursor:pointer; }
-.content { padding:1rem; overflow:auto; }
-.card { border:1px solid var(--border); border-radius:12px; padding:1rem; box-shadow:var(--shadow); }
-
-table { width:100%; border-collapse:collapse; margin-top:1rem; }
-th, td { border-bottom:1px solid var(--border); padding:.6rem; text-align:left; }
-th { font-size:.85rem; opacity:.7; }
-
-.modal {
-  display:none; position:fixed; z-index:10000; left:0; top:0; width:100%; height:100%;
-  background-color:rgba(0,0,0,0.4); justify-content:center; align-items:center;
+.sidebar {
+  border-right: 1px solid var(--border);
+  background: var(--white);
 }
-.modal-content { background-color:var(--white); padding:1.5rem; border-radius:12px; max-width:600px; width:90%; box-shadow:var(--shadow); }
+.brand {
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+nav { padding: 1rem; }
+.nav-item {
+  display: block; padding: .6rem;
+  border-radius: 8px; text-decoration: none; color: var(--text);
+}
+.nav-item:hover, .nav-item.active { background: var(--ink-20); }
 
-.search { margin-bottom:1rem; }
-.search input { width:90%; padding:.5rem; border-radius:8px; border:1px solid var(--border); }
+.main { display: grid; grid-template-rows: 64px 1fr; min-width: 0; }
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 1rem; border-bottom: 1px solid var(--border);
+}
+.btn {
+  border: 1px solid var(--text);
+  background: transparent; padding: .4rem .8rem;
+  border-radius: 8px; cursor: pointer;
+}
+.content { padding: 1rem; overflow: auto; }
+.card {
+  border: 1px solid var(--border);
+  border-radius: 12px; padding: 1rem;
+  box-shadow: var(--shadow);
+}
 
-.card-container { display:flex; gap:1rem; flex-wrap:wrap; margin-top:1rem; }
-.card-container .card { flex:1 1 150px; padding:1rem; border:1px solid var(--border); border-radius:12px; box-shadow:var(--shadow); cursor:pointer; }
-.view-btn { margin-top:.5rem; border:1px solid var(--text); padding:.3rem .5rem; border-radius:8px; background:transparent; cursor:pointer; }
+table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+th, td {
+  border-bottom: 1px solid var(--border);
+  padding: .6rem; text-align: left;
+}
+th { font-size: .85rem; opacity: .7; }
 
-.close { float:right; cursor:pointer; font-size:20px; }
-  .menu-container {
+.star { color: gold; font-size: 1.2rem; }
+
+.menu-container {
   position: relative;
   display: inline-block;
 }
@@ -83,16 +99,42 @@ th { font-size:.85rem; opacity:.7; }
 .dropdown a:hover { background: var(--ink-20); }
 .dropdown a:last-child { border-bottom: none; }
 .dropdown.show { display: block; }
+
+.search { margin-bottom: 1rem; }
+.search input { width: 90%; padding: .5rem; border-radius: 8px; border: 1px solid var(--border); }
+.modal {
+  display: none; 
+  position: fixed; 
+  z-index: 10000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4); 
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: var(--white);
+  padding: 1.5rem;
+  border-radius: 12px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: var(--shadow);
+}
 </style>
 </head>
 <body>
 <div class="app">
+  
   <aside class="sidebar">
     <div class="brand">LGU 3 ADMIN SYSTEM</div>
     <nav>
       <a href="admindashboard.html" class="nav-item">Dashboard</a>
-      <a href="adminvendor.html" class="nav-item">Vendor Management</a>
-      <a href="admincommodity.html" class="nav-item active">Commodity & Price Monitoring</a>
+      <a href="adminvendor.html" class="nav-item active">Vendor Management</a>
+      <a href="admincommodity.html" class="nav-item">Commodity & Price Monitoring</a>
       <a href="adminsupply.html" class="nav-item">Supply Monitoring</a>
       <a href="admininspection.html" class="nav-item">Inspection & Compliance</a>
       <a href="reports.html" class="nav-item">Reports & Analytics</a>
@@ -103,7 +145,7 @@ th { font-size:.85rem; opacity:.7; }
 
   <section class="main">
     <header class="topbar">
-      <div style="display:flex; align-items:center; gap:.5rem;">
+      <div style="display:flex; align-items:center; gap:0.5rem;">
         <button class="btn" id="backBtn">← Back</button>
         <div class="menu-container">
           <button class="btn" id="menuBtn">☰</button>
@@ -118,191 +160,179 @@ th { font-size:.85rem; opacity:.7; }
           </div>
         </div>
       </div>
-      <div><button class="btn" id="exportBtn">Export</button></div>
+      <div>
+        <button class="btn" id="exportBtn">Export</button>
+      </div>
     </header>
 
     <div class="content">
       <div class="card">
         <h1>COMMODITY & PRICE MONITORING</h1>
-        <div class="search">🔎 <input id="searchInput" type="search" placeholder="Search…"></div>
-        <table id="commodityTable">
-          <thead>
-            <tr>
-              <th>Type of Business</th>
-              <th>Previous Price</th>
-              <th>Current Price</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td contenteditable="true">Takoyaki store</td>
-              <td contenteditable="true">50</td>
-              <td contenteditable="true">55</td>
-              <td contenteditable="true">Stable</td>
-            </tr>
-            <tr>
-              <td contenteditable="true">Sound equipment</td>
-              <td contenteditable="true">200</td>
-              <td contenteditable="true">250</td>
-              <td contenteditable="true">High</td>
-            </tr>
-            <tr>
-              <td contenteditable="true">Tables and chairs</td>
-              <td contenteditable="true">100</td>
-              <td contenteditable="true">90</td>
-              <td contenteditable="true">Low</td>
-            </tr>
-            <tr>
-              <td contenteditable="true">Atan's Meat Shop</td>
-              <td contenteditable="true">150</td>
-              <td contenteditable="true">180</td>
-              <td contenteditable="true">High</td>
-            </tr>
-          </tbody>
-        </table>
-        
-  <div style="display:flex;gap:2rem;margin-top:1rem;align-items:flex-start;">
-      <div style="flex:0 0 auto;">
-        <canvas id="pieChart" width="300" height="300"></canvas>
-      </div>
-        <div class="card-container">
-          <div class="card" onclick="openDataModal('Takoyaki store')">
-            Takoyaki store<br>
-            <button class="view-btn">View Data</button>
-          </div>
-          <div class="card" onclick="openDataModal('Sound equipment')">
-            Sound equipment<br>
-            <button class="view-btn">View Data</button>
-          </div>
-          <div class="card" onclick="openDataModal('Tables and chairs')">
-            Tables and chairs<br>
-            <button class="view-btn">View Data</button>
-          </div>
-          <div class="card" onclick="openDataModal('Atan Meat Shop')">
-            Atan Meat Shop<br>
-            <button class="view-btn">View Data</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+<div class="search">🔎 <input id="commoditySearch" type="search" placeholder="Search…"></div>
+<table id="commodityTable">
+  <thead>
+    <tr>
+      <th>Type of Business</th>
+      <th>Previous Price</th>
+      <th>Current Price</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+<button id="addCommodityBtn" class="btn" style="margin-top:1rem;">➕ New Commodity</button>
+
+<div style="display:flex;gap:2rem;margin-top:1rem;align-items:flex-start;">
+  <div style="flex:0 0 auto;">
+    <canvas id="pieChart" width="300" height="300"></canvas>
+  </div>
+  <div class="card-container" id="commodityCards"></div>
 </div>
 
-<div id="dataModal" class="modal">
+<div class="modal" id="commodityModal">
   <div class="modal-content">
-    <span class="close" onclick="closeDataModal()">&times;</span>
-    <h3 id="dataModalTitle"></h3>
-    <canvas id="lineChart" width="500" height="250"></canvas>
+    <span class="close" onclick="closeCommodityModal()">&times;</span>
+    <h3 id="commodityModalTitle">Add Commodity</h3>
+    <input type="hidden" id="commodityIndex">
+    <label>Type:<br><input id="commodityType"></label><br>
+    <label>Previous Price:<br><input id="commodityPrev" type="number"></label><br>
+    <label>Current Price:<br><input id="commodityCurr" type="number"></label><br>
+    <label>Status:<br><input id="commodityStatus"></label><br>
+    <button id="saveCommodityBtn" class="btn" style="margin-top:.5rem;">Save</button>
+    <button id="closeCommodityBtn" class="btn" style="margin-top:.5rem;">Cancel</button>
   </div>
 </div>
 
-  <script>
-const STORAGE_KEY = "commodityData";
-const commodityTableBody = document.querySelector("#commodityTable tbody");
-const businessCardsDiv = document.getElementById("businessCards");
-let lineChart;
+<script>
+const COMMODITY_KEY = "commodity_data";
+const tableBody = document.querySelector("#commodityTable tbody");
+const cardsDiv = document.getElementById("commodityCards");
+let pieChart;
 
+// Default data if localStorage empty
+if(!localStorage.getItem(COMMODITY_KEY)) {
+  localStorage.setItem(COMMODITY_KEY, JSON.stringify([
+    { type:"Takoyaki store", prev:50, curr:55, status:"Stable" },
+    { type:"Sound equipment", prev:200, curr:250, status:"High" },
+    { type:"Tables and chairs", prev:100, curr:90, status:"Low" },
+    { type:"Atan's Meat Shop", prev:150, curr:180, status:"High" }
+  ]));
+}
 
-const defaultData = [
-  { name:"Takoyaki store", prev:50, curr:55, status:"Stable" },
-  { name:"Sound equipment", prev:200, curr:250, status:"High" },
-  { name:"Tables and chairs", prev:100, curr:90, status:"Low" },
-  { name:"Atan's Meat Shop", prev:150, curr:180, status:"High" }
-];
+function loadCommodities(){
+  const data = JSON.parse(localStorage.getItem(COMMODITY_KEY) || "[]");
+  tableBody.innerHTML = "";
+  cardsDiv.innerHTML = "";
+  
+  data.forEach((item,i)=>{
 
-
-function loadData(){
-  let data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null") || defaultData;
-  commodityTableBody.innerHTML = "";
-  businessCardsDiv.innerHTML = "";
-  data.forEach(item=>{
     const tr = document.createElement("tr");
-    tr.innerHTML = `<td contenteditable="true">${item.name}</td>
-                    <td contenteditable="true">${item.prev}</td>
-                    <td contenteditable="true">${item.curr}</td>
-                    <td contenteditable="true">${item.status}</td>`;
-    commodityTableBody.appendChild(tr);
+    tr.innerHTML = `
+      <td>${item.type}</td>
+      <td>${item.prev}</td>
+      <td>${item.curr}</td>
+      <td>${item.status}</td>
+      <td>
+        <span class="edit-icon" style="cursor:pointer;" onclick="editCommodity(${i})">✏️</span>
+        <span class="delete-icon" style="cursor:pointer;" onclick="deleteCommodity(${i})">🗑️</span>
+      </td>`;
+    tableBody.appendChild(tr);
 
+  
     const card = document.createElement("div");
     card.className = "card";
-    card.innerHTML = `${item.name}<br><button class="view-btn">View Data</button>`;
-    card.onclick = ()=>openDataModal(item.name);
-    businessCardsDiv.appendChild(card);
+    card.innerHTML = `${item.type}<br><button class="view-btn">View Data</button>`;
+    card.onclick = ()=> openDataModal(item.type);
+    cardsDiv.appendChild(card);
   });
   updatePieChart();
 }
 
+function saveCommodities(data){ localStorage.setItem(COMMODITY_KEY, JSON.stringify(data)); }
 
-function saveData(){
-  const rows = [...commodityTableBody.rows];
-  const data = rows.map(r=>({
-    name: r.cells[0].innerText.trim(),
-    prev: parseFloat(r.cells[1].innerText) || 0,
-    curr: parseFloat(r.cells[2].innerText) || 0,
-    status: r.cells[3].innerText.trim()
-  }));
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  updatePieChart();
+function deleteCommodity(i){
+  const data = JSON.parse(localStorage.getItem(COMMODITY_KEY) || "[]");
+  data.splice(i,1);
+  saveCommodities(data);
+  loadCommodities();
 }
 
-let pieChart;
-function updatePieChart(){
-  const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-  const counts = {High:0, Low:0, Stable:0};
-  data.forEach(d=>{ if(counts[d.status]!==undefined) counts[d.status]++; });
-  const pieData = {
-    labels:["High","Low","Stable"],
-    datasets:[{data:[counts.High,counts.Low,counts.Stable], backgroundColor:['#ff4d4d','#9fff80','#ffd966'] }]
+const commodityModal = document.getElementById("commodityModal");
+const commodityIndex = document.getElementById("commodityIndex");
+const commodityType = document.getElementById("commodityType");
+const commodityPrev = document.getElementById("commodityPrev");
+const commodityCurr = document.getElementById("commodityCurr");
+const commodityStatus = document.getElementById("commodityStatus");
+
+document.getElementById("addCommodityBtn").onclick = ()=>{
+  document.getElementById("commodityModalTitle").textContent="Add Commodity";
+  commodityIndex.value="";
+  [commodityType,commodityPrev,commodityCurr,commodityStatus].forEach(i=>i.value="");
+  commodityModal.style.display="flex";
+}
+
+document.getElementById("saveCommodityBtn").onclick = ()=>{
+  const data = JSON.parse(localStorage.getItem(COMMODITY_KEY)||"[]");
+  const item = {
+    type: commodityType.value,
+    prev: parseFloat(commodityPrev.value)||0,
+    curr: parseFloat(commodityCurr.value)||0,
+    status: commodityStatus.value
   };
-  const ctx = document.getElementById("pieChart").getContext("2d");
-  if(pieChart) pieChart.destroy();
-  pieChart = new Chart(ctx, {type:"pie", data:pieData});
+  if(commodityIndex.value==="") data.push(item);
+  else data[commodityIndex.value]=item;
+  saveCommodities(data);
+  loadCommodities();
+  commodityModal.style.display="none";
 }
 
-
-const dataModal = document.getElementById("dataModal");
-function openDataModal(name){
-  document.getElementById("dataModalTitle").textContent = name + " - Past 6 Months";
-  dataModal.style.display = "flex";
-
-  const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-  const item = data.find(d=>d.name===name);
-  if(!item) return;
-
-  const ctxLine = document.getElementById("lineChart").getContext("2d");
-  if(lineChart) lineChart.destroy();
-  const exampleLabels = ["Jan","Feb","Mar","Apr","May","Jun"];
-  const exampleData = [item.prev, item.prev+((item.curr-item.prev)/5), item.prev+((item.curr-item.prev)/3), (item.prev+item.curr)/2, item.curr-((item.curr-item.prev)/5), item.curr];
-
-  lineChart = new Chart(ctxLine,{
-    type:"line",
-    data:{ labels:exampleLabels, datasets:[{ label:item.name + " Prices", data:exampleData, borderColor:"black", backgroundColor:"rgba(0,0,0,0.1)", fill:false, tension:0.2 }] }
-  });
+function editCommodity(i){
+  const data = JSON.parse(localStorage.getItem(COMMODITY_KEY)||"[]")[i];
+  document.getElementById("commodityModalTitle").textContent="Edit Commodity";
+  commodityIndex.value=i;
+  commodityType.value = data.type;
+  commodityPrev.value = data.prev;
+  commodityCurr.value = data.curr;
+  commodityStatus.value = data.status;
+  commodityModal.style.display="flex";
 }
-function closeDataModal(){ dataModal.style.display="none"; }
-dataModal.addEventListener("click", e=>{ if(e.target===dataModal) closeDataModal(); });
 
+document.getElementById("closeCommodityBtn").onclick = ()=> commodityModal.style.display="none";
+commodityModal.addEventListener("click", e=>{ if(e.target===commodityModal) commodityModal.style.display="none"; });
 
-document.getElementById("menuBtn").addEventListener("click", ()=> document.getElementById("menuDropdown").classList.toggle("show"));
-document.addEventListener("click", e=>{ if(!e.target.closest(".menu-container")) document.getElementById("menuDropdown").classList.remove("show"); });
-
-
-document.getElementById("searchInput").addEventListener("keyup", function(){
+document.getElementById("commoditySearch").addEventListener("keyup", function(){
   const filter = this.value.toLowerCase();
   document.querySelectorAll("#commodityTable tbody tr").forEach(r=>{
     r.style.display = r.innerText.toLowerCase().includes(filter) ? "" : "none";
   });
 });
 
+function updatePieChart(){
+  const data = JSON.parse(localStorage.getItem(COMMODITY_KEY)||"[]");
+  const counts = {High:0, Low:0, Stable:0};
+  data.forEach(d=>{ if(counts[d.status]!==undefined) counts[d.status]++; });
+  const ctx = document.getElementById("pieChart").getContext("2d");
+  if(pieChart) pieChart.destroy();
+  pieChart = new Chart(ctx,{
+    type:"pie",
+    data:{ labels:["High","Low","Stable"], datasets:[{data:[counts.High,counts.Low,counts.Stable], backgroundColor:["#ff4d4d","#9fff80","#ffd966"]}] }
+  });
+}
 
-commodityTableBody.addEventListener("input", saveData);
+function openDataModal(name){
+  document.getElementById("dataModal").style.display="flex";
+  document.getElementById("dataModalTitle").textContent = name + " - Past 6 Months";
+  const data = JSON.parse(localStorage.getItem(COMMODITY_KEY)||"[]").find(d=>d.type===name);
+  if(!data) return;
+  const ctx = document.getElementById("lineChart").getContext("2d");
+  const values = [data.prev, (data.prev+data.curr)/2, data.curr, data.curr-5, data.curr+2, data.curr]; // dummy values
+  if(window.lineChart) window.lineChart.destroy();
+  window.lineChart = new Chart(ctx,{type:"line", data:{labels:["Jan","Feb","Mar","Apr","May","Jun"], datasets:[{label:data.type, data:values, borderColor:"black", fill:false}]}, options:{}});
+}
+function closeDataModal(){ document.getElementById("dataModal").style.display="none"; }
 
-
-window.onload = ()=>{
-  document.getElementById("adminName").textContent = localStorage.getItem("adminName")||"Admin";
-  loadData();
-};
+window.onload = ()=>{ loadCommodities(); }
 </script>
 </body>
 </html>
