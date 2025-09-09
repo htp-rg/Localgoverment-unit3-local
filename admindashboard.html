@@ -24,14 +24,10 @@ body {
 }
 .app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
 
-/* Sidebar */
 .sidebar {
   border-right: 1px solid var(--border);
   background: var(--white);
-  transition: transform .3s;
 }
-.sidebar.open { transform: translateX(0); }
-.sidebar:not(.open) { transform: translateX(-100%); }
 .brand {
   font-weight: 800;
   text-transform: uppercase;
@@ -40,25 +36,16 @@ body {
 }
 nav { padding: 1rem; }
 .nav-item {
-  display: block;
-  padding: .6rem;
-  border-radius: 8px;
-  text-decoration: none;
-  color: var(--text);
+  display: block; padding: .6rem;
+  border-radius: 8px; text-decoration: none; color: var(--text);
 }
 .nav-item:hover, .nav-item.active { background: var(--ink-20); }
 
-/* Main */
 .main { display: grid; grid-template-rows: 64px 1fr; min-width: 0; }
 .topbar {
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 1rem; border-bottom: 1px solid var(--border);
 }
-.search {
-  display: flex; align-items: center; border: 1px solid var(--border);
-  border-radius: 12px; padding: .4rem .7rem;
-}
-.search input { border: none; outline: none; }
 .btn {
   border: 1px solid var(--text);
   background: transparent; padding: .4rem .8rem;
@@ -67,19 +54,25 @@ nav { padding: 1rem; }
 .content { padding: 1rem; overflow: auto; }
 .grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
 .card {
-  background: var(--white); border: 1px solid var(--border);
-  border-radius: 12px; padding: 1rem; box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  border-radius: 12px; padding: 1rem;
+  box-shadow: var(--shadow);
 }
 
-/* Table */
-table { width: 100%; border-collapse: collapse; }
+/* Colored cards */
+.card.yellow { background: #ffeb3b; color: #111; }
+.card.green { background: #4caf50; color: #fff; }
+.card.red { background: #f44336; color: #fff; }
+.card.blue { background: #0a53c1; color: #fff; }
+
+table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; }
 th, td {
   border-bottom: 1px solid var(--border);
-  padding: .6rem; text-align: left; vertical-align: middle;
+  padding: .6rem; text-align: left;
 }
 th { font-size: .85rem; opacity: .7; }
-.star { cursor: pointer; font-size: 1.2rem; color: #ccc; }
-.star.active { color: gold; }
+
+.star { font-size: 1.2rem; color: gold; }
 .edit-icon, .delete-icon { cursor: pointer; margin-left: 6px; }
 
 /* Modal */
@@ -111,23 +104,21 @@ th { font-size: .85rem; opacity: .7; }
   </aside>
 
   <section class="main">
-    <header class="topbar">
-      <div style="display:flex; align-items:center; gap:0.5rem;">
+     <div style="display:flex; align-items:center; gap:0.5rem;">
         <button class="btn" id="menuBtn">☰</button>
-        <div class="search">🔎 <input id="searchInput" type="search" placeholder="Search…"></div>
       </div>
       <div>
         <button class="btn" id="exportBtn">Export</button>
       </div>
     </header>
 
-    <div class="content" id="contentArea">
+     <div class="content" id="contentArea">
       <h1>Dashboard</h1>
       <div class="grid">
-        <div class="card"><h3>Price Variance / Cost Savings</h3><p>₱12,500</p><small>+8% vs last month</small></div>
-        <div class="card"><h3>On-Time Delivery Rate</h3><p>92%</p><small>+3 pts</small></div>
-        <div class="card"><h3>Defect Rate / Compliance Score</h3><p>2%</p><small>-1 pt</small></div>
-        <div class="card"><h3>Vendor Performance Score</h3><p>87/100</p><small>Stable</small></div>
+        <div class="card yellow"><h3>Price Variance / Cost Savings</h3><p>₱12,500</p><small>+8% vs last month</small></div>
+        <div class="card green"><h3>On-Time Delivery Rate</h3><p>92%</p><small>+3 pts</small></div>
+        <div class="card red"><h3>Defect Rate / Compliance Score</h3><p>2%</p><small>-1 pt</small></div>
+        <div class="card blue"><h3>Vendor Performance Score</h3><p>87/100</p><small>Stable</small></div>
       </div>
 
       <div class="grid">
@@ -135,7 +126,9 @@ th { font-size: .85rem; opacity: .7; }
           <h3>Supply Chain Flow (Last 6 Weeks)</h3>
           <canvas id="pipelineChart" height="100"></canvas>
         </div>
-        <div class="card" id="tasksCard">
+      </div>
+
+       <div class="card" id="tasksCard">
           <h3>Tasks</h3>
           <ul id="taskList" style="list-style:none;padding:0;margin:0;">
             <li><input type="checkbox" /> Review vendor contracts <span class="edit-icon">✏️</span> <span class="delete-icon">🗑️</span></li>
@@ -143,15 +136,12 @@ th { font-size: .85rem; opacity: .7; }
             <li><input type="checkbox" /> Update compliance checklist <span class="edit-icon">✏️</span> <span class="delete-icon">🗑️</span></li>
             <li><input type="checkbox" /> Evaluate supplier pricing <span class="edit-icon">✏️</span> <span class="delete-icon">🗑️</span></li>
           </ul>
-          <button id="addTaskBtn" class="btn" style="margin-top:.5rem;">➕</button>
-        </div>
-      </div>
-
-      <<div class="card" style="margin-top:1rem;">
-        <h3>Recent Vendor Engagements</h3>
+        <button id="addVendorBtn" class="btn">➕ New Vendor</button>
+           <h3>Recent Vendor Engagements</h3>
         <table id="vendorEngagementsTable">
+          <div class="search">🔎 <input id="searchInput" type="search" placeholder="Search…"></div>
           <thead>
-            <tr>
+             <tr>
               <th>Type of Business</th><th>Status</th><th>Owner</th><th>Due Date</th><th>Records of Payment</th><th>Rating</th>
             </tr>
           </thead>
@@ -177,60 +167,56 @@ th { font-size: .85rem; opacity: .7; }
     <label>Owner:<br><input id="vendorOwner"></label><br>
     <label>Due Date:<br><input id="vendorDue" type="date"></label><br>
     <label>Payment:<br><input id="vendorPayment"></label><br>
+    <label>Rating (0-5):<br><input id="vendorRating" type="number" min="0" max="5"></label><br>
     <button id="saveVendorBtn" class="btn" style="margin-top:.5rem;">Save</button>
     <button id="closeVendorBtn" class="btn" style="margin-top:.5rem;">Cancel</button>
   </div>
 </div>
 
-
-<div class="modal" id="taskModal">
-  <div class="modal-content">
-    <h3>Add Task</h3>
-    <label>Task:<br><input id="taskInput"></label><br>
-    <button id="saveTaskBtn" class="btn" style="margin-top:.5rem;">Save</button>
-    <button id="closeTaskBtn" class="btn" style="margin-top:.5rem;">Cancel</button>
-  </div>
-</div>
-
 <script>
-let pipelineChart = null;
+let pipelineChart=null;
+const STORAGE_KEYS={vendors:"vendor_engagements"};
 
-const STORAGE_KEYS = {
-  tasks: "dashboard_tasks",
-  vendors: "vendor_engagements"
-};
-
+function renderStars(num){
+  return "★".repeat(num)+"☆".repeat(5-num);
+}
 
 function loadVendors(){
-  const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
-  const vendorTable = document.querySelector("#vendorEngagementsTable tbody");
-  vendorTable.innerHTML = "";
+  const vendors=JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors)||"[]");
+  const tbody=document.querySelector("#vendorEngagementsTable tbody");
+  tbody.innerHTML="";
   vendors.forEach((v,i)=>{
     const row=document.createElement("tr");
     row.innerHTML=`
-      <td>${v.type}</td><td>${v.status}</td><td>${v.owner}</td>
-      <td>${v.due}</td><td>${v.payment}</td>
+      <td>${v.type}</td>
+      <td>${v.status}</td>
+      <td>${v.owner}</td>
+      <td>${v.due}</td>
+      <td>${v.payment}</td>
+      <td><span class="star">${renderStars(v.rating||0)}</span></td>
       <td>
         <span class="edit-icon" onclick="editVendor(${i})">✏️</span>
         <span class="delete-icon" onclick="deleteVendor(${i})">🗑️</span>
       </td>`;
-    vendorTable.appendChild(row);
+    tbody.appendChild(row);
   });
 }
-function saveVendors(vendors){ localStorage.setItem(STORAGE_KEYS.vendors, JSON.stringify(vendors)); }
+function saveVendors(vendors){localStorage.setItem(STORAGE_KEYS.vendors,JSON.stringify(vendors));}
+
 function editVendor(index){
   const vendors=JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors)||"[]");
   const v=vendors[index];
   document.getElementById("vendorModalTitle").textContent="Edit Vendor";
   document.getElementById("vendorIndex").value=index;
   vendorType.value=v.type; vendorStatus.value=v.status; vendorOwner.value=v.owner;
-  vendorDue.value=v.due; vendorPayment.value=v.payment;
+  vendorDue.value=v.due; vendorPayment.value=v.payment; vendorRating.value=v.rating||0;
   document.getElementById("vendorModal").style.display="flex";
 }
 function deleteVendor(index){
   const vendors=JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors)||"[]");
   vendors.splice(index,1); saveVendors(vendors); loadVendors();
 }
+
 document.getElementById("addVendorBtn").onclick=()=>{
   document.getElementById("vendorModalTitle").textContent="Add Vendor";
   document.getElementById("vendorIndex").value="";
@@ -239,39 +225,14 @@ document.getElementById("addVendorBtn").onclick=()=>{
 };
 document.getElementById("saveVendorBtn").onclick=()=>{
   const vendors=JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors)||"[]");
-  const v={type:vendorType.value,status:vendorStatus.value,owner:vendorOwner.value,due:vendorDue.value,payment:vendorPayment.value};
+  const v={type:vendorType.value,status:vendorStatus.value,owner:vendorOwner.value,
+           due:vendorDue.value,payment:vendorPayment.value,rating:parseInt(vendorRating.value)||0};
   const index=document.getElementById("vendorIndex").value;
   if(index==="") vendors.push(v); else vendors[index]=v;
   saveVendors(vendors); loadVendors();
   document.getElementById("vendorModal").style.display="none";
 };
 document.getElementById("closeVendorBtn").onclick=()=>document.getElementById("vendorModal").style.display="none";
-
-
-function loadTasks(){
-  const tasks=JSON.parse(localStorage.getItem(STORAGE_KEYS.tasks)||"[]");
-  const taskList=document.getElementById("taskList");
-  taskList.innerHTML="";
-  tasks.forEach((t,i)=>{
-    const li=document.createElement("li");
-    li.textContent=t.text;
-    const del=document.createElement("span");
-    del.textContent=" 🗑️";
-    del.className="delete-icon";
-    del.onclick=()=>{tasks.splice(i,1); localStorage.setItem(STORAGE_KEYS.tasks,JSON.stringify(tasks)); loadTasks();};
-    li.appendChild(del);
-    taskList.appendChild(li);
-  });
-}
-document.getElementById("addTaskBtn").onclick=()=>document.getElementById("taskModal").style.display="flex";
-document.getElementById("saveTaskBtn").onclick=()=>{
-  const tasks=JSON.parse(localStorage.getItem(STORAGE_KEYS.tasks)||"[]");
-  tasks.push({text:taskInput.value});
-  localStorage.setItem(STORAGE_KEYS.tasks,JSON.stringify(tasks));
-  loadTasks();
-  document.getElementById("taskModal").style.display="none";
-};
-document.getElementById("closeTaskBtn").onclick=()=>document.getElementById("taskModal").style.display="none";
 
 function initDashboard(){
   const ctx=document.getElementById("pipelineChart").getContext("2d");
@@ -285,7 +246,7 @@ function initDashboard(){
   });
 }
 
-window.onload=()=>{ loadVendors(); loadTasks(); initDashboard(); };
+window.onload=()=>{loadVendors();initDashboard();};
 </script>
 </body>
 </html>
