@@ -98,12 +98,12 @@ nav { padding: 1rem; }
 .dropdown.show { display: block; }
 
 /* Button colors */
-.btn-personal { background: var(--green); }
-.btn-password { background: var(--blue); }
-.btn-delete { background: var(--red); }
-.btn-community { background: var(--purple); }
+.btn-personal { background: var(--green); color: white; }
+.btn-password { background: var(--blue); color: white; }
+.btn-delete { background: var(--red); color: white; }
+.btn-community { background: var(--purple); color: white; }
 .btn-terms { background: var(--yellow); color: black !important; }
-.btn-report { background: var(--teal); }
+.btn-report { background: var(--teal); color: white; }
 
 /* Modal */
 .settings-modal {
@@ -152,12 +152,12 @@ nav { padding: 1rem; }
           <button class="btn" id="menuBtn">☰</button>
           <div class="dropdown" id="menuDropdown">
             <p id="adminName">Admin</p>
-            <button class="btn-personal" onclick="openForm('personal')">Personal Details</button>
-            <button class="btn-password" onclick="openForm('password')">Password and Security</button>
-            <button class="btn-delete" onclick="openForm('delete')">Delete Account</button>
-            <button class="btn-community" onclick="openForm('community')">Community Standard</button>
-            <button class="btn-terms" onclick="openForm('terms')">Terms of Service</button>
-            <button class="btn-report" onclick="openForm('report')">Report a Problem</button>
+            <a href="upgrade.html">Upgrade Personal Details</a>
+            <a href="adminpassword.html">Password and Security</a>
+            <a href="#" id="deleteAccount">Delete Account</a>
+            <a href="terms.html">Terms of Service</a>
+            <a href="adminreport.html">Report a Problem</a>
+            <a href="main.html" id="signOut">Sign Out</a>
           </div>
         </div>
       </div>
@@ -167,7 +167,6 @@ nav { padding: 1rem; }
     </header>
 
     <div class="content">
-      <!-- Settings Modal -->
       <div id="settingsModal" class="settings-modal">
         <div class="settings-modal-content">
           <span class="close" onclick="closeForm()">&times;</span>
@@ -177,20 +176,20 @@ nav { padding: 1rem; }
             <label>Name:</label><input type="text" placeholder="Enter your name"><br>
             <label>Email:</label><input type="email" placeholder="Enter your email"><br>
             <label>Phone:</label><input type="text" placeholder="Enter phone number"><br>
-            <button type="submit">Save</button>
+            <button type="submit" class="btn btn-personal">Save</button>
           </form>
 
           <form id="passwordForm" class="settings-form" style="display:none;">
             <label>Old Password:</label><input type="password"><br>
             <label>New Password:</label><input type="password"><br>
             <label>Confirm New Password:</label><input type="password"><br>
-            <button type="submit">Update</button>
+            <button type="submit" class="btn btn-password">Update</button>
           </form>
 
           <form id="deleteForm" class="settings-form" style="display:none;">
             <p>⚠️ This action cannot be undone. Please type <b>DELETE</b> to confirm.</p>
             <input type="text" placeholder="Type DELETE">
-            <button type="submit" style="background:red;color:white;">Delete Account</button>
+            <button type="submit" class="btn btn-delete">Delete Account</button>
           </form>
 
           <div id="communityForm" class="settings-form" style="display:none;">
@@ -207,7 +206,7 @@ nav { padding: 1rem; }
           <form id="reportForm" class="settings-form" style="display:none;">
             <label>Describe the issue:</label>
             <textarea rows="4" style="width:100%;"></textarea>
-            <button type="submit">Send Report</button>
+            <button type="submit" class="btn btn-report">Send Report</button>
           </form>
         </div>
       </div>
