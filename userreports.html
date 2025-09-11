@@ -92,7 +92,6 @@ nav { padding: 1rem; }
   gap: 1rem;
 }
 
-/* Chat */
 .chat-message {
   max-width: 70%;
   padding: .5rem .8rem;
@@ -120,7 +119,6 @@ nav { padding: 1rem; }
   text-align: right;
 }
 
-/* Popup modal */
 .modal {
   display: none;
   position: fixed;
@@ -176,7 +174,14 @@ nav { padding: 1rem; }
       </div>
     </header>
 
-    <div class="content">
+     <div class="content">
+      <h1>Reports and Dashboard with AI Analytic</h1>
+      <div class="grid">
+        <div class="card">
+          <h3>Vendor Performance Dashboard</h3>
+          <canvas id="vendorChart" height="120"></canvas>
+        </div>
+        <div class="card">
       <h1>User Reports & Complaints</h1>
       <div class="grid">
         <div class="card">
@@ -205,7 +210,6 @@ nav { padding: 1rem; }
   </section>
 </div>
 
-<!-- Complaint Modal -->
 <div class="modal" id="complaintModal">
   <div class="modal-content">
     <h3>Submit Complaint</h3>
@@ -233,7 +237,6 @@ window.addEventListener("click", e=>{
   }
 });
 
-// Chatbot
 function initChat() {
   const chatBox = document.getElementById("chatboxContainer");
   const chatInput = document.getElementById("chatInput");
@@ -272,7 +275,6 @@ function initChat() {
 }
 initChat();
 
-// Complaint Modal
 const makeBtn = document.getElementById("makeComplaintBtn");
 const modal = document.getElementById("complaintModal");
 const cancelBtn = document.getElementById("cancelComplaint");
@@ -288,8 +290,8 @@ document.getElementById("complaintForm").addEventListener("submit", function(e){
 
   let complaints = JSON.parse(localStorage.getItem("complaints") || "{}");
 
-  // find highest RPT number
-  let maxNum = 4; // default since admin has RPT-001 to 004
+ 
+  let maxNum = 4; 
   Object.keys(complaints).forEach(ref=>{
     const num = parseInt(ref.split("-")[1]);
     if(num>maxNum) maxNum = num;
