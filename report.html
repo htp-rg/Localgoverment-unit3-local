@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Report a Problem</title>
+<style>
+:root {
+  --text: #111111;
+  --blue: #0a53c1;
+  --ink-20: #f4f6f8;
+  --white: #ffffff;
+  --border: #e6e8eb;
+  --shadow: 0 6px 24px rgba(0, 0, 0, .06);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Inter, system-ui, sans-serif;
+  background: var(--white);
+  color: var(--text);
+}
+.app { min-height: 100vh; display: flex; flex-direction: column; }
+
+.topbar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.8rem 1rem; border-bottom: 1px solid var(--border);
+}
+.topbar-right { display: flex; align-items: center; gap: 0.5rem; }
+.btn {
+  border: 1px solid var(--text); background: transparent;
+  padding: .4rem .8rem; border-radius: 8px; cursor: pointer;
+}
+.menu-container { position: relative; }
+.dropdown {
+  display: none; position: absolute; top: 120%; right: 0;
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 12px; box-shadow: var(--shadow);
+  min-width: 220px; overflow: hidden; z-index: 1000;
+}
+.dropdown.show { display: block; }
+.dropdown a {
+  display: block; padding: 0.9rem 1rem; text-decoration: none;
+  color: var(--text); font-size: 0.9rem; transition: background 0.2s;
+}
+.dropdown a:hover { background: var(--ink-20); }
+
+.content { padding: 2rem; flex: 1; }
+.card {
+  border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem;
+  box-shadow: var(--shadow); max-width: 600px; margin: auto;
+}
+h2 { margin-bottom: 1rem; }
+label { display: block; margin-top: 0.8rem; font-weight: bold; }
+input, textarea {
+  width: 100%; padding: .6rem; margin-top: 0.3rem;
+  border-radius: 8px; border: 1px solid var(--border);
+}
+textarea { min-height: 120px; }
+.save-btn {
+  margin-top: 1rem; background: var(--blue); color: white; border: none;
+  padding: .6rem 1.2rem; border-radius: 8px; cursor: pointer;
+}
+.save-btn:hover { opacity: 0.9; }
+</style>
+</head>
+<body>
+<div class="app">
+
+<header class="topbar">
+  <div class="topbar-left"></div>
+  <div class="topbar-right">
+    <button class="btn" id="backBtn">← Back</button>
+    <div class="menu-container">
+      <button class="btn" id="menuBtn">☰</button>
+      <div class="dropdown" id="menuDropdown">
+        <a href="upgrade.html">Upgrade Personal Details</a>
+        <a href="password.html">Password and Security</a>
+        <a href="report.html">Report a Problem</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="reports.html">View Complaints</a>
+        <a href="main.html" id="signOut">Sign Out</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="content">
+  <div class="card">
+    <h2>Report a Problem</h2>
+    <form id="reportForm">
+      <label for="title">Issue Title:</label>
+      <input type="text" id="title" placeholder="Enter issue title" required>
+
+      <label for="details">Details:</label>
+      <textarea id="details" placeholder="Describe the issue" required></textarea>
+
+      <label for="email">Your Email (optional):</label>
+      <input type="email" id="email" placeholder="Enter email">
+
+      <button type="submit" class="save-btn">Submit Report</button>
+    </form>
+  </div>
+</div>
+
+</div>
+
+<script>
+document.getElementById("menuBtn").onclick = (e) => {
+  e.stopPropagation();
+  document.getElementById("menuDropdown").classList.toggle("show");
+};
+window.addEventListener("click", (e) => {
+  if (!e.target.closest(".menu-container")) {
+    document.getElementById("menuDropdown").classList.remove("show");
+  }
+});
+
+document.getElementById("backBtn").onclick = () => {
+  window.history.back();
+};
+
+document.getElementById("reportForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+
+  let reports = JSON.parse(localStorage.getItem("reports")) || [];
+
+
+  let baseId = 5;
+  let newId = "RPT-" + String(baseId + reports.length).padStart(3, "0");
+
+  let report = {
+    id: newId,
+    title: document.getElementById("title").value,
+    details: document.getElementById("details").value,
+    email: document.getElementById("email").value,
+    date: new Date().toLocaleString()
+  };
+
+  reports.push(report);
+  localStorage.setItem("reports", JSON.stringify(reports));
+
+  alert("✅ Report submitted successfully! Your ID is " + newId);
+  window.location.href = "reports.html";
+});
+</script>
+</body>
+</html>
