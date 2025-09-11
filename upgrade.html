@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Upgrade Personal Details</title>
+<style>
+:root {
+  --text: #111111;
+  --blue: #0a53c1;
+  --ink-20: #f4f6f8;
+  --white: #ffffff;
+  --border: #e6e8eb;
+  --shadow: 0 6px 24px rgba(0, 0, 0, .06);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Inter, system-ui, sans-serif;
+  background: var(--white);
+  color: var(--text);
+}
+.app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+
+.sidebar {
+  border-right: 1px solid var(--border);
+  background: #4e73df;
+}
+.brand {
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 1rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--white);
+}
+nav { padding: 1rem; }
+.nav-item {
+  display: block; padding: .6rem;
+  border-radius: 8px; text-decoration: none; color: var(--text);
+}
+.nav-item:hover, .nav-item.active { background: var(--ink-20); }
+
+.main { display: grid; grid-template-rows: 64px 1fr; min-width: 0; }
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 1rem; border-bottom: 1px solid var(--border);
+}
+.btn {
+  border: 1px solid var(--text);
+  background: transparent; padding: .4rem .8rem;
+  border-radius: 8px; cursor: pointer;
+}
+.content { padding: 1rem; overflow: auto; }
+.card {
+  border: 1px solid var(--border);
+  border-radius: 12px; padding: 1rem;
+  box-shadow: var(--shadow);
+  max-width: 600px;
+  margin: auto;
+}
+
+form label { display: block; margin-top: 0.8rem; font-weight: bold; }
+form input, form select {
+  width: 100%;
+  padding: .5rem;
+  margin-top: 0.3rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+.save-btn {
+  margin-top: 1rem;
+  background: var(--blue);
+  color: white;
+  border: none;
+  padding: .6rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.save-btn:hover { opacity: 0.9; }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">LGU 3 SYSTEM</div>
+    <nav>
+      <a href="admindashboard.html" class="nav-item">Dashboard</a>
+      <a href="adminvendor.html" class="nav-item">Vendor Management</a>
+      <a href="upgrade.html" class="nav-item active">Upgrade Personal Details</a>
+      <a href="adminsettings.html" class="nav-item">Settings</a>
+      <a href="loginadmin.html" class="nav-item" style="margin-top:2rem; font-weight:bold;">Logout</a>
+    </nav>
+  </aside>
+
+  <section class="main">
+    <header class="topbar">
+      <div style="display:flex; align-items:center; gap:.5rem;">
+        <button class="btn" id="backBtn">← Back</button>
+        <div class="menu-container">
+          <button class="btn" id="menuBtn">☰</button>
+          <div class="dropdown" id="menuDropdown">
+            <p id="adminName">Admin</p>
+            <a href="upgrade.html">Upgrade Personal Details</a>
+            <a href="adminpassword.html">Password and Security</a>
+            <a href="#" id="deleteAccount">Delete Account</a>
+            <a href="terms.html">Terms of Service</a>
+            <a href="adminreport.html">Report a Problem</a>
+            <a href="main.html" id="signOut">Sign Out</a>
+          </div>
+        </div>
+      </div>
+      <div>
+        <button class="btn" id="exportBtn">Export</button>
+      </div>
+    </header>
+
+    <div class="content">
+      <div class="card">
+        <h2>Upgrade Personal Details</h2>
+        <form id="detailsForm">
+          <label for="role">Role:</label>
+          <select id="role" required>
+            <option value="">-- Select Role --</option>
+            <option value="admin">Admin</option>
+            <option value="user">User</option>
+          </select>
+
+          <label for="name">Full Name:</label>
+          <input type="text" id="name" placeholder="Enter your full name" required>
+
+          <label for="email">Email:</label>
+          <input type="email" id="email" placeholder="Enter your email" required>
+
+          <label for="phone">Phone Number:</label>
+          <input type="text" id="phone" placeholder="Enter phone number">
+
+          <label for="address">Address:</label>
+          <input type="text" id="address" placeholder="Enter address">
+
+          <button type="submit" class="save-btn">Save Details</button>
+        </form>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+window.onload = () => {
+  const form = document.getElementById("detailsForm");
+  const role = localStorage.getItem("role");
+  const name = localStorage.getItem("name");
+  const email = localStorage.getItem("email");
+  const phone = localStorage.getItem("phone");
+  const address = localStorage.getItem("address");
+
+  if(role) document.getElementById("role").value = role;
+  if(name) document.getElementById("name").value = name;
+  if(email) document.getElementById("email").value = email;
+  if(phone) document.getElementById("phone").value = phone;
+  if(address) document.getElementById("address").value = address;
+
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    localStorage.setItem("role", document.getElementById("role").value);
+    localStorage.setItem("name", document.getElementById("name").value);
+    localStorage.setItem("email", document.getElementById("email").value);
+    localStorage.setItem("phone", document.getElementById("phone").value);
+    localStorage.setItem("address", document.getElementById("address").value);
+
+    alert("✅ Personal details saved successfully!");
+  });
+};
+</script>
+</body>
+</html>
