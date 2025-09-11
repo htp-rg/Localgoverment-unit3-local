@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>User Reports & Analytics</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+:root {
+  --text: #111111;
+  --blue: #0a53c1;
+  --ink-20: #f4f6f8;
+  --white: #ffffff;
+  --border: #e6e8eb;
+  --shadow: 0 6px 24px rgba(0, 0, 0, .06);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Inter, system-ui, sans-serif;
+  background: var(--white);
+  color: var(--text);
+}
+.app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+
+.sidebar {
+  border-right: 1px solid var(--border);
+  background: #4e73df; 
+}
+.brand {
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+nav { padding: 1rem; }
+.nav-item {
+  display: block; padding: .6rem;
+  border-radius: 8px; text-decoration: none; color: var(--text);
+}
+.nav-item:hover, .nav-item.active { background: var(--ink-20); }
+
+.main { display: grid; grid-template-rows: 64px 1fr; min-width: 0; }
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 1rem; border-bottom: 1px solid var(--border);
+}
+.btn {
+  border: 1px solid var(--text);
+  background: transparent; padding: .4rem .8rem;
+  border-radius: 8px; cursor: pointer;
+}
+.content { padding: 1rem; overflow: auto; }
+.card {
+  border: 1px solid var(--border);
+  border-radius: 12px; padding: 1rem;
+  box-shadow: var(--shadow);
+}
+.menu-container {
+  position: relative;
+  display: inline-block;
+}
+.dropdown {
+  display: none;
+  position: absolute;
+  top: 110%;
+  right: 0;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  min-width: 220px;
+  z-index: 1000;
+}
+.dropdown p {
+  margin: 0; padding: 0.8rem;
+  font-weight: bold;
+  border-bottom: 1px solid var(--border);
+}
+.dropdown a {
+  display: block; padding: 0.8rem;
+  text-decoration: none; color: var(--text);
+  border-bottom: 1px solid var(--border);
+}
+.dropdown a:hover { background: var(--ink-20); }
+.dropdown a:last-child { border-bottom: none; }
+.dropdown.show { display: block; }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+/* Chat */
+.chat-message {
+  max-width: 70%;
+  padding: .5rem .8rem;
+  border-radius: 12px;
+  word-wrap: break-word;
+  font-size: 0.9rem;
+  position: relative;
+}
+.chat-user {
+  align-self: flex-end;
+  background: #0a53c1;
+  color: white;
+  border-bottom-right-radius: 0;
+}
+.chat-bot {
+  align-self: flex-start;
+  background: #e6e6e6;
+  color: #111;
+  border-bottom-left-radius: 0;
+}
+.chat-timestamp {
+  font-size: 0.7rem;
+  opacity: 0.6;
+  margin-top: 2px;
+  text-align: right;
+}
+
+/* Popup modal */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+.modal-content {
+  background: var(--white);
+  padding: 1rem;
+  border-radius: 12px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: var(--shadow);
+}
+.modal-content h3 { margin-top: 0; }
+.modal-content label { display: block; margin: .5rem 0; }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">LGU 3 USER SYSTEM</div>
+    <nav>
+      <a href="userdashboard.html" class="nav-item">Dashboard</a>
+      <a href="uservendor.html" class="nav-item">Vendor Management</a>
+      <a href="usercommodity.html" class="nav-item">Commodity & Price Monitoring</a>
+      <a href="usersupply.html" class="nav-item">Supply Monitoring</a>
+      <a href="userinspection.html" class="nav-item">Inspection & Compliance</a>
+      <a href="userreports.html" class="nav-item active">Reports & Analytics</a>
+      <a href="usersettings.html" class="nav-item">Settings</a>
+      <a href="login.html" class="nav-item" style="margin-top:2rem; font-weight:bold;">Logout</a>
+    </nav>
+  </aside>
+
+  <section class="main">
+    <header class="topbar">
+      <div style="display:flex; align-items:center; gap:.5rem;">
+        <button class="btn" id="backBtn" type="button">← Back</button>
+        <div class="menu-container">
+          <button class="btn" id="menuBtn" type="button">☰</button>
+          <div class="dropdown" id="menuDropdown">
+            <p id="userName">User</p>
+            <a href="upgrade.html">Upgrade Personal Details</a>
+            <a href="userpassword.html">Password and Security</a>
+            <a href="terms.html">Terms of Service</a>
+            <a href="userreport.html">Report a Problem</a>
+            <a href="main.html" id="signOut">Sign Out</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="content">
+      <h1>User Reports & Complaints</h1>
+      <div class="grid">
+        <div class="card">
+          <h3>Make a Complaint</h3>
+          <button id="makeComplaintBtn" class="btn">➕ Make Complaint</button>
+        </div>
+        <div class="card">
+          <h3>AI Chat Support</h3>
+          <div id="chatboxContainer" style="
+               border:1px solid #ccc;
+               padding:10px;
+               border-radius:8px;
+               height:300px;
+               overflow-y:auto;
+               display:flex;
+               flex-direction:column;
+               gap:.5rem;
+               background:#f9f9f9;"></div>
+          <div style="margin-top:.5rem;display:flex;gap:.5rem;">
+            <input id="chatInput" type="text" placeholder="Type your question..." style="flex:1;padding:.5rem;border:1px solid #ccc;border-radius:6px;">
+            <button id="chatSendBtn" class="btn">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Complaint Modal -->
+<div class="modal" id="complaintModal">
+  <div class="modal-content">
+    <h3>Submit Complaint</h3>
+    <form id="complaintForm">
+      <label>
+        Complaint Details:
+        <textarea id="complaintText" required style="width:100%;height:100px;"></textarea>
+      </label>
+      <div style="margin-top:1rem;display:flex;justify-content:flex-end;gap:.5rem;">
+        <button type="button" class="btn" id="cancelComplaint">Cancel</button>
+        <button type="submit" class="btn">Submit</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+// Dropdown toggle
+const menuBtn = document.getElementById("menuBtn");
+const menuDropdown = document.getElementById("menuDropdown");
+menuBtn.addEventListener("click", ()=> menuDropdown.classList.toggle("show"));
+window.addEventListener("click", e=>{
+  if(!menuBtn.contains(e.target) && !menuDropdown.contains(e.target)){
+    menuDropdown.classList.remove("show");
+  }
+});
+
+// Chatbot
+function initChat() {
+  const chatBox = document.getElementById("chatboxContainer");
+  const chatInput = document.getElementById("chatInput");
+  const chatSendBtn = document.getElementById("chatSendBtn");
+
+  function addMessage(sender, text) {
+    const div = document.createElement("div");
+    const time = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+    div.className = `chat-message ${sender==="You"?"chat-user":"chat-bot"}`;
+    div.innerHTML = `${text}<div class="chat-timestamp">${time}</div>`;
+    chatBox.appendChild(div);
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+
+  function botReply(msg) {
+    msg = msg.toLowerCase();
+    if(msg.includes("status")) return "📊 Current reports show most vendors are on track, with 2 pending complaints.";
+    if(msg.includes("performance")) return "✅ Vendor performance is averaging 85%, with rentals leading at 90%.";
+    if(msg.includes("complaint")) return "⚠️ You can submit a complaint using the ➕ Make Complaint button.";
+    if(msg.includes("hello")||msg.includes("hi")) return "👋 Hello! How can I assist you today?";
+    return "🤖 Sorry, I don’t have an answer for that. Try asking about 'status', 'performance', or 'complaints'.";
+  }
+
+  chatSendBtn.onclick = () => {
+    const text = chatInput.value.trim();
+    if(text){
+      addMessage("You", text);
+      setTimeout(()=>addMessage("Bot", botReply(text)),500);
+      chatInput.value="";
+    }
+  };
+
+  chatInput.addEventListener("keypress", e=>{
+    if(e.key==="Enter") chatSendBtn.click();
+  });
+}
+initChat();
+
+// Complaint Modal
+const makeBtn = document.getElementById("makeComplaintBtn");
+const modal = document.getElementById("complaintModal");
+const cancelBtn = document.getElementById("cancelComplaint");
+
+makeBtn.onclick = ()=> modal.style.display="flex";
+cancelBtn.onclick = ()=> modal.style.display="none";
+window.onclick = (e)=>{ if(e.target===modal) modal.style.display="none"; };
+
+document.getElementById("complaintForm").addEventListener("submit", function(e){
+  e.preventDefault();
+  const text = document.getElementById("complaintText").value.trim();
+  if(!text) return;
+
+  let complaints = JSON.parse(localStorage.getItem("complaints") || "{}");
+
+  // find highest RPT number
+  let maxNum = 4; // default since admin has RPT-001 to 004
+  Object.keys(complaints).forEach(ref=>{
+    const num = parseInt(ref.split("-")[1]);
+    if(num>maxNum) maxNum = num;
+  });
+  const nextRef = "RPT-" + String(maxNum+1).padStart(3,"0");
+
+  complaints[nextRef] = text;
+  localStorage.setItem("complaints", JSON.stringify(complaints));
+
+  alert(`Complaint submitted with reference ${nextRef}`);
+  this.reset();
+  modal.style.display="none";
+});
+</script>
+</body>
+</html>
