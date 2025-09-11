@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Supply Monitoring</title>
+<title>User Supply Monitoring</title>
 <style>
 :root {
   --text: #111111;
@@ -13,7 +13,6 @@
   --border: #e6e8eb;
   --shadow: 0 6px 24px rgba(0, 0, 0, .06);
 }
-
 * { box-sizing: border-box; }
 body {
   margin: 0;
@@ -23,126 +22,41 @@ body {
 }
 .app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
 
-  .sidebar {
-  border-right: 1px solid var(--border);
-  background: #4e73df; 
-}
-.brand {
-  font-weight: 800;
-  text-transform: uppercase;
-  padding: 1rem;
-  border-bottom: 1px solid var(--border);
-}
+.sidebar { border-right: 1px solid var(--border); background: #4e73df; }
+.brand { font-weight: 800; text-transform: uppercase; padding: 1rem; border-bottom: 1px solid var(--border); color: var(--white);}
 nav { padding: 1rem; }
-.nav-item {
-  display: block; padding: .6rem;
-  border-radius: 8px; text-decoration: none; color: var(--text);
-}
+.nav-item { display: block; padding: .6rem; border-radius: 8px; text-decoration: none; color: var(--text); }
 .nav-item:hover, .nav-item.active { background: var(--ink-20); }
 
 .main { display: grid; grid-template-rows: 64px 1fr; min-width: 0; }
-.topbar {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 1rem; border-bottom: 1px solid var(--border);
-}
-.btn {
-  border: 1px solid var(--text);
-  background: transparent; padding: .4rem .8rem;
-  border-radius: 8px; cursor: pointer;
-}
+.topbar { display: flex; align-items: center; justify-content: space-between; padding: 0 1rem; border-bottom: 1px solid var(--border); }
+.btn { border: 1px solid var(--text); background: transparent; padding: .4rem .8rem; border-radius: 8px; cursor: pointer; }
 .content { padding: 1rem; overflow: auto; }
-.card {
-  border: 1px solid var(--border);
-  border-radius: 12px; padding: 1rem;
-  box-shadow: var(--shadow);
-}
+.card { border: 1px solid var(--border); border-radius: 12px; padding: 1rem; box-shadow: var(--shadow); }
 
 table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
-th, td {
-  border-bottom: 1px solid var(--border);
-  padding: .6rem; text-align: left;
-}
+th, td { border-bottom: 1px solid var(--border); padding: .6rem; text-align: left; }
 th { font-size: .85rem; opacity: .7; }
 
-.star { color: gold; font-size: 1.2rem; }
+.star { cursor: pointer; font-size: 1.2rem; color: lightgray; }
+.star.gold { color: gold; }
 
-.menu-container {
-  position: relative;
-  display: inline-block;
-}
-.dropdown {
-  display: none;
-  position: absolute;
-  top: 110%;
-  right: 0;
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  box-shadow: var(--shadow);
-  min-width: 220px;
-  z-index: 1000;
-}
-.dropdown p {
-  margin: 0;
-  padding: 0.8rem;
-  font-weight: bold;
-  border-bottom: 1px solid var(--border);
-}
-.dropdown a {
-  display: block;
-  padding: 0.8rem;
-  text-decoration: none;
-  color: var(--text);
-  border-bottom: 1px solid var(--border);
-}
-.dropdown a:hover { background: var(--ink-20); }
-.dropdown a:last-child { border-bottom: none; }
-.dropdown.show { display: block; }
-
-.search { margin-bottom: 1rem; }
-.search input { width: 90%; padding: .5rem; border-radius: 8px; border: 1px solid var(--border); }
-.modal {
-  display: none; 
-  position: fixed; 
-  z-index: 10000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0,0,0,0.4); 
-  justify-content: center;
-  align-items: center;
-}
-
-.modal-content {
-  background-color: var(--white);
-  padding: 1.5rem;
-  border-radius: 12px;
-  max-width: 400px;
-  width: 90%;
-  box-shadow: var(--shadow);
-}
-  .edit-icon, .delete-icon {
-  cursor: pointer;
-  margin-right: 0.5rem;
-}
 </style>
 </head>
 <body>
 <div class="app">
   
   <aside class="sidebar">
-    <div class="brand">LGU 3 ADMIN SYSTEM</div>
+    <div class="brand">LGU 3 USER SYSTEM</div>
     <nav>
-      <a href="admindashboard.html" class="nav-item">Dashboard</a>
-      <a href="adminvendor.html" class="nav-item ">Vendor Management</a>
-      <a href="admincommodity.html" class="nav-item">Commodity & Price Monitoring</a>
-      <a href="adminsupply.html" class="nav-item active">Supply Monitoring</a>
-      <a href="admininspection.html" class="nav-item">Inspection & Compliance</a>
-      <a href="reports.html" class="nav-item">Reports & Analytics</a>
-      <a href="adminsettings.html" class="nav-item">Settings</a>
-      <a href="loginadmin.html" class="nav-item" style="margin-top:2rem; font-weight:bold;">Logout</a>
+      <a href="userdashboard.html" class="nav-item">Dashboard</a>
+      <a href="uservendor.html" class="nav-item">Vendor Management</a>
+      <a href="usercommodity.html" class="nav-item">Commodity & Price Monitoring</a>
+      <a href="usersupply.html" class="nav-item active">Supply Monitoring</a>
+      <a href="userinspection.html" class="nav-item">Inspection & Compliance</a>
+      <a href="userreports.html" class="nav-item">Reports & Analytics</a>
+      <a href="usersettings.html" class="nav-item">Settings</a>
+      <a href="login.html" class="nav-item" style="margin-top:2rem; font-weight:bold;">Logout</a>
     </nav>
   </aside>
 
@@ -150,100 +64,40 @@ th { font-size: .85rem; opacity: .7; }
     <header class="topbar">
       <div style="display:flex; align-items:center; gap:0.5rem;">
         <button class="btn" id="backBtn">← Back</button>
-        <div class="menu-container">
-          <button class="btn" id="menuBtn">☰</button>
-          <div class="dropdown" id="menuDropdown">
-            <p id="adminName">Admin</p>
-            <a href="upgrade.html">Upgrade Personal Details</a>
-            <a href="adminpassword.html">Password and Security</a>
-            <a href="#" id="deleteAccount">Delete Account</a>
-            <a href="terms.html">Terms of Service</a>
-            <a href="adminreport.html">Report a Problem</a>
-            <a href="main.html" id="signOut">Sign Out</a>
-          </div>
-        </div>
-      </div>
-      <div>
-        <button class="btn" id="exportBtn">Export</button>
       </div>
     </header>
 
     <div class="content">
-<div class="card">
-  <h1>Supply Monitoring</h1>
-  <input type="text" id="supplySearch" placeholder="Search Supply…" style="margin-bottom:1rem;width:100%;padding:.5rem;">
-  <table id="supplyTable">
-    <thead>
-      <tr>
-        <th>Ref No.</th>
-        <th>Business Name</th>
-        <th>Business Category</th>
-        <th>Supplier</th>
-        <th>Pick-up</th>
-        <th>Drop-off</th>
-        <th>Delivery Time</th>
-        <th>Report</th>
-        <th>Contact No.</th>
-        <th>Item Value</th>
-        <th>Quality</th>
-        <th>Status</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-  <button id="addSupplyBtn" class="btn" style="margin-top:1rem;">➕ New Supply</button>
+      <div class="card">
+        <h1>Supply Monitoring</h1>
+        <input type="text" id="supplySearch" placeholder="Search Supply…" style="margin-bottom:1rem;width:100%;padding:.5rem;">
+        <table id="supplyTable">
+          <thead>
+            <tr>
+              <th>Ref No.</th>
+              <th>Business Name</th>
+              <th>Business Category</th>
+              <th>Supplier</th>
+              <th>Pick-up</th>
+              <th>Drop-off</th>
+              <th>Delivery Time</th>
+              <th>Report</th>
+              <th>Contact No.</th>
+              <th>Item Value</th>
+              <th>Quality (Rate)</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
 </div>
-<div class="modal" id="supplyModal">
-  <div class="modal-content">
-    <h3 id="supplyModalTitle">Add Supply</h3>
-    <input type="hidden" id="supplyIndex">
-    
-    <label>Business Name:<br><input id="supplyBusiness" type="text"></label><br>
-    <label>Business Category:<br><input id="supplyCategory" type="text"></label><br>
-    <label>Supplier:<br><input id="supplySupplier" type="text"></label><br>
-    <label>Pick-up:<br><input id="supplyPickup" type="text"></label><br>
-    <label>Drop-off:<br><input id="supplyDropoff" type="text"></label><br>
-    <label>Delivery Time:<br><input id="supplyTime" type="text"></label><br>
-    <label>Report:<br><input id="supplyReport" type="text"></label><br>
-    <label>Contact No.:<br><input id="supplyContact" type="text"></label><br>
-    <label>Item Value:<br><input id="supplyValue" type="text"></label><br>
-    <label>Quality (0-5):<br><input id="supplyQuality" type="number" min="0" max="5"></label><br>
-    <label>Status:<br><input id="supplyStatus" type="text"></label><br>
-    
-    <button id="saveSupplyBtn" class="btn" style="margin-top:.5rem;">Save</button>
-    <button id="closeSupplyBtn" class="btn" style="margin-top:.5rem;">Cancel</button>
-  </div>
-</div>
+
 <script>
 const SUPPLY_KEY = "supply_data";
 const supplyTableBody = document.querySelector("#supplyTable tbody");
-
-if (!localStorage.getItem(SUPPLY_KEY)) {
-  localStorage.setItem(SUPPLY_KEY, JSON.stringify([
-    { business: "Daisy Poultry", category: "MEAT SHOP", supplier: "James", pickup: "Quezon City", dropoff: "Muñoz", time: "12:00 am - 2:00 pm", report: "Filed", contact: "0970-567-1136", value: "₱4,000.00", quality: 5, status: "⛔ Delayed" },
-    { business: "Takoyaki Supplier", category: "SUPPLIES SHOP", supplier: "Maria", pickup: "Makati", dropoff: "Muñoz", time: "7:00 am - 9:00 am", report: "Filed", contact: "0917-888-9999", value: "₱2,500.00", quality: 5, status: "✅ Completed" },
-    { business: "Catering Supplies", category: "CATERING", supplier: "Sofia", pickup: "Taguig", dropoff: "Muñoz", time: "10:00 am - 12:00 pm", report: "Filed", contact: "0920-555-4444", value: "₱3,200.00", quality: 5, status: "✏ In progress" },
-    { business: "Party Rental", category: "RENTAL SHOP", supplier: "Ramon", pickup: "Manila", dropoff: "Muñoz", time: "3:00 am - 5:00 am", report: "Filed", contact: "0998-222-3333", value: "₱5,000.00", quality: 5, status: "✅ Completed" }
-  ]));
-}
-
-const supplyModal = document.getElementById("supplyModal");
-const supplyIndex = document.getElementById("supplyIndex");
-const supplyBusiness = document.getElementById("supplyBusiness");
-const supplyCategory = document.getElementById("supplyCategory");
-const supplySupplier = document.getElementById("supplySupplier");
-const supplyPickup = document.getElementById("supplyPickup");
-const supplyDropoff = document.getElementById("supplyDropoff");
-const supplyTime = document.getElementById("supplyTime");
-const supplyReport = document.getElementById("supplyReport");
-const supplyContact = document.getElementById("supplyContact");
-const supplyValue = document.getElementById("supplyValue");
-const supplyQuality = document.getElementById("supplyQuality");
-const supplyStatus = document.getElementById("supplyStatus");
-const saveSupplyBtn = document.getElementById("saveSupplyBtn");
-const closeSupplyBtn = document.getElementById("closeSupplyBtn");
-const addSupplyBtn = document.getElementById("addSupplyBtn");
 
 function loadSupplies() {
   const data = JSON.parse(localStorage.getItem(SUPPLY_KEY) || "[]");
@@ -261,79 +115,32 @@ function loadSupplies() {
       <td>${supply.report}</td>
       <td>${supply.contact}</td>
       <td>${supply.value}</td>
-      <td>${"★".repeat(supply.quality)+"☆".repeat(5-supply.quality)}</td>
-      <td>${supply.status}</td>
-      <td>
-        <span class="edit-icon" style="cursor:pointer" onclick="editSupply(${i})">✏️</span>
-        <span class="delete-icon" style="cursor:pointer" onclick="deleteSupply(${i})">🗑️</span>
-      </td>`;
+      <td id="stars-${i}"></td>
+      <td>${supply.status}</td>`;
     supplyTableBody.appendChild(tr);
+
+    renderStars(i, supply.quality || 0);
   });
 }
 
-function saveSupplies(data) {
-  localStorage.setItem(SUPPLY_KEY, JSON.stringify(data));
-}
-
-addSupplyBtn.onclick = () => {
-  document.getElementById("supplyModalTitle").textContent = "Add Supply";
-  supplyIndex.value = "";
-  [supplyBusiness, supplyCategory, supplySupplier, supplyPickup, supplyDropoff, supplyTime, supplyReport, supplyContact, supplyValue, supplyQuality, supplyStatus].forEach(i => i.value = "");
-  supplyModal.style.display = "flex";
-};
-
-saveSupplyBtn.onclick = () => {
-  const data = JSON.parse(localStorage.getItem(SUPPLY_KEY) || "[]");
-  const s = {
-    business: supplyBusiness.value,
-    category: supplyCategory.value,
-    supplier: supplySupplier.value,
-    pickup: supplyPickup.value,
-    dropoff: supplyDropoff.value,
-    time: supplyTime.value,
-    report: supplyReport.value,
-    contact: supplyContact.value,
-    value: supplyValue.value,
-    quality: parseInt(supplyQuality.value) || 0,
-    status: supplyStatus.value
-  };
-  if (supplyIndex.value === "") data.push(s);
-  else data[supplyIndex.value] = s;
-  saveSupplies(data);
-  loadSupplies();
-  supplyModal.style.display = "none";
-};
-
-
-function editSupply(i) {
-  const data = JSON.parse(localStorage.getItem(SUPPLY_KEY) || "[]")[i];
-  document.getElementById("supplyModalTitle").textContent = "Edit Supply";
-  supplyIndex.value = i;
-  supplyBusiness.value = data.business;
-  supplyCategory.value = data.category;
-  supplySupplier.value = data.supplier;
-  supplyPickup.value = data.pickup;
-  supplyDropoff.value = data.dropoff;
-  supplyTime.value = data.time;
-  supplyReport.value = data.report;
-  supplyContact.value = data.contact;
-  supplyValue.value = data.value;
-  supplyQuality.value = data.quality;
-  supplyStatus.value = data.status;
-  supplyModal.style.display = "flex";
-}
-
-function deleteSupply(i) {
-  if(confirm("Are you sure you want to delete this supply?")) {
-    const data = JSON.parse(localStorage.getItem(SUPPLY_KEY) || "[]");
-    data.splice(i,1);
-    saveSupplies(data);
-    loadSupplies();
+function renderStars(index, rating) {
+  const container = document.getElementById(`stars-${index}`);
+  container.innerHTML = "";
+  for (let j = 1; j <= 5; j++) {
+    const star = document.createElement("span");
+    star.className = "star" + (j <= rating ? " gold" : "");
+    star.innerHTML = "★";
+    star.onclick = () => rateSupply(index, j);
+    container.appendChild(star);
   }
 }
 
-closeSupplyBtn.onclick = () => supplyModal.style.display = "none";
-supplyModal.addEventListener("click", e => { if(e.target === supplyModal) supplyModal.style.display = "none"; });
+function rateSupply(index, rating) {
+  const data = JSON.parse(localStorage.getItem(SUPPLY_KEY) || "[]");
+  data[index].quality = rating;
+  localStorage.setItem(SUPPLY_KEY, JSON.stringify(data));
+  renderStars(index, rating);
+}
 
 document.getElementById("supplySearch").addEventListener("keyup", function() {
   const filter = this.value.toLowerCase();
@@ -341,19 +148,8 @@ document.getElementById("supplySearch").addEventListener("keyup", function() {
     r.style.display = r.innerText.toLowerCase().includes(filter) ? "" : "none";
   });
 });
-const menuBtn = document.getElementById("menuBtn");
-const menuDropdown = document.getElementById("menuDropdown");
 
-menuBtn.addEventListener("click", () => {
-  menuDropdown.classList.toggle("show");
-});
-
-
-window.addEventListener("click", (e) => {
-  if (!menuBtn.contains(e.target) && !menuDropdown.contains(e.target)) {
-    menuDropdown.classList.remove("show");
-  }
-});
 window.onload = () => loadSupplies();
 </script>
-
+</body>
+</html>
