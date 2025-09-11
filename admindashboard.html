@@ -35,19 +35,13 @@ body {
   padding: 1rem;
   border-bottom: 1px solid var(--border);
 }
-nav-item {
-  display: block;
-  padding: .6rem;
-  border-radius: 8px;
-  text-decoration: none;
-  color: #fff;
-  transition: background 0.3s;
+nav { padding: 1rem; }
+.nav-item {
+  display: block; padding: .6rem;
+  border-radius: 8px; text-decoration: none; color: var(--text);
 }
+.nav-item:hover, .nav-item.active { background: var(--ink-20); }
 
-.nav-item:hover,
-.nav-item.active {
-  background: rgba(255, 255, 255, 0.15);
-}
 .main { display: grid; grid-template-rows: 64px 1fr; min-width: 0; }
 .topbar {
   display: flex; align-items: center; justify-content: space-between;
