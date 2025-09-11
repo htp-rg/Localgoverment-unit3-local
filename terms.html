@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Terms of Service</title>
+<style>
+:root {
+  --text: #111111;
+  --blue: #0a53c1;
+  --ink-20: #f4f6f8;
+  --white: #ffffff;
+  --border: #e6e8eb;
+  --shadow: 0 6px 24px rgba(0, 0, 0, .06);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Inter, system-ui, sans-serif;
+  background: var(--white);
+  color: var(--text);
+}
+.app { 
+  display: block; 
+  min-height: 100vh; 
+}
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 1rem; border-bottom: 1px solid var(--border);
+}
+.btn {
+  border: 1px solid var(--text);
+  background: transparent; padding: .4rem .8rem;
+  border-radius: 8px; cursor: pointer;
+}
+.content {
+  padding: 2rem;
+  max-width: 800px;
+  margin: auto;
+}
+h2 {
+  margin-bottom: 1rem;
+}
+p {
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<header class="topbar">
+  <button class="btn" id="backBtn">← Back</button>
+</header>
+
+<div class="content">
+  <h2>Terms of Service</h2>
+  <p>
+    By accessing and using this application, you agree to comply with the following terms of service. 
+    The platform is designed to provide tools and resources to help manage personal and professional activities. 
+    You are responsible for maintaining the confidentiality of your account and personal details at all times. 
+    Any misuse of the system that disrupts functionality or compromises security is strictly prohibited. 
+  </p>
+
+  <p>
+    Users are expected to provide accurate and updated information when using the application. 
+    False or misleading information may result in suspension or termination of your account. 
+    The platform reserves the right to modify features or update requirements without prior notice. 
+    Continued use of the system signifies your acceptance of these changes and updates. 
+  </p>
+
+  <p>
+    We value the security and privacy of your personal data and strive to protect it using appropriate measures. 
+    However, we cannot guarantee complete protection against all possible threats or unauthorized access. 
+    You are encouraged to use strong passwords and avoid sharing sensitive account information with others. 
+    By agreeing to these terms, you acknowledge and accept the responsibilities associated with digital use. 
+  </p>
+</div>
+
+</div>
+
+<script>
+document.getElementById("backBtn").onclick = () => {
+  window.history.back();
+};
+</script>
+</body>
+</html>
