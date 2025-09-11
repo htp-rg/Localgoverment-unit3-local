@@ -264,6 +264,19 @@ document.getElementById("inspectionForm").addEventListener("submit", function(e)
   alert("Survey submitted successfully!");
   this.reset();
 });
+
+  const menuBtn = document.getElementById("menuBtn");
+const menuDropdown = document.getElementById("menuDropdown");
+
+menuBtn.addEventListener("click", () => {
+  menuDropdown.classList.toggle("show");
+});
+
+window.addEventListener("click", (e) => {
+  if (!menuBtn.contains(e.target) && !menuDropdown.contains(e.target)) {
+    menuDropdown.classList.remove("show");
+  }
+});
 </script>
 </body>
 </html>
