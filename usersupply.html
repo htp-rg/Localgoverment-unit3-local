@@ -64,9 +64,20 @@ th { font-size: .85rem; opacity: .7; }
     <header class="topbar">
       <div style="display:flex; align-items:center; gap:0.5rem;">
         <button class="btn" id="backBtn">← Back</button>
+        <div class="menu-container">
+          <button class="btn" id="menuBtn">☰</button>
+          <div class="dropdown" id="menuDropdown">
+            <p id="userName">User</p>
+             <a href="upgrade.html">Upgrade Personal Details</a>
+            <a href="password.html">Password and Security</a>
+            <a href="#" id="deleteAccount">Delete Account</a>
+            <a href="terms.html">Terms of Service</a>
+            <a href="report.html">Report a Problem</a>
+            <a href="main.html" id="signOut">Sign Out</a>
+          </div>
+        </div>
       </div>
     </header>
-
     <div class="content">
       <div class="card">
         <h1>Supply Monitoring</h1>
