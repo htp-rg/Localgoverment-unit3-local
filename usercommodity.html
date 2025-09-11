@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>User Commodity & Price Monitoring</title>
+<style>
+:root {
+  --text: #111111;
+  --blue: #0a53c1;
+  --ink-20: #f4f6f8;
+  --white: #ffffff;
+  --border: #e6e8eb;
+  --shadow: 0 6px 24px rgba(0, 0, 0, .06);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Inter, system-ui, sans-serif;
+  background: var(--white);
+  color: var(--text);
+}
+.app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+.sidebar {
+  border-right: 1px solid var(--border);
+  background: #4e73df; 
+}
+.brand {
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 1rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--black);
+}
+nav { padding: 1rem; }
+.nav-item {
+  display: block; padding: .6rem;
+  border-radius: 8px; text-decoration: none; color: var(--text);
+}
+.nav-item:hover, .nav-item.active { background: var(--ink-20); }
+.main { display: grid; grid-template-rows: 64px 1fr; min-width: 0; }
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 1rem; border-bottom: 1px solid var(--border);
+}
+.btn {
+  border: 1px solid var(--text);
+  background: transparent; padding: .4rem .8rem;
+  border-radius: 8px; cursor: pointer;
+}
+.content { padding: 1rem; overflow: auto; }
+.card {
+  border: 1px solid var(--border);
+  border-radius: 12px; padding: 1rem;
+  box-shadow: var(--shadow);
+}
+table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+th, td {
+  border-bottom: 1px solid var(--border);
+  padding: .6rem; text-align: left;
+}
+th { font-size: .85rem; opacity: .7; }
+
+.menu-container { position: relative; display: inline-block; }
+.dropdown {
+  display: none;
+  position: absolute;
+  top: 110%;
+  right: 0;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  min-width: 220px;
+  z-index: 1000;
+}
+.dropdown p {
+  margin: 0; padding: 0.8rem;
+  font-weight: bold;
+  border-bottom: 1px solid var(--border);
+}
+.dropdown a {
+  display: block; padding: 0.8rem;
+  text-decoration: none; color: var(--text);
+  border-bottom: 1px solid var(--border);
+}
+.dropdown a:hover { background: var(--ink-20); }
+.dropdown a:last-child { border-bottom: none; }
+.dropdown.show { display: block; }
+
+.search { margin-bottom: 1rem; }
+.search input { width: 90%; padding: .5rem; border-radius: 8px; border: 1px solid var(--border); }
+.modal {
+  display: none; 
+  position: fixed; 
+  z-index: 10000;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4); 
+  justify-content: center;
+  align-items: center;
+}
+.modal-content {
+  background-color: var(--white);
+  padding: 1.5rem;
+  border-radius: 12px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: var(--shadow);
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">LGU 3 USER SYSTEM</div>
+    <nav>
+      <a href="userdashboard.html" class="nav-item">Dashboard</a>
+      <a href="uservendor.html" class="nav-item">Vendor Management</a>
+      <a href="usercommodity.html" class="nav-item active">Commodity & Price Monitoring</a>
+      <a href="usersupply.html" class="nav-item">Supply Monitoring</a>
+      <a href="userinspection.html" class="nav-item">Inspection & Compliance</a>
+      <a href="userreports.html" class="nav-item">Reports & Analytics</a>
+      <a href="usersettings.html" class="nav-item">Settings</a>
+      <a href="login.html" class="nav-item" style="margin-top:2rem; font-weight:bold;">Logout</a>
+    </nav>
+  </aside>
+
+  <section class="main">
+    <header class="topbar">
+      <div style="display:flex; align-items:center; gap:0.5rem;">
+        <button class="btn" id="backBtn">← Back</button>
+        <div class="menu-container">
+          <button class="btn" id="menuBtn">☰</button>
+          <div class="dropdown" id="menuDropdown">
+            <p id="userName">User</p>
+            <a href="profile.html">Profile</a>
+            <a href="security.html">Password and Security</a>
+            <a href="terms.html">Terms of Service</a>
+            <a href="report.html">Report a Problem</a>
+            <a href="main.html" id="signOut">Sign Out</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="content">
+      <div class="card">
+        <h1>COMMODITY & PRICE MONITORING</h1>
+        <div class="search">🔎 <input id="commoditySearch" type="search" placeholder="Search…"></div>
+        <table id="commodityTable">
+          <thead>
+            <tr>
+              <th>Type of Business</th>
+              <th>Previous Price</th>
+              <th>Current Price</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+
+        <div style="display:flex;gap:2rem;margin-top:1rem;align-items:flex-start;">
+          <div style="flex:0 0 auto;">
+            <canvas id="pieChart" width="300" height="300"></canvas>
+          </div>
+          <div class="card-container" id="commodityCards"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="modal" id="dataModal">
+  <div class="modal-content">
+    <span class="close" onclick="closeDataModal()">&times;</span>
+    <h3 id="dataModalTitle"></h3>
+    <table id="lineTable">
+      <thead>
+        <tr><th>Week</th><th>Price</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+const COMMODITY_KEY = "commodity_data";
+const tableBody = document.querySelector("#commodityTable tbody");
+const cardsDiv = document.getElementById("commodityCards");
+let pieChart;
+
+
+const menuBtn = document.getElementById("menuBtn");
+const menuDropdown = document.getElementById("menuDropdown");
+menuBtn.addEventListener("click", () => menuDropdown.classList.toggle("show"));
+window.addEventListener("click", (e) => {
+  if (!menuBtn.contains(e.target) && !menuDropdown.contains(e.target)) {
+    menuDropdown.classList.remove("show");
+  }
+});
+
+
+function loadCommodities() {
+  const data = JSON.parse(localStorage.getItem(COMMODITY_KEY) || "[]");
+  tableBody.innerHTML = "";
+  cardsDiv.innerHTML = ""; 
+  const colors = ["#ff4d4d", "#ffd966", "#9fff80", "#4da6ff"]; 
+
+  data.forEach((item, i) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${item.type}</td> 
+      <td>${item.prev}</td> 
+      <td>${item.curr}</td> 
+      <td>${item.status}</td>
+    `; 
+    tableBody.appendChild(tr);
+
+    const card = document.createElement("div"); 
+    card.className = "card"; 
+    card.style.backgroundColor = colors[i % colors.length]; 
+    card.style.color = (colors[i % colors.length] === "#ffd966") ? "#111" : "#fff"; 
+    card.innerHTML = `${item.type}<br><button class="view-btn">View Data</button>`; 
+    card.querySelector(".view-btn").onclick = (e) => { e.stopPropagation(); openDataModal(item.type); }; 
+    cardsDiv.appendChild(card); 
+  });
+
+  updatePieChart();
+}
+
+
+function updatePieChart() {
+  const data = JSON.parse(localStorage.getItem(COMMODITY_KEY) || "[]");
+  const counts = { High: 0, Low: 0, Stable: 0 };
+  data.forEach(d => { if (counts[d.status] !== undefined) counts[d.status]++; });
+  const ctx = document.getElementById("pieChart").getContext("2d");
+  if (pieChart) pieChart.destroy();
+  pieChart = new Chart(ctx, {
+    type: "pie",
+    data: {
+      labels: ["High", "Low", "Stable"],
+      datasets: [{
+        data: [counts.High, counts.Low, counts.Stable],
+        backgroundColor: ["#ff4d4d", "#9fff80", "#ffd966"]
+      }]
+    }
+  });
+}
+
+const dataModal = document.getElementById("dataModal");
+const dataModalTitle = document.getElementById("dataModalTitle");
+const lineTableBody = document.querySelector("#lineTable tbody");
+
+function openDataModal(name) {
+  const data = JSON.parse(localStorage.getItem(COMMODITY_KEY) || "[]");
+  const item = data.find(d => d.type === name);
+  if (!item) return;
+
+  dataModalTitle.textContent = `${name} - Past 6 Weeks`;
+  lineTableBody.innerHTML = "";
+
+  const weeks = ["Week 1","Week 2","Week 3","Week 4","Week 5","Week 6"];
+  const values = [
+    item.prev,
+    item.prev + (item.curr - item.prev) * 0.2,
+    item.prev + (item.curr - item.prev) * 0.4,
+    item.prev + (item.curr - item.prev) * 0.6,
+    item.prev + (item.curr - item.prev) * 0.8,
+    item.curr
+  ];
+
+  values.forEach((v, i) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${weeks[i]}</td><td>${v.toFixed(2)}</td>`;
+    lineTableBody.appendChild(tr);
+  });
+
+  dataModal.style.display = "flex";
+}
+function closeDataModal() { dataModal.style.display = "none"; }
+
+
+document.getElementById("commoditySearch").addEventListener("keyup", function() {
+  const filter = this.value.toLowerCase();
+  document.querySelectorAll("#commodityTable tbody tr").forEach(r => {
+    r.style.display = r.innerText.toLowerCase().includes(filter) ? "" : "none";
+  });
+});
+
+window.onload = () => { 
+  document.getElementById("userName").textContent = localStorage.getItem("userName") || "User";
+  loadCommodities(); 
+};
+</script>
+</body>
+</html>
