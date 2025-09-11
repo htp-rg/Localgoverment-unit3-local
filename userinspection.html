@@ -61,6 +61,34 @@ nav { padding: 1rem; }
 fieldset { margin-bottom: 1rem; border: none; }
 legend { font-weight: bold; margin-bottom: .5rem; }
 label { display: block; margin: .4rem 0; }
+
+  .menu-container { position: relative; display: inline-block; }
+.dropdown {
+  display: none;
+  position: absolute;
+  top: 110%;
+  right: 0;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  min-width: 220px;
+  z-index: 1000;
+}
+.dropdown p {
+  margin: 0; padding: 0.8rem;
+  font-weight: bold;
+  border-bottom: 1px solid var(--border);
+}
+.dropdown a {
+  display: block; padding: 0.8rem;
+  text-decoration: none; color: var(--text);
+  border-bottom: 1px solid var(--border);
+}
+.dropdown a:hover { background: var(--ink-20); }
+.dropdown a:last-child { border-bottom: none; }
+.dropdown.show { display: block; }
+
 </style>
 </head>
 <body>
