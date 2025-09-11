@@ -26,6 +26,7 @@ body {
 .sidebar {
   border-right: 1px solid var(--border);
   background: #4e73df; 
+  color: white;
 }
 .brand {
   font-weight: 800;
@@ -37,6 +38,7 @@ nav { padding: 1rem; }
 .nav-item {
   display: block; padding: .6rem;
   border-radius: 8px; text-decoration: none; color: var(--text);
+  background: white; margin-bottom: .5rem;
 }
 .nav-item:hover, .nav-item.active { background: var(--ink-20); }
 
@@ -55,11 +57,9 @@ nav { padding: 1rem; }
   border: 1px solid var(--border);
   border-radius: 12px; padding: 1rem;
   box-shadow: var(--shadow);
+  background: var(--white);
 }
-.menu-container {
-  position: relative;
-  display: inline-block;
-}
+.menu-container { position: relative; display: inline-block; }
 .dropdown {
   display: none;
   position: absolute;
@@ -98,7 +98,6 @@ nav { padding: 1rem; }
   border-radius: 12px;
   word-wrap: break-word;
   font-size: 0.9rem;
-  position: relative;
 }
 .chat-user {
   align-self: flex-end;
@@ -174,20 +173,19 @@ nav { padding: 1rem; }
       </div>
     </header>
 
-     <div class="content">
+    <div class="content">
       <h1>Reports and Dashboard with AI Analytic</h1>
       <div class="grid">
         <div class="card">
           <h3>Vendor Performance Dashboard</h3>
           <canvas id="vendorChart" height="120"></canvas>
         </div>
-        <div class="card">
-      <h1>User Reports & Complaints</h1>
-      <div class="grid">
+
         <div class="card">
           <h3>Make a Complaint</h3>
           <button id="makeComplaintBtn" class="btn">➕ Make Complaint</button>
         </div>
+
         <div class="card">
           <h3>AI Chat Support</h3>
           <div id="chatboxContainer" style="
@@ -236,8 +234,9 @@ window.addEventListener("click", e=>{
   }
 });
 
-  function initReports() {
+document.getElementById("backBtn").onclick = ()=> window.history.back();
 
+function initReports() {
   const ctx = document.getElementById("vendorChart");
   if (ctx) {
     new Chart(ctx, {
@@ -253,6 +252,8 @@ window.addEventListener("click", e=>{
       options: { responsive: true, scales: { y: { beginAtZero:true, max:100 } } }
     });
   }
+}
+initReports();
 
 function initChat() {
   const chatBox = document.getElementById("chatboxContainer");
@@ -307,7 +308,6 @@ document.getElementById("complaintForm").addEventListener("submit", function(e){
 
   let complaints = JSON.parse(localStorage.getItem("complaints") || "{}");
 
- 
   let maxNum = 4; 
   Object.keys(complaints).forEach(ref=>{
     const num = parseInt(ref.split("-")[1]);
