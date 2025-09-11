@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Login</title>
+  <style>
+    body { font-family: Arial; background: #f2f2f2; margin: 0; padding: 0; }
+    .container { max-width: 400px; margin: 60px auto; padding: 20px; border-radius: 8px; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    h1, h2 { text-align: center; color: #333; }
+    label { display: block; margin-top: 15px; font-weight: bold; }
+    input, button { padding: 10px; border-radius: 5px; border: 1px solid #ccc; width: 100%; margin-top: 5px; font-size: 14px; box-sizing: border-box; }
+    button { cursor: pointer; border: none; color: #fff; }
+    .btn-login { background: #4285f4; margin-top: 15px; }
+    .btn-create { background: green; margin-top: 15px; }
+    .switch { text-align: center; margin-top: 15px; font-size: 14px; }
+    .switch a { color: #4285f4; cursor: pointer; }
+    #message { text-align: center; margin-top: 10px; color: red; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>MARKET AND TRADE MONITORING SYSTEM</h1>
+    <form id="createForm">
+      <h2>Create an Account</h2>
+      <label for="newName">Full Name:</label>
+      <input type="text" id="newName" required placeholder="Enter your name">
+
+      <label for="newEmail">Email:</label>
+      <input type="email" id="newEmail" required placeholder="Enter your email">
+
+      <label for="newPassword">Password:</label>
+      <input type="password" id="newPassword" required placeholder="Enter your password">
+
+      <button type="submit" class="btn-create">Create Account</button>
+      <div class="switch">Already have an account? <a id="showLogin">Log in here</a></div>
+    </form>
+
+    <form id="loginForm" class="hidden">
+      <h2>Login</h2>
+      <label for="loginEmail">Email:</label>
+      <input type="email" id="loginEmail" required placeholder="Enter your email">
+
+      <label for="loginPassword">Password:</label>
+      <input type="password" id="loginPassword" required placeholder="Enter your password">
+
+      <button type="submit" class="btn-login">Login</button>
+      <div class="switch">Don't have an account? <a id="showCreate">Create one here</a></div>
+    </form>
+
+    <div id="message"></div>
+  </div>
+
+  <script>
+    const createForm = document.getElementById("createForm");
+    const loginForm = document.getElementById("loginForm");
+    const message = document.getElementById("message");
+
+    document.getElementById("showLogin").onclick = () => {
+      createForm.classList.add("hidden");
+      loginForm.classList.remove("hidden");
+      message.textContent = "";
+    };
+    document.getElementById("showCreate").onclick = () => {
+      loginForm.classList.add("hidden");
+      createForm.classList.remove("hidden");
+      message.textContent = "";
+    };
+
+  
+    createForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = document.getElementById("newName").value.trim();
+      const email = document.getElementById("newEmail").value.trim();
+      const password = document.getElementById("newPassword").value.trim();
+
+      if (!name || !email || !password) {
+        message.textContent = "Please fill all fields.";
+        return;
+      }
+
+      localStorage.setItem("userName", name);
+      localStorage.setItem("userEmail", email);
+      localStorage.setItem("userPassword", password);
+
+      message.style.color = "green";
+      message.textContent = "✅ Account created successfully! Please log in.";
+
+      createForm.classList.add("hidden");
+      loginForm.classList.remove("hidden");
+    });
+
+
+    loginForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = document.getElementById("loginEmail").value.trim();
+      const password = document.getElementById("loginPassword").value.trim();
+
+      const savedEmail = localStorage.getItem("userEmail");
+      const savedPassword = localStorage.getItem("userPassword");
+
+      if (email === savedEmail && password === savedPassword) {
+        localStorage.setItem("isLoggedIn", "true");
+        message.style.color = "green";
+        message.textContent = "✅ Login successful! Redirecting...";
+        setTimeout(() => { window.location.href = "userdashboard.html"; }, 1000);
+      } else {
+        message.style.color = "red";
+        message.textContent = "❌ Invalid email or password.";
+      }
+    });
+
+
+    window.onload = () => {
+      if (localStorage.getItem("isLoggedIn") === "true") {
+        window.location.href = "userdashboard.html";
+      }
+    };
+  </script>
+</body>
+</html>
