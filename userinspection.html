@@ -80,10 +80,21 @@ label { display: block; margin: .4rem 0; }
     </nav>
   </aside>
 
-  <section class="main">
+   <section class="main">
     <header class="topbar">
       <div style="display:flex; align-items:center; gap:0.5rem;">
-        <button class="btn" onclick="history.back()">← Back</button>
+        <button class="btn" id="backBtn">← Back</button>
+        <div class="menu-container">
+          <button class="btn" id="menuBtn">☰</button>
+          <div class="dropdown" id="menuDropdown">
+            <p id="userName">User</p>
+            <a href="upgrade.html">Upgrade Personal Details</a>
+            <a href="userpassword.html">Password and Security</a>
+            <a href="terms.html">Terms of Service</a>
+            <a href="userreport.html">Report a Problem</a>
+            <a href="main.html" id="signOut">Sign Out</a>
+          </div>
+        </div>
       </div>
     </header>
 
