@@ -24,9 +24,37 @@ body {
   display: block; 
   min-height: 100vh; 
 }
-.topbar {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 1rem; border-bottom: 1px solid var(--border);
+.menu-container {
+  position: relative;
+}
+.dropdown {
+  display: none;
+  position: absolute;
+  top: 120%;
+  right: 0;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  min-width: 220px;
+  overflow: hidden;
+  z-index: 1000;
+}
+.dropdown.show { display: block; }
+.dropdown a {
+  display: block;
+  padding: 0.9rem 1rem;
+  text-decoration: none;
+  color: var(--text);
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+.dropdown a:hover { background: var(--ink-20); }
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 .btn {
   border: 1px solid var(--text);
