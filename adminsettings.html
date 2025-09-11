@@ -63,7 +63,6 @@ nav { padding: 1rem; }
   box-shadow: var(--shadow);
 }
 
-/* Dropdown menu */
 .menu-container { position: relative; display: inline-block; }
 .dropdown {
   display: none;
@@ -73,9 +72,8 @@ nav { padding: 1rem; }
   border: 1px solid var(--border);
   border-radius: 8px;
   box-shadow: var(--shadow);
-  min-width: 240px;
+  min-width: 200px;
   z-index: 1000;
-  overflow: hidden;
 }
 .dropdown p {
   margin: 0;
@@ -83,29 +81,34 @@ nav { padding: 1rem; }
   font-weight: bold;
   border-bottom: 1px solid var(--border);
 }
-.dropdown button {
+.dropdown a {
   display: block;
-  width: 100%;
   padding: 0.8rem;
-  border: none;
-  cursor: pointer;
+  text-decoration: none;
   font-size: 0.9rem;
-  text-align: left;
-  background: var(--white);
-  color: var(--white);
+  color: var(--text);
 }
-.dropdown button:hover { opacity: 0.85; }
+.dropdown a:hover { background: var(--ink-20); }
 .dropdown.show { display: block; }
 
-/* Button colors */
-.btn-personal { background: var(--green); color: white; }
-.btn-password { background: var(--blue); color: white; }
-.btn-delete { background: var(--red); color: white; }
-.btn-community { background: var(--purple); color: white; }
-.btn-terms { background: var(--yellow); color: black !important; }
-.btn-report { background: var(--teal); color: white; }
+.settings-btn {
+  display: block;
+  width: 100%;
+  margin: 0.5rem 0;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+}
+.settings-btn:hover { opacity: 0.9; }
+.settings-btn.personal { background: var(--green); color: white; }
+.settings-btn.password { background: var(--blue); color: white; }
+.settings-btn.delete { background: var(--red); color: white; }
+.settings-btn.terms { background: var(--yellow); color: black; }
+.settings-btn.report { background: var(--teal); color: white; }
 
-/* Modal */
 .settings-modal {
   display: none; 
   position: fixed; 
@@ -154,7 +157,6 @@ nav { padding: 1rem; }
             <p id="adminName">Admin</p>
             <a href="upgrade.html">Upgrade Personal Details</a>
             <a href="adminpassword.html">Password and Security</a>
-            <a href="#" id="deleteAccount">Delete Account</a>
             <a href="terms.html">Terms of Service</a>
             <a href="adminreport.html">Report a Problem</a>
             <a href="main.html" id="signOut">Sign Out</a>
@@ -167,122 +169,79 @@ nav { padding: 1rem; }
     </header>
 
     <div class="content">
-      <div id="settingsModal" class="settings-modal">
-        <div class="settings-modal-content">
-          <span class="close" onclick="closeForm()">&times;</span>
-          <h3 id="settingsModalTitle"></h3>
+      <h2>Account Center</h2>
+      <button class="settings-btn personal" onclick="openForm('personal')">Personal Details</button>
+      <button class="settings-btn password" onclick="openForm('password')">Password and Security</button>
+      <button class="settings-btn delete" onclick="openForm('delete')">Delete Account</button>
 
-          <form id="personalForm" class="settings-form" style="display:none;">
-            <label>Name:</label><input type="text" placeholder="Enter your name"><br>
-            <label>Email:</label><input type="email" placeholder="Enter your email"><br>
-            <label>Phone:</label><input type="text" placeholder="Enter phone number"><br>
-            <button type="submit" class="btn btn-personal">Save</button>
-          </form>
-
-          <form id="passwordForm" class="settings-form" style="display:none;">
-            <label>Old Password:</label><input type="password"><br>
-            <label>New Password:</label><input type="password"><br>
-            <label>Confirm New Password:</label><input type="password"><br>
-            <button type="submit" class="btn btn-password">Update</button>
-          </form>
-
-          <form id="deleteForm" class="settings-form" style="display:none;">
-            <p>⚠️ This action cannot be undone. Please type <b>DELETE</b> to confirm.</p>
-            <input type="text" placeholder="Type DELETE">
-            <button type="submit" class="btn btn-delete">Delete Account</button>
-          </form>
-
-          <div id="communityForm" class="settings-form" style="display:none;">
-            <p><b>🌍 Community Standard:</b><br>
-            All admins are expected to follow professional guidelines and respect LGU protocols. Misuse of the system may lead to suspension.</p>
-          </div>
-
-          <div id="termsForm" class="settings-form" style="display:none;">
-            <p><b>📜 Terms of Service:</b><br>
-            By using this system, you agree to comply with LGU 3 Admin policies, data security guidelines, 
-            and vendor management protocols. Any violation may result in account suspension.</p>
-          </div>
-
-          <form id="reportForm" class="settings-form" style="display:none;">
-            <label>Describe the issue:</label>
-            <textarea rows="4" style="width:100%;"></textarea>
-            <button type="submit" class="btn btn-report">Send Report</button>
-          </form>
-        </div>
-      </div>
+      <h2>Community Standard</h2>
+      <button class="settings-btn terms" onclick="openForm('terms')">Terms of Service</button>
+      <button class="settings-btn report" onclick="openForm('report')">Report a Problem</button>
     </div>
   </section>
 </div>
 
+<div id="settingsModal" class="settings-modal">
+  <div class="settings-modal-content">
+    <span class="close" onclick="closeForm()">&times;</span>
+    <h3 id="settingsModalTitle"></h3>
+
+    <form id="personalForm" class="settings-form" style="display:none;">
+      <label>Name:</label><input type="text" placeholder="Enter your name"><br>
+      <label>Email:</label><input type="email" placeholder="Enter your email"><br>
+      <label>Phone:</label><input type="text" placeholder="Enter phone number"><br>
+      <button type="submit" class="settings-btn personal">Save</button>
+    </form>
+
+    <form id="passwordForm" class="settings-form" style="display:none;">
+      <label>Old Password:</label><input type="password"><br>
+      <label>New Password:</label><input type="password"><br>
+      <label>Confirm New Password:</label><input type="password"><br>
+      <button type="submit" class="settings-btn password">Update</button>
+    </form>
+
+    <form id="deleteForm" class="settings-form" style="display:none;">
+      <p>⚠️ This action cannot be undone. Please type <b>DELETE</b> to confirm.</p>
+      <input type="text" placeholder="Type DELETE">
+      <button type="submit" class="settings-btn delete">Delete Account</button>
+    </form>
+
+    <div id="termsForm" class="settings-form" style="display:none;">
+      <p><b>📜 Terms of Service:</b><br>
+      By using this system, you agree to comply with LGU 3 Admin policies, data security guidelines, 
+      and vendor management protocols. Any violation may result in account suspension.</p>
+    </div>
+
+    <form id="reportForm" class="settings-form" style="display:none;">
+      <label>Describe the issue:</label>
+      <textarea rows="4" style="width:100%;"></textarea>
+      <button type="submit" class="settings-btn report">Send Report</button>
+    </form>
+  </div>
+</div>
+
 <script>
-function saveSettings(key, data) {
-  localStorage.setItem(key, JSON.stringify(data));
-}
-function loadSettings(key) {
-  return JSON.parse(localStorage.getItem(key) || "{}");
-}
-function populatePersonalDetails() {
-  const data = loadSettings("personalDetails");
-  if (data.name) document.querySelector("#personalForm input[type='text']").value = data.name;
-  if (data.email) document.querySelector("#personalForm input[type='email']").value = data.email;
-  if (data.phone) document.querySelectorAll("#personalForm input[type='text']")[1].value = data.phone;
-}
-function populatePasswordForm() {
-  document.querySelectorAll("#passwordForm input[type='password']").forEach(inp => inp.value = "");
-}
-
-document.getElementById("personalForm").onsubmit = function(e){
-  e.preventDefault();
-  const inputs = this.querySelectorAll("input");
-  const data = { name: inputs[0].value, email: inputs[1].value, phone: inputs[2].value };
-  saveSettings("personalDetails", data);
-  alert("✅ Personal details updated!");
-  closeForm();
-};
-
-document.getElementById("passwordForm").onsubmit = function(e){
-  e.preventDefault();
-  const inputs = this.querySelectorAll("input");
-  const oldPass = inputs[0].value, newPass = inputs[1].value, confirmPass = inputs[2].value;
-  if(newPass !== confirmPass){ alert("❌ Passwords do not match!"); return; }
-  saveSettings("adminPassword", { oldPassword: oldPass, newPassword: newPass });
-  alert("✅ Password updated!");
-  closeForm();
-};
-
-document.getElementById("deleteForm").onsubmit = function(e){
-  e.preventDefault();
-  const input = this.querySelector("input").value;
-  if(input === "DELETE"){
-    localStorage.clear();
-    alert("⚠️ Account deleted!");
-    closeForm();
-    window.location.href = "loginadmin.html";
-  } else { alert("❌ Please type DELETE to confirm."); }
-};
-
 function openForm(type) {
-  document.getElementById("settingsModal").style.display = "flex";
-  document.querySelectorAll(".settings-form, #communityForm, #termsForm").forEach(f => f.style.display="none");
-  let title = "";
-  if(type === "personal"){ title="Personal Details"; document.getElementById("personalForm").style.display="block"; populatePersonalDetails();}
-  if(type === "password"){ title="Password and Security"; document.getElementById("passwordForm").style.display="block"; populatePasswordForm();}
-  if(type === "delete"){ title="Delete Account"; document.getElementById("deleteForm").style.display="block";}
-  if(type === "community"){ title="Community Standard"; document.getElementById("communityForm").style.display="block";}
-  if(type === "terms"){ title="Terms of Service"; document.getElementById("termsForm").style.display="block";}
-  if(type === "report"){ title="Report a Problem"; document.getElementById("reportForm").style.display="block";}
-  document.getElementById("settingsModalTitle").textContent = title;
+  document.getElementById("settingsModal").style.display="flex";
+  document.querySelectorAll(".settings-form").forEach(f=>f.style.display="none");
+  let title="";
+  if(type==="personal"){title="Personal Details";document.getElementById("personalForm").style.display="block";}
+  if(type==="password"){title="Password and Security";document.getElementById("passwordForm").style.display="block";}
+  if(type==="delete"){title="Delete Account";document.getElementById("deleteForm").style.display="block";}
+  if(type==="terms"){title="Terms of Service";document.getElementById("termsForm").style.display="block";}
+  if(type==="report"){title="Report a Problem";document.getElementById("reportForm").style.display="block";}
+  document.getElementById("settingsModalTitle").textContent=title;
 }
-function closeForm(){ document.getElementById("settingsModal").style.display="none"; }
+function closeForm(){document.getElementById("settingsModal").style.display="none";}
 
-const menuBtn = document.getElementById("menuBtn");
-const menuDropdown = document.getElementById("menuDropdown");
-menuBtn.addEventListener("click", () => { menuDropdown.classList.toggle("show"); });
-window.addEventListener("click", (e) => {
-  if (!menuBtn.contains(e.target) && !menuDropdown.contains(e.target)) {
+const menuBtn=document.getElementById("menuBtn");
+const menuDropdown=document.getElementById("menuDropdown");
+menuBtn.addEventListener("click",()=>{menuDropdown.classList.toggle("show");});
+window.addEventListener("click",(e)=>{
+  if(!menuBtn.contains(e.target)&&!menuDropdown.contains(e.target)){
     menuDropdown.classList.remove("show");
   }
 });
 </script>
 </body>
-</html>
+        
