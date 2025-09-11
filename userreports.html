@@ -227,7 +227,6 @@ nav { padding: 1rem; }
 </div>
 
 <script>
-// Dropdown toggle
 const menuBtn = document.getElementById("menuBtn");
 const menuDropdown = document.getElementById("menuDropdown");
 menuBtn.addEventListener("click", ()=> menuDropdown.classList.toggle("show"));
@@ -236,6 +235,24 @@ window.addEventListener("click", e=>{
     menuDropdown.classList.remove("show");
   }
 });
+
+  function initReports() {
+
+  const ctx = document.getElementById("vendorChart");
+  if (ctx) {
+    new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: ["Takoyaki", "Meat Shop", "Catering", "Rental"],
+        datasets: [{
+          label: "Performance",
+          data: [87, 65, 72, 90],
+          backgroundColor: "#0a53c1"
+        }]
+      },
+      options: { responsive: true, scales: { y: { beginAtZero:true, max:100 } } }
+    });
+  }
 
 function initChat() {
   const chatBox = document.getElementById("chatboxContainer");
