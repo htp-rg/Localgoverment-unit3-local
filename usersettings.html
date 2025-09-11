@@ -12,12 +12,6 @@
   --white: #ffffff;
   --border: #e6e8eb;
   --shadow: 0 6px 24px rgba(0, 0, 0, .06);
-
-  --red: #e74c3c;
-  --green: #27ae60;
-  --yellow: #f39c12;
-  --purple: #8e44ad;
-  --teal: #16a085;
 }
 * { box-sizing: border-box; }
 body {
@@ -28,11 +22,11 @@ body {
 }
 .app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
 
-.sidebar {
+  .sidebar {
   border-right: 1px solid var(--border);
   background: #4e73df; 
-  color: white;
 }
+  
 .brand {
   font-weight: 800;
   text-transform: uppercase;
@@ -41,13 +35,8 @@ body {
 }
 nav { padding: 1rem; }
 .nav-item {
-  display: block;
-  padding: .6rem;
-  border-radius: 8px;
-  text-decoration: none;
-  color: var(--text);
-  background: white;
-  margin-bottom: .3rem;
+  display: block; padding: .6rem;
+  border-radius: 8px; text-decoration: none; color: var(--text);
 }
 .nav-item:hover, .nav-item.active { background: var(--ink-20); }
 
