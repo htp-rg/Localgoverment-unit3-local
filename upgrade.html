@@ -22,23 +22,23 @@ body {
 }
 .app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
 
-.sidebar {
+  .sidebar {
   border-right: 1px solid var(--border);
   background: #4e73df; 
 }
+  
 .brand {
   font-weight: 800;
   text-transform: uppercase;
   padding: 1rem;
   border-bottom: 1px solid var(--border);
-  color: white;
 }
 nav { padding: 1rem; }
 .nav-item {
   display: block; padding: .6rem;
-  border-radius: 8px; text-decoration: none; color: var(--white);
+  border-radius: 8px; text-decoration: none; color: var(--text);
 }
-.nav-item:hover, .nav-item.active { background: var(--ink-20); color: var(--text); }
+.nav-item:hover, .nav-item.active { background: var(--ink-20); }
 
 .main { display: grid; grid-template-rows: 64px 1fr; min-width: 0; }
 .topbar {
