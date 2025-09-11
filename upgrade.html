@@ -110,23 +110,46 @@ form input, form select {
   cursor: pointer;
 }
 .save-btn:hover { opacity: 0.9; }
+  .topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.topbar-left {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
 </style>
 </head>
 <body>
 <div class="app">
 
-<header class="topbar-right">
-  <button class="btn" id="backBtn">← Back</button>
-  <div class="menu-container">
-    <button class="btn" id="menuBtn">☰</button>
-    <div class="dropdown" id="menuDropdown">
-      <p id="adminName">Admin</p>
-      <a href="upgrade.html">Upgrade Personal Details</a>
-      <a href="adminpassword.html">Password and Security</a>
-      <a href="#" id="deleteAccount">Delete Account</a>
-      <a href="terms.html">Terms of Service</a>
-      <a href="adminreport.html">Report a Problem</a>
-      <a href="main.html" id="signOut">Sign Out</a>
+<header class="topbar">
+  <div class="topbar-left">
+    <h2 class="brand">Upgrade Personal Details</h2>
+  </div>
+  <div class="topbar-right">
+    <button class="btn" id="backBtn">← Back</button>
+    <div class="menu-container">
+      <button class="btn" id="menuBtn">☰</button>
+      <div class="dropdown" id="menuDropdown">
+        <p id="adminName">Admin</p>
+        <a href="upgrade.html">Upgrade Personal Details</a>
+        <a href="adminpassword.html">Password and Security</a>
+        <a href="#" id="deleteAccount">Delete Account</a>
+        <a href="terms.html">Terms of Service</a>
+        <a href="adminreport.html">Report a Problem</a>
+        <a href="main.html" id="signOut">Sign Out</a>
+      </div>
     </div>
   </div>
 </header>
