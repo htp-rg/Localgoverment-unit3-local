@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>User Vendor Management</title>
+<style>
+:root {
+  --text: #111111;
+  --blue: #0a53c1;
+  --ink-20: #f4f6f8;
+  --white: #ffffff;
+  --border: #e6e8eb;
+  --shadow: 0 6px 24px rgba(0, 0, 0, .06);
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Inter, system-ui, sans-serif;
+  background: var(--white);
+  color: var(--text);
+}
+.app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+
+.sidebar {
+  border-right: 1px solid var(--border);
+  background: #4e73df; 
+}
+.brand {
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 1rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--white);
+}
+nav { padding: 1rem; }
+.nav-item {
+  display: block; padding: .6rem;
+  border-radius: 8px; text-decoration: none; color: var(--text);
+}
+.nav-item:hover, .nav-item.active { background: var(--ink-20); }
+
+.main { display: grid; grid-template-rows: 64px 1fr; min-width: 0; }
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 1rem; border-bottom: 1px solid var(--border);
+}
+.btn {
+  border: 1px solid var(--text);
+  background: transparent; padding: .4rem .8rem;
+  border-radius: 8px; cursor: pointer;
+}
+.content { padding: 1rem; overflow: auto; }
+.card {
+  border: 1px solid var(--border);
+  border-radius: 12px; padding: 1rem;
+  box-shadow: var(--shadow);
+}
+
+table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+th, td {
+  border-bottom: 1px solid var(--border);
+  padding: .6rem; text-align: left;
+}
+th { font-size: .85rem; opacity: .7; }
+
+.star { color: gold; font-size: 1.2rem; }
+
+.menu-container {
+  position: relative;
+  display: inline-block;
+}
+.dropdown {
+  display: none;
+  position: absolute;
+  top: 110%;
+  right: 0;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  min-width: 220px;
+  z-index: 1000;
+}
+.dropdown p {
+  margin: 0;
+  padding: 0.8rem;
+  font-weight: bold;
+  border-bottom: 1px solid var(--border);
+}
+.dropdown a {
+  display: block;
+  padding: 0.8rem;
+  text-decoration: none;
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+}
+.dropdown a:hover { background: var(--ink-20); }
+.dropdown a:last-child { border-bottom: none; }
+.dropdown.show { display: block; }
+
+.search { margin-bottom: 1rem; }
+.search input { width: 90%; padding: .5rem; border-radius: 8px; border: 1px solid var(--border); }
+</style>
+</head>
+<body>
+<div class="app">
+  
+  <aside class="sidebar">
+    <div class="brand">LGU 3 USER SYSTEM</div>
+    <nav>
+      <a href="userdashboard.html" class="nav-item">Dashboard</a>
+      <a href="uservendor.html" class="nav-item active">Vendor Management</a>
+      <a href="usercommodity.html" class="nav-item">Commodity & Price Monitoring</a>
+      <a href="usersupply.html" class="nav-item">Supply Monitoring</a>
+      <a href="userinspection.html" class="nav-item">Inspection & Compliance</a>
+      <a href="userreports.html" class="nav-item">Reports & Analytics</a>
+      <a href="usersettings.html" class="nav-item">Settings</a>
+      <a href="login.html" class="nav-item" style="margin-top:2rem; font-weight:bold;">Logout</a>
+    </nav>
+  </aside>
+
+  <section class="main">
+    <header class="topbar">
+      <div style="display:flex; align-items:center; gap:0.5rem;">
+        <button class="btn" id="backBtn">← Back</button>
+        <div class="menu-container">
+          <button class="btn" id="menuBtn">☰</button>
+          <div class="dropdown" id="menuDropdown">
+            <p id="userName">User</p>
+            <a href="profile.html">Profile</a>
+            <a href="security.html">Password and Security</a>
+            <a href="terms.html">Terms of Service</a>
+            <a href="report.html">Report a Problem</a>
+            <a href="main.html" id="signOut">Sign Out</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="content">
+      <div class="card">
+        <h1>Vendor Management</h1>
+        <div class="search">🔎 <input id="searchInput" type="search" placeholder="Search…"></div>
+        <table id="vendorEngagementsTable">
+          <thead>
+            <tr>
+              <th>Business Name</th>
+              <th>Status</th>
+              <th>Owner</th>
+              <th>Due Date</th>
+              <th>Records of Payment</th>
+              <th>Rating</th>
+            </tr>
+          </thead>
+          <tbody>
+           <tr>
+            <td>Takoyaki store</td>
+            <td>✅ Completed</td>
+            <td>Gacusan, Aira Jane</td>
+            <td>03 Sep 2025</td>
+            <td>3,785.00</td>
+            <td class="star">★★★★★</td>
+          </tr>
+          <tr>
+            <td>Sound equipment</td>
+            <td>✏ In progress</td>
+            <td>Furigay, Neri Jane</td>
+            <td>10 Sep 2025</td>
+            <td>2,345</td>
+            <td class="star">☆☆☆☆☆</td>
+          </tr>
+          <tr>
+            <td>Tables and chairs</td>
+            <td>⏳ Not started</td>
+            <td>Pena, Rona Mae</td>
+            <td>04 Nov 2025</td>
+            <td>5,199</td>
+            <td class="star">☆☆☆☆☆</td>
+          </tr>
+          <tr>
+            <td>Atan's Meat Shop</td>
+            <td>⛔ Blocked</td>
+            <td>Dacoco, Jonathan</td>
+            <td>12 Mar 2025</td>
+            <td>1,870</td>
+            <td class="star">★★★☆☆</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+const menuBtn = document.getElementById("menuBtn");
+const menuDropdown = document.getElementById("menuDropdown");
+menuBtn.addEventListener("click", ()=> menuDropdown.classList.toggle("show"));
+document.addEventListener("click", e => { if(!e.target.closest(".menu-container")) menuDropdown.classList.remove("show"); });
+
+document.getElementById("searchInput").addEventListener("keyup", function(){
+  const filter = this.value.toLowerCase();
+  document.querySelectorAll("#vendorEngagementsTable tbody tr").forEach(r=>{
+    r.style.display = r.innerText.toLowerCase().includes(filter) ? "" : "none";
+  });
+});
+
+window.onload = ()=>{
+  document.getElementById("userName").textContent = localStorage.getItem("userName") || "User";
+}
+</script>
+</body>
+</html>
