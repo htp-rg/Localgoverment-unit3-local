@@ -224,6 +224,7 @@ function loadVendors() {
   }
 
   const tbody = document.querySelector("#vendorEngagementsTable tbody");
+  if (!tbody) return; // safety check
   tbody.innerHTML = "";
 
   vendors.forEach(v => {
@@ -259,12 +260,11 @@ document.getElementById("exportBtn").onclick = function() {
 
 document.getElementById("backBtn").addEventListener("click", () => {
   if (document.referrer) {
-
     window.history.back();
   } else {
-  
     window.location.href = "admindashboard.html";
   }
 });
+
 window.onload = loadVendors;
 </script>
