@@ -130,18 +130,32 @@ th { font-size: .85rem; opacity: .7; }
     </div>
 
   
-    <div class="card table-section">
-      <div class="table-header">
-        <h3>Commodity Table</h3>
-        <select id="commoditySelect" class="select">
-          <option value="">-- Choose Category --</option>
-          <option value="meat">Meat</option>
-          <option value="fish">Fish</option>
-          <option value="fruits">Fruits</option>
-          <option value="vegetables">Vegetables</option>
-          <option value="others">Others</option>
-        </select>
-      </div>
+   <div class="card table-section">
+  <div class="table-header">
+    <h3>Commodity Table</h3>
+  </div>
+
+  <table id="commodityTable">
+    <thead>
+      <tr>
+        <th>Commodity Price</th>
+        <th>Category</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <div style="margin-top: 1rem; display: flex; justify-content: center;">
+    <select id="commoditySelect" class="select">
+      <option value="">-- Choose Category --</option>
+      <option value="meat">Meat</option>
+      <option value="fish">Fish</option>
+      <option value="fruits">Fruits</option>
+      <option value="vegetables">Vegetables</option>
+      <option value="others">Others</option>
+    </select>
+  </div>
+</div>
 
      <table id="commodityTable" style="display:none;">
         <tbody></tbody>
