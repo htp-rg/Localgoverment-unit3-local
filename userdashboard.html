@@ -251,27 +251,37 @@ function loadVendors() {
   const tbody = document.querySelector("#vendorEngagementsTable tbody");
   tbody.innerHTML = "";
 
-  if(vendors.length === 0){
-    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#777;">No vendors registered yet.</td></tr>`;
-    return;
+let vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
+
+    if (vendors.length === 0) {
+      vendors = defaultVendors;
+      localStorage.setItem(STORAGE_KEYS.vendors, JSON.stringify(defaultVendors));
+    }
+
+    const tbody = document.querySelector("#vendorEngagementsTable tbody");
+    if (!tbody) return; 
+
+    tbody.innerHTML = "";
+
+    if (vendors.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#777;">No vendor records found.</td></tr>`;
+      return;
+    }
+
+    vendors.forEach(v => {
+      const row = document.createElement("tr");
+      const statusClass = v.status === "Approved" ? "status-approved" : "status-declined";
+      row.innerHTML = `
+        <td>${v.name}</td>
+        <td>${v.contact}</td>
+        <td>${v.nature}</td>
+        <td>${v.permit}</td>
+        <td>${v.email}</td>
+        <td class="${statusClass}">${v.status}</td>
+      `;
+      tbody.appendChild(row);
+    });
   }
-
-  vendors.forEach(v => {
-    const statusClass = v.status === "Accepted" ? "status-approved" : "status-declined";
-    const statusIcon = v.status === "Accepted" ? "✔" : "✖";
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${v.name}</td>
-      <td>${v.contact}</td>
-      <td>${v.business || v.nature || ""}</td>
-      <td>${v.permit}</td>
-      <td>${v.email}</td>
-      <td class="${statusClass}">${statusIcon} ${v.status}</td>
-    `;
-    tbody.appendChild(row);
-  });
-}
-
 document.addEventListener("DOMContentLoaded", () => {
   const searchInput = document.getElementById("searchInput");
   searchInput.addEventListener("keyup", function() {
