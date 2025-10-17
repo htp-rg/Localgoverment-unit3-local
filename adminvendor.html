@@ -257,7 +257,7 @@ th { font-size: .85rem; opacity: .7; }
 </div>
 
 <script>
-const STORAGE_KEYS = { vendors:"vendor_engagements" };
+const STORAGE_KEY = "vendor_engagements";
 
 function renderStars(num){ return "★".repeat(num)+"☆".repeat(5-num); }
 
@@ -266,8 +266,8 @@ const menuDropdown = document.getElementById("menuDropdown");
 menuBtn.addEventListener("click", ()=> menuDropdown.classList.toggle("show"));
 document.addEventListener("click", e => { if(!e.target.closest(".menu-container")) menuDropdown.classList.remove("show"); });
 
-  if (!localStorage.getItem("vendor_engagements")) {
-  localStorage.setItem("vendor_engagements", JSON.stringify([
+if (!localStorage.getItem(STORAGE_KEY)) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify([
     { type: "Takoyaki store", status: "✅ Completed", owner: "Gacusan, Aira Jane", due: "2025-09-03", payment: "3,785.00", rating: 5 },
     { type: "Sound equipment", status: "✏ In progress", owner: "Furigay, Neri Jane", due: "2025-09-10", payment: "2,345", rating: 0 },
     { type: "Tables and chairs", status: "⏳ Not started", owner: "Pena, Rona Mae", due: "2025-11-04", payment: "5,199", rating: 0 },
@@ -276,7 +276,7 @@ document.addEventListener("click", e => { if(!e.target.closest(".menu-container"
 }
 
 function loadVendors(){
-  const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
+  const vendors = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
   const tbody = document.querySelector("#vendorEngagementsTable tbody");
   tbody.innerHTML = "";
   vendors.forEach((v,i)=>{
@@ -296,8 +296,7 @@ function loadVendors(){
   });
 }
 
-function saveVendors(vendors){ localStorage.setItem(STORAGE_KEYS.vendors, JSON.stringify(vendors)); }
-
+function saveVendors(vendors){ localStorage.setItem(STORAGE_KEY, JSON.stringify(vendors)); }
 
 const vendorModal = document.getElementById("vendorModal");
 const vendorIndex = document.getElementById("vendorIndex");
@@ -309,7 +308,7 @@ const vendorPayment = document.getElementById("vendorPayment");
 const vendorRating = document.getElementById("vendorRating");
 
 function editVendor(i){
-  const v = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors)||"[]")[i];
+  const v = JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]")[i];
   document.getElementById("vendorModalTitle").textContent="Edit Vendor";
   vendorIndex.value = i;
   vendorType.value = v.type;
@@ -322,7 +321,7 @@ function editVendor(i){
 }
 
 function deleteVendor(i){
-  const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors)||"[]");
+  const vendors = JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");
   vendors.splice(i,1);
   saveVendors(vendors);
   loadVendors();
@@ -333,10 +332,10 @@ document.getElementById("addVendorBtn").onclick = ()=>{
   vendorIndex.value="";
   [vendorType,vendorStatus,vendorOwner,vendorDue,vendorPayment,vendorRating].forEach(i=>i.value="");
   vendorModal.style.display="flex";
-}
+};
 
 document.getElementById("saveVendorBtn").onclick = ()=>{
-  const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors)||"[]");
+  const vendors = JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");
   const v = {
     type: vendorType.value,
     status: vendorStatus.value,
@@ -350,7 +349,7 @@ document.getElementById("saveVendorBtn").onclick = ()=>{
   saveVendors(vendors);
   loadVendors();
   vendorModal.style.display="none";
-}
+};
 
 document.getElementById("closeVendorBtn").onclick = ()=> vendorModal.style.display="none";
 
@@ -360,18 +359,13 @@ document.getElementById("searchInput").addEventListener("keyup", function(){
     r.style.display = r.innerText.toLowerCase().includes(filter) ? "" : "none";
   });
 });
-  vendorModal.addEventListener("click", e => {
+
+vendorModal.addEventListener("click", e => {
   if (e.target === vendorModal) vendorModal.style.display = "none";
 });
 
 window.onload = ()=>{
   loadVendors();
   document.getElementById("adminName").textContent = localStorage.getItem("adminName") || "Admin";
-}
-  window.onload = ()=>{
-  const data = JSON.parse(localStorage.getItem("vendorData") || "[]");
-  console.log("Vendor data from user page:", data);
-    };
+};
 </script>
-</body>
-</html>
