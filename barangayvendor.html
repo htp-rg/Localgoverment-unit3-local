@@ -204,20 +204,29 @@ const STORAGE_KEYS = { vendors: "vendor_engagements", pending: "pending_vendors"
 
 function loadVendors() {
   const defaultVendors = [
-    { name: "Gacusan, Aira Jane", contact: "0912-345-6789", nature: "Takoyaki Store", permit: "BP-00123", email: "aira.gacusan@example.com", status: "✔ Accepted" },
-    { name: "Furigay, Neri Jane", contact: "0923-456-7890", nature: "Sound Equipment", permit: "BP-00456", email: "neri.furigay@example.com", status: "✖ Declined" },
-    { name: "Pena, Rona Mae", contact: "0934-567-8901", nature: "Tables and Chairs Rental", permit: "BP-00789", email: "rona.pena@example.com", status: "✔ Accepted" },
-    { name: "Dacoco, Jonathan", contact: "0945-678-9012", nature: "Atan’s Meat Shop", permit: "BP-00999", email: "jonathan.dacoco@example.com", status: "✖ Declined" }
+    { name: "Gacusan, Aira Jane", contact: "0912-345-6789", nature: "Takoyaki Store", permit: "BP-00123", email: "aira.gacusan@example.com", status: "Approved" },
+    { name: "Furigay, Neri Jane", contact: "0923-456-7890", nature: "Sound Equipment", permit: "BP-00456", email: "neri.furigay@example.com", status: "Declined" },
+    { name: "Pena, Rona Mae", contact: "0934-567-8901", nature: "Tables and Chairs Rental", permit: "BP-00789", email: "rona.pena@example.com", status: "Approved" },
+    { name: "Dacoco, Jonathan", contact: "0945-678-9012", nature: "Atan’s Meat Shop", permit: "BP-00999", email: "jonathan.dacoco@example.com", status: "Declined" }
   ];
 
   let vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
 
+  // If no vendors exist yet, store defaults
   if (vendors.length === 0) {
     vendors = defaultVendors;
     localStorage.setItem(STORAGE_KEYS.vendors, JSON.stringify(defaultVendors));
   }
 
-  vendors.forEach(v=>{
+  const tbody = document.querySelector("#vendorEngagementsTable tbody");
+  tbody.innerHTML = ""; // clear before rendering
+
+  if (vendors.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#777;">No vendor records found.</td></tr>`;
+    return;
+  }
+
+  vendors.forEach(v => {
     const row = document.createElement("tr");
     const statusClass = v.status === "Approved" ? "status-approved" : "status-declined";
     row.innerHTML = `
@@ -232,6 +241,7 @@ function loadVendors() {
   });
 }
 
+// ----------------- Notification Modal Logic -----------------
 const notifIcon = document.getElementById("notifIcon");
 const notifModal = document.getElementById("notifModal");
 const notifList = document.getElementById("notifList");
@@ -241,20 +251,22 @@ notifIcon.onclick = () => {
   notifModal.style.display = "flex";
   renderPending();
 };
-document.getElementById("closeNotifBtn").onclick = ()=> notifModal.style.display="none";
 
-function renderPending(){
+document.getElementById("closeNotifBtn").onclick = () => notifModal.style.display = "none";
+
+function renderPending() {
   const pending = JSON.parse(localStorage.getItem(STORAGE_KEYS.pending) || "[]");
   notifList.innerHTML = "";
-  if(pending.length===0){
+
+  if (pending.length === 0) {
     notifList.innerHTML = "<p>No pending requests.</p>";
   } else {
-    pending.forEach((p,i)=>{
+    pending.forEach((p, i) => {
       const div = document.createElement("div");
-      div.style.border="1px solid var(--border)";
-      div.style.padding="0.8rem";
-      div.style.marginBottom="0.6rem";
-      div.style.borderRadius="8px";
+      div.style.border = "1px solid var(--border)";
+      div.style.padding = "0.8rem";
+      div.style.marginBottom = "0.6rem";
+      div.style.borderRadius = "8px";
       div.innerHTML = `
         <strong>${p.name}</strong><br>
         Contact: ${p.contact}<br>
@@ -267,55 +279,51 @@ function renderPending(){
       notifList.appendChild(div);
     });
   }
+
   notifCount.textContent = pending.length;
-  notifCount.style.display = pending.length>0 ? "inline" : "none";
+  notifCount.style.display = pending.length > 0 ? "inline" : "none";
 }
 
-function approveVendor(i){
+function approveVendor(i) {
   const pending = JSON.parse(localStorage.getItem(STORAGE_KEYS.pending) || "[]");
   const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
   const p = pending[i];
+
+  vendors.push({ ...p, status: "Approved" });
+  pending.splice(i, 1);
+
+  localStorage.setItem(STORAGE_KEYS.vendors, JSON.stringify(vendors));
+  localStorage.setItem(STORAGE_KEYS.pending, JSON.stringify(pending));
+
+  renderPending();
+  loadVendors();
+}
+
+function declineVendor(i) {
+  const pending = JSON.parse(localStorage.getItem(STORAGE_KEYS.pending) || "[]");
+  const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
+  const p = pending[i];
+
+  vendors.push({ ...p, status: "Declined" });
+  pending.splice(i, 1);
+
+  localStorage.setItem(STORAGE_KEYS.vendors, JSON.stringify(vendors));
+  localStorage.setItem(STORAGE_KEYS.pending, JSON.stringify(pending));
+
+  renderPending();
+  loadVendors();
+}
+document.getElementById("backBtn").addEventListener("click", () => {
+  if (document.referrer) {
+
+    window.history.back();
+  } else {
   
-  vendors.push({
-    name: p.name,
-    contact: p.contact,
-    nature: p.nature,
-    permit: p.permit,
-    email: p.email,
-    status: "Approved"
-  });
-
-  pending.splice(i,1);
-  localStorage.setItem(STORAGE_KEYS.vendors, JSON.stringify(vendors));
-  localStorage.setItem(STORAGE_KEYS.pending, JSON.stringify(pending));
-  renderPending();
-  loadVendors();
-}
-
-function declineVendor(i){
-  const pending = JSON.parse(localStorage.getItem(STORAGE_KEYS.pending) || "[]");
-  const p = pending[i];
-  const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
-
-  vendors.push({
-    name: p.name,
-    contact: p.contact,
-    nature: p.nature,
-    permit: p.permit,
-    email: p.email,
-    status: "Declined"
-  });
-
-  pending.splice(i,1);
-  localStorage.setItem(STORAGE_KEYS.vendors, JSON.stringify(vendors));
-  localStorage.setItem(STORAGE_KEYS.pending, JSON.stringify(pending));
-  renderPending();
-  loadVendors();
-}
-
-window.onload = ()=>{
+    window.location.href = "barangayvendor.html";
+  }
+});
+window.onload = () => {
   loadVendors();
   renderPending();
 };
 </script>
-</html>
