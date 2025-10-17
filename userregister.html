@@ -93,14 +93,15 @@ button:hover {
 <body>
 <div class="card">
   <h1>Vendor Registration</h1>
-  <form id="vendorForm">
-    <input type="text" id="name" placeholder="Full Name" required>
-    <input type="text" id="contact" placeholder="Contact No." required>
-    <input type="text" id="nature" placeholder="Nature of Business" required>
-    <input type="text" id="permit" placeholder="Business Permit No." required>
-    <input type="email" id="email" placeholder="Email Address" required>
-    <button type="submit">Register Vendor</button>
-  </form>
+ <form id="vendorForm">
+  <input type="text" id="name" placeholder="Full Name" required>
+  <input type="text" id="contact" placeholder="Contact No." required>
+  <input type="text" id="nature" placeholder="Nature of Business" required>
+  <input type="text" id="permit" placeholder="Business Permit No." required>
+  <input type="email" id="email" placeholder="Email Address" required>
+  <input type="password" id="password" placeholder="Password" required>
+  <button type="submit">Register Vendor</button>
+</form>
   <div class="success-message" id="successMsg">
     ✅ Registration submitted successfully! Await approval.
   </div>
@@ -127,6 +128,8 @@ document.getElementById("vendorForm").addEventListener("submit", function(e) {
   const nature = document.getElementById("nature").value.trim();
   const permit = document.getElementById("permit").value.trim();
   const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const newVendor = { name, contact, nature, permit, email, password, status: "Pending" };
 
   if (!name || !contact || !nature || !permit || !email) {
     alert("Please fill out all fields.");
