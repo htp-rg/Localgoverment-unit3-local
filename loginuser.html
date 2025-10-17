@@ -1,122 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>User Login</title>
-  <style>
-    body { font-family: Arial; background: #f2f2f2; margin: 0; padding: 0; }
-    .container { max-width: 400px; margin: 60px auto; padding: 20px; border-radius: 8px; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    h1, h2 { text-align: center; color: #333; }
-    label { display: block; margin-top: 15px; font-weight: bold; }
-    input, button { padding: 10px; border-radius: 5px; border: 1px solid #ccc; width: 100%; margin-top: 5px; font-size: 14px; box-sizing: border-box; }
-    button { cursor: pointer; border: none; color: #fff; }
-    .btn-login { background: #4285f4; margin-top: 15px; }
-    .btn-create { background: green; margin-top: 15px; }
-    .switch { text-align: center; margin-top: 15px; font-size: 14px; }
-    .switch a { color: #4285f4; cursor: pointer; }
-    #message { text-align: center; margin-top: 10px; color: red; }
-    .hidden { display: none; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Login</title>
+<style>
+:root {
+  --blue: #4e73df;
+  --white: #fff;
+  --border: #e6e8eb;
+  --shadow: 0 6px 24px rgba(0,0,0,0.08);
+  --text: #111;
+}
+
+body {
+  font-family: Inter, system-ui, sans-serif;
+  background: #f5f6fa;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.card {
+  background: var(--white);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  width: 100%;
+  max-width: 400px;
+}
+
+h1 {
+  text-align: center;
+  color: var(--blue);
+  margin-bottom: 1.5rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+input {
+  padding: 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 1rem;
+  width: 100%;
+}
+
+button {
+  padding: 0.8rem;
+  border: none;
+  background: var(--blue);
+  color: white;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.2s ease-in-out;
+}
+
+button:hover {
+  background: #3b5ed7;
+}
+
+.error-message {
+  background: #ffe0e0;
+  color: #b00000;
+  border: 1px solid #b00000;
+  border-radius: 8px;
+  padding: 0.8rem;
+  text-align: center;
+  margin-top: 1rem;
+  display: none;
+}
+
+.back-link {
+  display: block;
+  margin-top: 1rem;
+  text-align: center;
+  color: var(--blue);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.back-link:hover { text-decoration: underline; }
+</style>
 </head>
 <body>
-  <div class="container">
-    <h1>MARKET AND TRADE MONITORING SYSTEM</h1>
-    <form id="createForm">
-      <h2>Create an Account</h2>
-      <label for="newName">Full Name:</label>
-      <input type="text" id="newName" required placeholder="Enter your name">
+<div class="card">
+  <h1>Vendor Login</h1>
+  <form id="loginForm">
+    <input type="email" id="email" placeholder="Email Address" required>
+    <button type="submit">Login</button>
+  </form>
+  <div class="error-message" id="errorMsg">
 
-      <label for="newEmail">Email:</label>
-      <input type="email" id="newEmail" required placeholder="Enter your email">
-
-      <label for="newPassword">Password:</label>
-      <input type="password" id="newPassword" required placeholder="Enter your password">
-
-      <button type="submit" class="btn-create">Create Account</button>
-      <div class="switch">Already have an account? <a id="showLogin">Log in here</a></div>
-    </form>
-
-    <form id="loginForm" class="hidden">
-      <h2>Login</h2>
-      <label for="loginEmail">Email:</label>
-      <input type="email" id="loginEmail" required placeholder="Enter your email">
-
-      <label for="loginPassword">Password:</label>
-      <input type="password" id="loginPassword" required placeholder="Enter your password">
-
-      <button type="submit" class="btn-login">Login</button>
-      <div class="switch">Don't have an account? <a id="showCreate">Create one here</a></div>
-    </form>
-
-    <div id="message"></div>
   </div>
+  <a href="userregister.html" class="back-link">Don't have an account? Register</a>
+</div>
 
-  <script>
-    const createForm = document.getElementById("createForm");
-    const loginForm = document.getElementById("loginForm");
-    const message = document.getElementById("message");
+<script>
+document.getElementById("loginForm").addEventListener("submit", function(e) {
+  e.preventDefault();
 
-    document.getElementById("showLogin").onclick = () => {
-      createForm.classList.add("hidden");
-      loginForm.classList.remove("hidden");
-      message.textContent = "";
-    };
-    document.getElementById("showCreate").onclick = () => {
-      loginForm.classList.add("hidden");
-      createForm.classList.remove("hidden");
-      message.textContent = "";
-    };
-
-  
-    createForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const name = document.getElementById("newName").value.trim();
-      const email = document.getElementById("newEmail").value.trim();
-      const password = document.getElementById("newPassword").value.trim();
-
-      if (!name || !email || !password) {
-        message.textContent = "Please fill all fields.";
-        return;
-      }
-
-      localStorage.setItem("userName", name);
-      localStorage.setItem("userEmail", email);
-      localStorage.setItem("userPassword", password);
-
-      message.style.color = "green";
-      message.textContent = "✅ Account created successfully! Please log in.";
-
-      createForm.classList.add("hidden");
-      loginForm.classList.remove("hidden");
-    });
+  const email = document.getElementById("email").value.trim().toLowerCase();
+  const errorMsg = document.getElementById("errorMsg");
 
 
-    loginForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const email = document.getElementById("loginEmail").value.trim();
-      const password = document.getElementById("loginPassword").value.trim();
+  const approved = JSON.parse(localStorage.getItem("vendor_engagements") || "[]");
+  const pending = JSON.parse(localStorage.getItem("pending_vendors") || "[]");
+  const allVendors = [...approved, ...pending];
 
-      const savedEmail = localStorage.getItem("userEmail");
-      const savedPassword = localStorage.getItem("userPassword");
+  const vendor = allVendors.find(v => v.email.toLowerCase() === email);
 
-      if (email === savedEmail && password === savedPassword) {
-        localStorage.setItem("isLoggedIn", "true");
-        message.style.color = "green";
-        message.textContent = "✅ Login successful! Redirecting...";
-        setTimeout(() => { window.location.href = "userdashboard.html"; }, 1000);
-      } else {
-        message.style.color = "red";
-        message.textContent = "❌ Invalid email or password.";
-      }
-    });
+  if (!vendor) {
+    errorMsg.style.display = "block";
+    return;
+  }
+
+  localStorage.setItem("logged_in_user", JSON.stringify(vendor));
 
 
-    window.onload = () => {
-      if (localStorage.getItem("isLoggedIn") === "true") {
-        window.location.href = "userdashboard.html";
-      }
-    };
-  </script>
+  window.location.href = "userdashboard.html";
+});
+</script>
 </body>
 </html>
