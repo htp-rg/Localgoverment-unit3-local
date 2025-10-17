@@ -68,6 +68,31 @@ th { font-size: .85rem; opacity: .7; }
 .modal table { width:100%; border-collapse:collapse; }
 .modal td { padding:.3rem; border-bottom:1px solid #ddd; }
 .close { float:right; cursor:pointer; font-weight:bold;}
+  .main-layout {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.chart-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.table-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
 </style>
 </head>
 <body>
@@ -87,7 +112,7 @@ th { font-size: .85rem; opacity: .7; }
     </nav>
   </aside>
 
- <section class="main">
+<section class="main">
   <header class="topbar">
   <div style="display:flex; align-items:center; gap:0.8rem;">
     <button class="btn" id="backBtn">← Back</button>
@@ -96,17 +121,19 @@ th { font-size: .85rem; opacity: .7; }
   <button class="btn" id="exportBtn">Export</button>
 </header>
    
-  <div class="content">
-      <!-- Chart -->
-      <div class="card">
-        <h3>Commodity Prices (Average PHP)</h3>
-        <canvas id="commodityChart" height="300"></canvas>
-      </div>
+<div class="content">
+  <div class="main-layout">
+   
+    <div class="card chart-section">
+      <h3>Commodity Prices (Average PHP)</h3>
+      <canvas id="commodityChart" height="300"></canvas>
+    </div>
 
-      <!-- Select & Table -->
-      <div class="card">
+  
+    <div class="card table-section">
+      <div class="table-header">
         <h3>Commodity Table</h3>
-        <select id="commoditySelect">
+        <select id="commoditySelect" class="select">
           <option value="">-- Choose Category --</option>
           <option value="meat">Meat</option>
           <option value="fish">Fish</option>
@@ -114,20 +141,24 @@ th { font-size: .85rem; opacity: .7; }
           <option value="vegetables">Vegetables</option>
           <option value="others">Others</option>
         </select>
-        <table id="commodityTable" style="margin-top:1rem;">
-          <thead>
-            <tr>
-              <th>Commodity Price</th>
-              <th>Category</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
       </div>
+
+      <table id="commodityTable">
+        <thead>
+          <tr>
+            <th>Commodity Price</th>
+            <th>Category</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
     </div>
-  </section>
+  </div>
+</div>
+</section>
 </div>
 
+<!-- Modal -->
 <div class="modal" id="priceModal">
   <div class="modal-content">
     <span class="close" id="closeModal">×</span>
@@ -139,93 +170,126 @@ th { font-size: .85rem; opacity: .7; }
 <script>
 const commodityData = {
   meat: [
-    { name:"Pork", current:"₱320-250/kg", previous:"₱300-230/kg" },
-    { name:"Beef", current:"₱380-450/kg", previous:"₱360-430/kg" },
-    { name:"Chicken", current:"₱210/kg", previous:"₱200/kg" }
+    { name: "Pork", current: "₱320-250/kg", previous: "₱300-230/kg" },
+    { name: "Beef", current: "₱380-450/kg", previous: "₱360-430/kg" },
+    { name: "Chicken", current: "₱210/kg", previous: "₱200/kg" }
   ],
   fish: [
-    { name:"Bangus", current:"₱200/kg", previous:"₱180/kg" },
-    { name:"Tilapia", current:"₱100/kg", previous:"₱90/kg" },
-    { name:"Galunggung", current:"₱200/kg", previous:"₱190/kg" }
+    { name: "Bangus", current: "₱200/kg", previous: "₱180/kg" },
+    { name: "Tilapia", current: "₱100/kg", previous: "₱90/kg" },
+    { name: "Galunggung", current: "₱200/kg", previous: "₱190/kg" }
   ],
   fruits: [
-    { name:"Banana", current:"₱50/kg", previous:"₱45/kg" },
-    { name:"Mango", current:"₱200/kg", previous:"₱180/kg" },
-    { name:"Apple", current:"₱150/kg", previous:"₱140/kg" }
+    { name: "Banana", current: "₱50/kg", previous: "₱45/kg" },
+    { name: "Mango", current: "₱200/kg", previous: "₱180/kg" },
+    { name: "Apple", current: "₱150/kg", previous: "₱140/kg" }
   ],
   vegetables: [
-    { name:"Cabbage", current:"₱50/kg", previous:"₱45/kg" },
-    { name:"Carrots", current:"₱150/kg", previous:"₱140/kg" },
-    { name:"Potatoes", current:"₱200/kg", previous:"₱180/kg" },
-    { name:"Tomatoes", current:"₱100/kg", previous:"₱90/kg" }
+    { name: "Cabbage", current: "₱50/kg", previous: "₱45/kg" },
+    { name: "Carrots", current: "₱150/kg", previous: "₱140/kg" },
+    { name: "Potatoes", current: "₱200/kg", previous: "₱180/kg" },
+    { name: "Tomatoes", current: "₱100/kg", previous: "₱90/kg" }
   ],
   others: [
-    { name:"Egg", current:"₱200/12pcs", previous:"₱180/12pcs" },
-    { name:"Onion", current:"₱100/kg", previous:"₱90/kg" },
-    { name:"Garlic", current:"₱200/kg", previous:"₱180/kg" }
+    { name: "Egg", current: "₱200/12pcs", previous: "₱180/12pcs" },
+    { name: "Onion", current: "₱100/kg", previous: "₱90/kg" },
+    { name: "Garlic", current: "₱200/kg", previous: "₱180/kg" }
   ]
 };
 
-// Calculate average for chart per category
-function avgPrice(category){
-  const nums = commodityData[category].map(item => {
-    const match = item.current.match(/\d+/g);
-    if(!match) return 0;
-    // for range, take average
-    if(match.length==2) return (parseInt(match[0])+parseInt(match[1]))/2;
-    return parseInt(match[0]);
-  });
-  return Math.round(nums.reduce((a,b)=>a+b,0)/nums.length);
+
+function extractAverage(value) {
+  const nums = value.match(/\d+/g);
+  if (!nums) return 0;
+  if (nums.length === 2) return (parseInt(nums[0]) + parseInt(nums[1])) / 2;
+  return parseInt(nums[0]);
 }
 
-// Bar Chart by category
-const ctx = document.getElementById('commodityChart').getContext('2d');
-const chart = new Chart(ctx,{
-  type:'bar',
-  data:{
-    labels:Object.keys(commodityData).map(c=>c.charAt(0).toUpperCase()+c.slice(1)),
-    datasets:[{
-      label:"Average Price (PHP)",
-      data:Object.keys(commodityData).map(avgPrice),
-      backgroundColor:"#0a53c1"
-    }]
+
+function computeAverages(type) {
+  return Object.keys(commodityData).map(category => {
+    const items = commodityData[category];
+    const values = items.map(i => extractAverage(i[type]));
+    const avg = values.reduce((a, b) => a + b, 0) / values.length;
+    return Math.round(avg);
+  });
+}
+
+const categories = Object.keys(commodityData).map(
+  c => c.charAt(0).toUpperCase() + c.slice(1)
+);
+
+const ctx = document.getElementById("commodityChart").getContext("2d");
+
+new Chart(ctx, {
+  type: "bar",
+  data: {
+    labels: categories,
+    datasets: [
+      {
+        label: "Current Price (PHP)",
+        data: computeAverages("current"),
+        backgroundColor: "#0a53c1"
+      },
+      {
+        label: "Previous Price (PHP)",
+        data: computeAverages("previous"),
+        backgroundColor: "#94b3ff"
+      }
+    ]
   },
-  options:{ responsive:true, scales:{ y:{ beginAtZero:true } } }
+  options: {
+    responsive: true,
+    scales: {
+      y: {
+        beginAtZero: true,
+        title: { display: true, text: "Average Price (PHP)" }
+      }
+    },
+    plugins: {
+      legend: {
+        position: "top"
+      }
+    }
+  }
 });
 
-// Populate table with commodity price and category
+
 const tableBody = document.querySelector("#commodityTable tbody");
-for(const [category, items] of Object.entries(commodityData)){
-  items.forEach(item=>{
-    const row = document.createElement('tr');
-    row.innerHTML = `<td>${item.current} (${item.name})</td><td>${category.charAt(0).toUpperCase()+category.slice(1)}</td>`;
+for (const [category, items] of Object.entries(commodityData)) {
+  items.forEach(item => {
+    const row = document.createElement("tr");
+    row.innerHTML = `<td>${item.current} (${item.name})</td>
+                     <td>${category.charAt(0).toUpperCase() + category.slice(1)}</td>`;
     tableBody.appendChild(row);
   });
 }
 
-// Modal for selected category
-const select = document.getElementById('commoditySelect');
-const modal = document.getElementById('priceModal');
-const modalTitle = document.getElementById('modalTitle');
-const priceTable = document.getElementById('priceTable');
-const closeModal = document.getElementById('closeModal');
 
-select.addEventListener('change', ()=>{
+const select = document.getElementById("commoditySelect");
+const modal = document.getElementById("priceModal");
+const modalTitle = document.getElementById("modalTitle");
+const priceTable = document.getElementById("priceTable");
+const closeModal = document.getElementById("closeModal");
+
+select.addEventListener("change", () => {
   const value = select.value;
-  if(!value) return;
-  modalTitle.textContent = value.charAt(0).toUpperCase()+value.slice(1);
-  priceTable.innerHTML="";
-  commodityData[value].forEach(item=>{
-    const row = document.createElement('tr');
-    row.innerHTML=`<td>${item.name}</td><td>Current: ${item.current}</td><td>Previous: ${item.previous}</td>`;
+  if (!value) return;
+  modalTitle.textContent = value.charAt(0).toUpperCase() + value.slice(1);
+  priceTable.innerHTML = "";
+  commodityData[value].forEach(item => {
+    const row = document.createElement("tr");
+    row.innerHTML = `<td>${item.name}</td>
+                     <td>Current: ${item.current}</td>
+                     <td>Previous: ${item.previous}</td>`;
     priceTable.appendChild(row);
   });
-  modal.style.display="flex";
+  modal.style.display = "flex";
 });
 
-closeModal.addEventListener('click', ()=>modal.style.display="none");
-window.addEventListener('click', e=>{ if(e.target===modal) modal.style.display="none"; });
-document.getElementById('backBtn').addEventListener('click', ()=>window.history.back());
+closeModal.addEventListener("click", () => (modal.style.display = "none"));
+window.addEventListener("click", e => {
+  if (e.target === modal) modal.style.display = "none";
+});
+document.getElementById("backBtn").addEventListener("click", () => window.history.back());
 </script>
-</body>
-</html>
