@@ -140,7 +140,7 @@ th { font-size: .85rem; opacity: .7; }
 
   <div class="card chart-container" style="margin-top:1.5rem;">
     <h3>Price Chain Flow (Last 6 Weeks)</h3>
-    <canvas id="pipelineChart" height="150"></canvas>
+   <canvas id="pipelineChart"></canvas>
   </div>
 
   <div class="card" style="margin-top:1.5rem;">
@@ -200,7 +200,16 @@ th { font-size: .85rem; opacity: .7; }
 <script>
 const STORAGE_KEYS = { vendors: "vendor_engagements" };
 let pipelineChart = null;
-
+  
+if (!localStorage.getItem(STORAGE_KEYS.vendors)) {
+  localStorage.setItem(STORAGE_KEYS.vendors, JSON.stringify([
+    { name: "Gacusan, Aira Jane", contact: "0912-345-6789", business: "Takoyaki Store", permit: "BP-00123", email:"aira.gacusan@example.com", status:"Accepted" },
+    { name: "Furigay, Neri Jane", contact: "0923-456-7890", business: "Sound Equipment", permit: "BP-00456", email:"neri.furigay@example.com", status:"Declined" },
+    { name: "Pena, Rona Mae", contact: "0934-567-8901", business: "Tables and Chairs Rental", permit: "BP-00789", email:"rona.pena@example.com", status:"Accepted" },
+    { name: "Dacoco, Jonathan", contact: "0945-678-9012", business: "Atan’s Meat Shop", permit: "BP-00999", email:"jonathan.dacoco@example.com", status:"Declined" }
+  ]));
+}
+  
 function initPipelineChart() {
   const ctx = document.getElementById("pipelineChart").getContext("2d");
   if(pipelineChart) pipelineChart.destroy();
