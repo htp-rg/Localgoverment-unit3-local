@@ -93,21 +93,13 @@ th { font-size: .85rem; opacity: .7; }
   align-items: center;
   margin-bottom: 0.5rem;
 }
-  #chatbot-container {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 320px;
-  background: #ffffff;
+ #chatbot-container {
   border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
   box-shadow: var(--shadow);
-  border-radius: 12px;
-  display: flex;
-  flex-direction: column;
-  font-size: 14px;
-  overflow: hidden;
-  z-index: 999;
 }
+  
 #chatbot-header {
   background: var(--blue);
   color: white;
@@ -181,7 +173,7 @@ th { font-size: .85rem; opacity: .7; }
     </div>
 
   
-   <div class="card table-section">
+<div class="card table-section">
   <div class="table-header">
     <h3>Commodity Table</h3>
   </div>
@@ -195,8 +187,9 @@ th { font-size: .85rem; opacity: .7; }
       <option value="others">Others</option>
     </select>
   </div>
-</div>
-<div id="chatbot-container" style="position: relative; width: 100%; margin-top: 1rem;">
+
+
+  <div id="chatbot-container" style="margin-top: 1.5rem; width: 100%;">
     <div id="chatbot-header" style="background: var(--blue); color: white; padding: 0.5rem; font-weight: bold; border-radius: 8px 8px 0 0;">
       💬 Commodity Chatbot
     </div>
@@ -207,6 +200,7 @@ th { font-size: .85rem; opacity: .7; }
     </div>
   </div>
 </div>
+    
      <table id="commodityTable" style="display:none;">
         <tbody></tbody>
        </table>
