@@ -221,18 +221,17 @@ if (!localStorage.getItem(STORAGE_KEYS.vendors)) {
   ]));
 }
   
-let pipelineChart = null;
-
 function initPipelineChart() {
   const ctx = document.getElementById("pipelineChart").getContext("2d");
-  if(pipelineChart) pipelineChart.destroy();
+  if (pipelineChart) pipelineChart.destroy();
+
   pipelineChart = new Chart(ctx, {
     type: "line",
     data: {
-      labels: ["Week 1","Week 2","Week 3","Week 4","Week 5","Week 6"],
+      labels: ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5", "Week 6"],
       datasets: [{
         label: "Deliveries",
-        data: [5,8,6,10,7,9],
+        data: [5, 8, 6, 10, 7, 9],
         borderColor: "#0a53c1",
         backgroundColor: "rgba(10,83,193,0.2)",
         fill: true,
@@ -241,7 +240,7 @@ function initPipelineChart() {
     },
     options: {
       responsive: true,
-      maintainAspectRatio: false, 
+      maintainAspectRatio: false,
       plugins: { legend: { display: false } },
       scales: {
         y: { beginAtZero: true },
@@ -249,6 +248,7 @@ function initPipelineChart() {
       }
     }
   });
+} 
 
 function loadVendors() {
   const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
