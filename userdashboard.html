@@ -62,7 +62,12 @@ nav { padding: 1rem; }
 
 .chart-container {
   max-width: 800px;
-  margin: 0 auto;
+  margin: 1.5rem auto 0 auto;
+  height: 250px; 
+}
+.chart-container canvas {
+  width: 100% !important;
+  height: 100% !important;
 }
 
 .card {
@@ -214,7 +219,7 @@ function initPipelineChart() {
     },
     options: {
       responsive: true,
-      maintainAspectRatio: false,
+      maintainAspectRatio: false, 
       plugins: { legend: { display: false } },
       scales: {
         y: { beginAtZero: true },
