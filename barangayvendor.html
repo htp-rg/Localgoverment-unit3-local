@@ -123,13 +123,18 @@ th { font-size: .85rem; opacity: .7; }
   </aside>
 
   <section class="main">
-  <header class="topbar">
+<header class="topbar">
   <div style="display:flex; align-items:center; gap:0.8rem;">
     <button class="btn" id="backBtn">← Back</button>
     <h2>Vendor Management</h2>
   </div>
-     <div id="notifIcon">🔔<span id="notifCount" style="display:none;">0</span></div>
-  <button class="btn" id="exportBtn">Export</button>
+
+  <div style="display:flex; align-items:center; gap:1rem;">
+    <div id="notifIcon" style="position:relative;">
+      🔔<span id="notifCount" style="display:none;">0</span>
+    </div>
+    <button class="btn" id="exportBtn">Export</button>
+  </div>
 </header>
 
     <div class="content">
