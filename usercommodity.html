@@ -273,37 +273,36 @@ document.addEventListener("DOMContentLoaded", function () {
     c => c.charAt(0).toUpperCase() + c.slice(1)
   );
 
-  const ctx = document.getElementById("commodityChart").getContext("2d");
-
-  new Chart(ctx, {
-    type: "bar",
-    data: {
-      labels: categories,
-      datasets: [
-        {
-          label: "Current Price (PHP)",
-          data: computeAverages("current"),
-          backgroundColor: "#0a53c1"
-        },
-        {
-          label: "Previous Price (PHP)",
-          data: computeAverages("previous"),
-          backgroundColor: "#94b3ff"
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        y: {
-          beginAtZero: true,
-          title: { display: true, text: "Average Price (PHP)" }
-        }
+const ctx = document.getElementById("commodityChart").getContext("2d");
+let chart = new Chart(ctx, {
+  type: "bar",
+  data: {
+    labels: categories,
+    datasets: [
+      {
+        label: "Current Price (PHP)",
+        data: computeAverages("current"),
+        backgroundColor: "#0a53c1"
       },
-      plugins: { legend: { position: "top" } }
-    }
-  });
+      {
+        label: "Previous Price (PHP)",
+        data: computeAverages("previous"),
+        backgroundColor: "#94b3ff"
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    scales: {
+      y: {
+        beginAtZero: true,
+        title: { display: true, text: "Average Price (PHP)" }
+      }
+    },
+    plugins: { legend: { position: "top" } }
+  }
+});
+
 
   localStorage.setItem("commodityData", JSON.stringify(commodityData));
 
