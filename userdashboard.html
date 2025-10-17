@@ -259,7 +259,7 @@ function loadVendors() {
   }
 
   vendors.forEach(v => {
-    const statusClass = v.status === "Accepted" ? "status-approved" : "status-declined";
+    const statusClass = v.status === "Approved" ? "status-approved" : "status-declined";
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>${v.name}</td>
