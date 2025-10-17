@@ -67,41 +67,21 @@ th { font-size: .85rem; opacity: .7; }
 
 .star { color: gold; font-size: 1.2rem; }
 
-.menu-container {
+#notifIcon {
+  font-size: 1.3rem;
+  cursor: pointer;
   position: relative;
-  display: inline-block;
 }
-.dropdown {
-  display: none;
+#notifCount {
   position: absolute;
-  top: 110%;
-  right: 0;
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  box-shadow: var(--shadow);
-  min-width: 220px;
-  z-index: 1000;
+  top: -6px;
+  right: -8px;
+  background: red;
+  color: white;
+  font-size: .7rem;
+  border-radius: 50%;
+  padding: 2px 5px;
 }
-.dropdown p {
-  margin: 0;
-  padding: 0.8rem;
-  font-weight: bold;
-  border-bottom: 1px solid var(--border);
-}
-.dropdown a {
-  display: block;
-  padding: 0.8rem;
-  text-decoration: none;
-  color: var(--text);
-  border-bottom: 1px solid var(--border);
-}
-.dropdown a:hover { background: var(--ink-20); }
-.dropdown a:last-child { border-bottom: none; }
-.dropdown.show { display: block; }
-
-.search { margin-bottom: 1rem; }
-.search input { width: 90%; padding: .5rem; border-radius: 8px; border: 1px solid var(--border); }
 
 .modal {
   display: none; 
@@ -120,26 +100,6 @@ th { font-size: .85rem; opacity: .7; }
   width: 90%;
   box-shadow: var(--shadow);
 }
-input[type="text"], input[type="number"], input[type="date"], input[type="email"] {
-  width: 100%; padding: .4rem; margin-bottom: .6rem; border-radius: 8px; border: 1px solid var(--border);
-}
-
-/* Notification Icon */
-#notifIcon {
-  font-size: 1.3rem;
-  cursor: pointer;
-  position: relative;
-}
-#notifCount {
-  position: absolute;
-  top: -6px;
-  right: -8px;
-  background: red;
-  color: white;
-  font-size: .7rem;
-  border-radius: 50%;
-  padding: 2px 5px;
-}
 </style>
 </head>
 <body>
@@ -150,53 +110,35 @@ input[type="text"], input[type="number"], input[type="date"], input[type="email"
     <nav>
       <a href="barangayvendor.html" class="nav-item active">Vendor Management</a>
       <a href="barangayinspection.html" class="nav-item">Inspection & Compliance</a>
-      <a href="barngaysettings.html" class="nav-item">Settings</a>
+      <a href="barangaysettings.html" class="nav-item">Settings</a>
       <a href="loginbarangay.html" class="nav-item" style="margin-top:2rem; font-weight:bold;">Logout</a>
     </nav>
   </aside>
 
   <section class="main">
     <header class="topbar">
-      <div style="display:flex; align-items:center; gap:0.5rem;">
-        <button class="btn" id="backBtn">← Back</button>
-        <div id="notifIcon">🔔<span id="notifCount" style="display:none;">0</span></div>
-        <div class="menu-container">
-          <button class="btn" id="menuBtn">☰</button>
-          <div class="dropdown" id="menuDropdown">
-            <p id="BarangayName">Name</p>
-            <a href="upgrade.html">Upgrade Personal Details</a>
-            <a href="barangaysettings.html">Password and Security</a>
-            <a href="#" id="deleteAccount">Delete Account</a>
-            <a href="terms.html">Terms of Service</a>
-            <a href="report.html">Report a Problem</a>
-            <a href="main.html" id="signOut">Sign Out</a>
-          </div>
-        </div>
-      </div>
       <div>
-        <button class="btn" id="exportBtn">Export</button>
+        <div id="notifIcon">🔔<span id="notifCount" style="display:none;">0</span></div>
       </div>
+      <div><button class="btn" id="exportBtn">Export</button></div>
     </header>
 
     <div class="content">
       <div class="card">
         <h1>Vendor Management</h1>
-        <div class="search">🔎 <input id="searchInput" type="search" placeholder="Search…"></div>
         <table id="vendorEngagementsTable">
           <thead>
             <tr>
-              <th>Business Name</th>
+              <th>Name</th>
+              <th>Contact No.</th>
+              <th>Nature of Business</th>
+              <th>Business Permit</th>
+              <th>Email</th>
               <th>Status</th>
-              <th>Owner</th>
-              <th>Due Date</th>
-              <th>Records of Payment</th>
-              <th>Rating</th>
-              <th></th>
             </tr>
           </thead>
           <tbody></tbody>
         </table>
-        <button id="addVendorBtn" class="btn" style="margin-top:1rem;">➕ New Vendor</button>
       </div>
     </div>
   </section>
@@ -210,44 +152,23 @@ input[type="text"], input[type="number"], input[type="date"], input[type="email"
   </div>
 </div>
 
-<div class="modal" id="vendorModal">
-  <div class="modal-content">
-    <h3 id="vendorModalTitle">Add Vendor</h3>
-    <input type="hidden" id="vendorIndex">
-    <label>Type:<br><input id="vendorType"></label><br>
-    <label>Status:<br><input id="vendorStatus"></label><br>
-    <label>Owner:<br><input id="vendorOwner"></label><br>
-    <label>Due Date:<br><input id="vendorDue" type="date"></label><br>
-    <label>Payment:<br><input id="vendorPayment"></label><br>
-    <label>Rating (0-5):<br><input id="vendorRating" type="number" min="0" max="5"></label><br>
-    <button id="saveVendorBtn" class="btn" style="margin-top:.5rem;">Save</button>
-    <button id="closeVendorBtn" class="btn" style="margin-top:.5rem;">Cancel</button>
-  </div>
-</div>
-
 <script>
 const STORAGE_KEYS = { vendors: "vendor_engagements", pending: "pending_vendors" };
 
-function renderStars(num){ return "★".repeat(num)+"☆".repeat(5-num); }
-
-function saveVendors(vendors){ localStorage.setItem(STORAGE_KEYS.vendors, JSON.stringify(vendors)); }
 function loadVendors(){
   const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
   const tbody = document.querySelector("#vendorEngagementsTable tbody");
   tbody.innerHTML = "";
-  vendors.forEach((v,i)=>{
+  vendors.forEach(v=>{
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td>${v.type}</td>
+      <td>${v.name}</td>
+      <td>${v.contact}</td>
+      <td>${v.nature}</td>
+      <td>${v.permit}</td>
+      <td>${v.email}</td>
       <td>${v.status}</td>
-      <td>${v.owner}</td>
-      <td>${v.due}</td>
-      <td>${v.payment}</td>
-      <td class="star">${renderStars(v.rating||0)}</td>
-      <td>
-        <span onclick="editVendor(${i})">✏️</span>
-        <span onclick="deleteVendor(${i})">🗑️</span>
-      </td>`;
+    `;
     tbody.appendChild(row);
   });
 }
@@ -278,10 +199,9 @@ function renderPending(){
       div.innerHTML = `
         <strong>${p.name}</strong><br>
         Contact: ${p.contact}<br>
-        Business Permit: ${p.permit}<br>
         Nature: ${p.nature}<br>
-        Market Place: ${p.place}<br>
-        Email: ${p.email}<br>
+        Business Permit: ${p.permit}<br>
+        Email: ${p.email}<br><br>
         <button class="btn" onclick="approveVendor(${i})">Approve</button>
         <button class="btn" onclick="declineVendor(${i})">Decline</button>
       `;
@@ -296,16 +216,19 @@ function approveVendor(i){
   const pending = JSON.parse(localStorage.getItem(STORAGE_KEYS.pending) || "[]");
   const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
   const p = pending[i];
+  
+ 
   vendors.push({
-    type: p.nature,
-    status: "✅ Approved",
-    owner: p.name,
-    due: new Date().toISOString().split("T")[0],
-    payment: "0.00",
-    rating: 0
+    name: p.name,
+    contact: p.contact,
+    nature: p.nature,
+    permit: p.permit,
+    email: p.email,
+    status: "✅ Approved"
   });
+
   pending.splice(i,1);
-  saveVendors(vendors);
+  localStorage.setItem(STORAGE_KEYS.vendors, JSON.stringify(vendors));
   localStorage.setItem(STORAGE_KEYS.pending, JSON.stringify(pending));
   renderPending();
   loadVendors();
@@ -313,50 +236,24 @@ function approveVendor(i){
 
 function declineVendor(i){
   const pending = JSON.parse(localStorage.getItem(STORAGE_KEYS.pending) || "[]");
+  const p = pending[i];
+  
+
+  const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
+  vendors.push({
+    name: p.name,
+    contact: p.contact,
+    nature: p.nature,
+    permit: p.permit,
+    email: p.email,
+    status: "❌ Declined"
+  });
+
   pending.splice(i,1);
+  localStorage.setItem(STORAGE_KEYS.vendors, JSON.stringify(vendors));
   localStorage.setItem(STORAGE_KEYS.pending, JSON.stringify(pending));
   renderPending();
-}
-
-function deleteVendor(i){
-  const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors)||"[]");
-  vendors.splice(i,1);
-  saveVendors(vendors);
   loadVendors();
-}
-
-const vendorModal = document.getElementById("vendorModal");
-const vendorIndex = document.getElementById("vendorIndex");
-const vendorType = document.getElementById("vendorType");
-const vendorStatus = document.getElementById("vendorStatus");
-const vendorOwner = document.getElementById("vendorOwner");
-const vendorDue = document.getElementById("vendorDue");
-const vendorPayment = document.getElementById("vendorPayment");
-const vendorRating = document.getElementById("vendorRating");
-
-document.getElementById("addVendorBtn").onclick = ()=>{
-  document.getElementById("vendorModalTitle").textContent="Add Vendor";
-  vendorIndex.value="";
-  [vendorType,vendorStatus,vendorOwner,vendorDue,vendorPayment,vendorRating].forEach(i=>i.value="");
-  vendorModal.style.display="flex";
-}
-document.getElementById("closeVendorBtn").onclick = ()=> vendorModal.style.display="none";
-
-document.getElementById("saveVendorBtn").onclick = ()=>{
-  const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors)||"[]");
-  const v = {
-    type: vendorType.value,
-    status: vendorStatus.value,
-    owner: vendorOwner.value,
-    due: vendorDue.value,
-    payment: vendorPayment.value,
-    rating: parseInt(vendorRating.value)||0
-  };
-  if(vendorIndex.value==="") vendors.push(v);
-  else vendors[vendorIndex.value]=v;
-  saveVendors(vendors);
-  loadVendors();
-  vendorModal.style.display="none";
 }
 
 window.onload = ()=>{
