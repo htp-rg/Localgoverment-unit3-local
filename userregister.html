@@ -101,25 +101,12 @@ button:hover {
   <input type="email" id="email" placeholder="Email Address" required>
   <input type="password" id="password" placeholder="Password" required>
   <button type="submit">Register Vendor</button>
-</form>
-  <div class="success-message" id="successMsg">
-    ✅ Registration submitted successfully! Await approval.
-  </div>
-  <a href="userlogin.html" class="back-link">Already have an account? Log in</a>
+ </form>
+  <div class="success-message" id="successMsg">✅ Registration successful! Redirecting to login...</div>
+  <a href="loginuser.html" class="back-link">Already have an account? Login</a>
 </div>
 
 <script>
-window.addEventListener("DOMContentLoaded", () => {
-  const pending = JSON.parse(localStorage.getItem("pending_vendors") || "[]");
-  const approved = JSON.parse(localStorage.getItem("vendor_engagements") || "[]");
-
-  const allVendors = [...pending, ...approved];
-
-  if (allVendors.length > 0) {
-    window.location.href = "userlogin.html";
-  }
-});
-
 document.getElementById("vendorForm").addEventListener("submit", function(e) {
   e.preventDefault();
 
@@ -127,25 +114,29 @@ document.getElementById("vendorForm").addEventListener("submit", function(e) {
   const contact = document.getElementById("contact").value.trim();
   const nature = document.getElementById("nature").value.trim();
   const permit = document.getElementById("permit").value.trim();
-  const email = document.getElementById("email").value.trim();
+  const email = document.getElementById("email").value.trim().toLowerCase();
   const password = document.getElementById("password").value.trim();
-  const newVendor = { name, contact, nature, permit, email, password, status: "Pending" };
 
-  if (!name || !contact || !nature || !permit || !email) {
+  if (!name || !contact || !nature || !permit || !email || !password) {
     alert("Please fill out all fields.");
     return;
   }
 
-  const newVendor = { name, contact, nature, permit, email, status: "Pending" };
   const pendingKey = "pending_vendors";
+  const approvedKey = "vendor_engagements";
 
-  let pending = JSON.parse(localStorage.getItem(pendingKey) || "[]");
+  const pending = JSON.parse(localStorage.getItem(pendingKey) || "[]");
+  const approved = JSON.parse(localStorage.getItem(approvedKey) || "[]");
 
-  if (pending.some(v => v.email === email)) {
+  const allVendors = [...pending, ...approved];
+
+  if (allVendors.some(v => v.email.toLowerCase() === email)) {
     alert("This email is already registered. Please log in instead.");
-    window.location.href = "userlogin.html";
+    window.location.href = "loginuser.html";
     return;
   }
+
+  const newVendor = { name, contact, nature, permit, email, password, status: "Pending" };
 
   pending.push(newVendor);
   localStorage.setItem(pendingKey, JSON.stringify(pending));
@@ -154,7 +145,9 @@ document.getElementById("vendorForm").addEventListener("submit", function(e) {
   const msg = document.getElementById("successMsg");
   msg.style.display = "block";
 
-  setTimeout(() => msg.style.display = "none", 4000);
+  setTimeout(() => {
+    window.location.href = "loginuser.html";
+  }, 1500);
 });
 </script>
 </body>
