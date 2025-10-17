@@ -14,6 +14,7 @@
   --border: #e6e8eb;
   --shadow: 0 6px 24px rgba(0, 0, 0, .06);
 }
+
 * { box-sizing: border-box; }
 body {
   margin: 0;
@@ -22,6 +23,7 @@ body {
   color: var(--text);
 }
 .app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+
 .sidebar {
   border-right: 1px solid var(--border);
   background: #4e73df; 
@@ -31,7 +33,6 @@ body {
   text-transform: uppercase;
   padding: 1rem;
   border-bottom: 1px solid var(--border);
-  color: var(--black);
 }
 nav { padding: 1rem; }
 .nav-item {
@@ -39,6 +40,7 @@ nav { padding: 1rem; }
   border-radius: 8px; text-decoration: none; color: var(--text);
 }
 .nav-item:hover, .nav-item.active { background: var(--ink-20); }
+
 .main { display: grid; grid-template-rows: 64px 1fr; min-width: 0; }
 .topbar {
   display: flex; align-items: center; justify-content: space-between;
@@ -50,11 +52,7 @@ nav { padding: 1rem; }
   border-radius: 8px; cursor: pointer;
 }
 .content { padding: 1rem; overflow: auto; }
-.card {
-  border: 1px solid var(--border);
-  border-radius: 12px; padding: 1rem;
-  box-shadow: var(--shadow);
-}
+
 table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
 th, td {
   border-bottom: 1px solid var(--border);
@@ -62,53 +60,38 @@ th, td {
 }
 th { font-size: .85rem; opacity: .7; }
 
-.menu-container { position: relative; display: inline-block; }
-.dropdown {
-  display: none;
-  position: absolute;
-  top: 110%;
-  right: 0;
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  box-shadow: var(--shadow);
-  min-width: 220px;
-  z-index: 1000;
+.card { border:1px solid var(--border); border-radius:12px; padding:1rem; box-shadow: var(--shadow); background:#fff; flex:1;}
+.select { padding:.5rem; border-radius:8px; border:1px solid var(--border);}
+.modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; }
+.modal-content { background:#fff; padding:1.5rem; border-radius:12px; width:400px; box-shadow:var(--shadow);}
+.modal h2 { margin-top:0; margin-bottom:.5rem; }
+.modal table { width:100%; border-collapse:collapse; }
+.modal td { padding:.3rem; border-bottom:1px solid #ddd; }
+.close { float:right; cursor:pointer; font-weight:bold;}
+  .main-layout {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 1.5rem;
+  align-items: start;
 }
-.dropdown p {
-  margin: 0; padding: 0.8rem;
-  font-weight: bold;
-  border-bottom: 1px solid var(--border);
-}
-.dropdown a {
-  display: block; padding: 0.8rem;
-  text-decoration: none; color: var(--text);
-  border-bottom: 1px solid var(--border);
-}
-.dropdown a:hover { background: var(--ink-20); }
-.dropdown a:last-child { border-bottom: none; }
-.dropdown.show { display: block; }
 
-.search { margin-bottom: 1rem; }
-.search input { width: 90%; padding: .5rem; border-radius: 8px; border: 1px solid var(--border); }
-.modal {
-  display: none; 
-  position: fixed; 
-  z-index: 10000;
-  left: 0; top: 0;
-  width: 100%; height: 100%;
-  overflow: auto;
-  background-color: rgba(0,0,0,0.4); 
+.chart-section {
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
-.modal-content {
-  background-color: var(--white);
-  padding: 1.5rem;
-  border-radius: 12px;
-  max-width: 400px;
-  width: 90%;
-  box-shadow: var(--shadow);
+
+.table-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
 }
 </style>
 </head>
@@ -128,173 +111,183 @@ th { font-size: .85rem; opacity: .7; }
     </nav>
   </aside>
 
-  <section class="main">
-    <header class="topbar">
-      <div style="display:flex; align-items:center; gap:0.5rem;">
-        <button class="btn" id="backBtn">← Back</button>
-        <div class="menu-container">
-          <button class="btn" id="menuBtn">☰</button>
-          <div class="dropdown" id="menuDropdown">
-            <p id="userName">User</p>
-            <a href="upgrade.html">Upgrade Personal Details</a>
-            <a href="password.html">Password and Security</a>
-            <a href="#" id="deleteAccount">Delete Account</a>
-            <a href="terms.html">Terms of Service</a>
-            <a href="report.html">Report a Problem</a>
-            <a href="main.html" id="signOut">Sign Out</a>
-          </div>
-        </div>
-      </div>
-    </header>
-
-    <div class="content">
-      <div class="card">
-        <h1>COMMODITY & PRICE MONITORING</h1>
-        <div class="search">🔎 <input id="commoditySearch" type="search" placeholder="Search…"></div>
-        <table id="commodityTable">
-          <thead>
-            <tr>
-              <th>Type of Business</th>
-              <th>Previous Price</th>
-              <th>Current Price</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-
-        <div style="display:flex;gap:2rem;margin-top:1rem;align-items:flex-start;">
-          <div style="flex:0 0 auto;">
-            <canvas id="pieChart" width="300" height="300"></canvas>
-          </div>
-          <div class="card-container" id="commodityCards"></div>
-        </div>
-      </div>
+<section class="main">
+  <header class="topbar">
+  <div style="display:flex; align-items:center; gap:0.8rem;">
+    <button class="btn" id="backBtn">← Back</button>
+    <h2>COMMODITY & PRICE MONITORING</h2>
+  </div>
+  <button class="btn" id="exportBtn">Export</button>
+</header>
+   
+<div class="content">
+  <div class="main-layout">
+   
+    <div class="card chart-section">
+      <h3>Commodity Prices (Average PHP)</h3>
+      <canvas id="commodityChart" height="300"></canvas>
     </div>
-  </section>
+
+  
+   <div class="card table-section">
+  <div class="table-header">
+    <h3>Commodity Table</h3>
+  </div>
+  <div style="margin-top: 1rem; display: flex; justify-content: center;">
+    <select id="commoditySelect" class="select">
+      <option value="">-- Choose Category --</option>
+      <option value="meat">Meat</option>
+      <option value="fish">Fish</option>
+      <option value="fruits">Fruits</option>
+      <option value="vegetables">Vegetables</option>
+      <option value="others">Others</option>
+    </select>
+  </div>
 </div>
 
-<div class="modal" id="dataModal">
+     <table id="commodityTable" style="display:none;">
+        <tbody></tbody>
+       </table>
+    </div>
+  </div>
+</div>
+</section>
+</div>
+
+<div class="modal" id="priceModal">
   <div class="modal-content">
-    <span class="close" onclick="closeDataModal()">&times;</span>
-    <h3 id="dataModalTitle"></h3>
-    <table id="lineTable">
-      <thead>
-        <tr><th>Week</th><th>Price</th></tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+    <span class="close" id="closeModal">×</span>
+    <h2 id="modalTitle"></h2>
+    <table id="priceTable"></table>
   </div>
 </div>
 
 <script>
-const COMMODITY_KEY = "commodity_data";
-const tableBody = document.querySelector("#commodityTable tbody");
-const cardsDiv = document.getElementById("commodityCards");
-let pieChart;
+const userData = JSON.parse(localStorage.getItem("commodityData"));
+console.log("User Commodity Data:", userData);
+  
+  meat: [
+    { name: "Pork", current: "₱320-250/kg", previous: "₱300-230/kg" },
+    { name: "Beef", current: "₱380-450/kg", previous: "₱360-430/kg" },
+    { name: "Chicken", current: "₱210/kg", previous: "₱200/kg" }
+  ],
+  fish: [
+    { name: "Bangus", current: "₱200/kg", previous: "₱180/kg" },
+    { name: "Tilapia", current: "₱100/kg", previous: "₱90/kg" },
+    { name: "Galunggung", current: "₱200/kg", previous: "₱190/kg" }
+  ],
+  fruits: [
+    { name: "Banana", current: "₱50/kg", previous: "₱45/kg" },
+    { name: "Mango", current: "₱200/kg", previous: "₱180/kg" },
+    { name: "Apple", current: "₱150/kg", previous: "₱140/kg" }
+  ],
+  vegetables: [
+    { name: "Cabbage", current: "₱50/kg", previous: "₱45/kg" },
+    { name: "Carrots", current: "₱150/kg", previous: "₱140/kg" },
+    { name: "Potatoes", current: "₱200/kg", previous: "₱180/kg" },
+    { name: "Tomatoes", current: "₱100/kg", previous: "₱90/kg" }
+  ],
+  others: [
+    { name: "Egg", current: "₱200/12pcs", previous: "₱180/12pcs" },
+    { name: "Onion", current: "₱100/kg", previous: "₱90/kg" },
+    { name: "Garlic", current: "₱200/kg", previous: "₱180/kg" }
+  ]
+};
 
 
-const menuBtn = document.getElementById("menuBtn");
-const menuDropdown = document.getElementById("menuDropdown");
-menuBtn.addEventListener("click", () => menuDropdown.classList.toggle("show"));
-window.addEventListener("click", (e) => {
-  if (!menuBtn.contains(e.target) && !menuDropdown.contains(e.target)) {
-    menuDropdown.classList.remove("show");
+function extractAverage(value) {
+  const nums = value.match(/\d+/g);
+  if (!nums) return 0;
+  if (nums.length === 2) return (parseInt(nums[0]) + parseInt(nums[1])) / 2;
+  return parseInt(nums[0]);
+}
+
+function computeAverages(type) {
+  return Object.keys(commodityData).map(category => {
+    const items = commodityData[category];
+    const values = items.map(i => extractAverage(i[type]));
+    const avg = values.reduce((a, b) => a + b, 0) / values.length;
+    return Math.round(avg);
+  });
+}
+
+
+const categories = Object.keys(commodityData).map(
+  c => c.charAt(0).toUpperCase() + c.slice(1)
+);
+
+const ctx = document.getElementById("commodityChart").getContext("2d");
+let chart = new Chart(ctx, {
+  type: "bar",
+  data: {
+    labels: categories,
+    datasets: [
+      {
+        label: "Current Price (PHP)",
+        data: computeAverages("current"),
+        backgroundColor: "#0a53c1"
+      },
+      {
+        label: "Previous Price (PHP)",
+        data: computeAverages("previous"),
+        backgroundColor: "#94b3ff"
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    scales: {
+      y: {
+        beginAtZero: true,
+        title: { display: true, text: "Average Price (PHP)" }
+      }
+    },
+    plugins: { legend: { position: "top" } }
   }
 });
 
 
-function loadCommodities() {
-  const data = JSON.parse(localStorage.getItem(COMMODITY_KEY) || "[]");
-  tableBody.innerHTML = "";
-  cardsDiv.innerHTML = ""; 
-  const colors = ["#ff4d4d", "#ffd966", "#9fff80", "#4da6ff"]; 
+const select = document.getElementById("commoditySelect");
+const modal = document.getElementById("priceModal");
+const modalTitle = document.getElementById("modalTitle");
+const priceTable = document.getElementById("priceTable");
+const closeModal = document.getElementById("closeModal");
 
-  data.forEach((item, i) => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${item.type}</td> 
-      <td>${item.prev}</td> 
-      <td>${item.curr}</td> 
-      <td>${item.status}</td>
-    `; 
-    tableBody.appendChild(tr);
+select.addEventListener("change", () => {
+  const value = select.value;
+  if (!value) return;
+  modalTitle.textContent = value.charAt(0).toUpperCase() + value.slice(1);
+  priceTable.innerHTML = "";
 
-    const card = document.createElement("div"); 
-    card.className = "card"; 
-    card.style.backgroundColor = colors[i % colors.length]; 
-    card.style.color = (colors[i % colors.length] === "#ffd966") ? "#111" : "#fff"; 
-    card.innerHTML = `${item.type}<br><button class="view-btn">View Data</button>`; 
-    card.querySelector(".view-btn").onclick = (e) => { e.stopPropagation(); openDataModal(item.type); }; 
-    cardsDiv.appendChild(card); 
+  commodityData[value].forEach((item, index) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${item.name}</td>
+      <td>Current: ${item.current}</td>
+      <td>Previous: ${item.previous}</td>
+      <td><button class="btn editBtn" data-cat="${value}" data-index="${index}">Edit</button></td>
+    `;
+    priceTable.appendChild(row);
   });
 
-  updatePieChart();
-}
-
-
-function updatePieChart() {
-  const data = JSON.parse(localStorage.getItem(COMMODITY_KEY) || "[]");
-  const counts = { High: 0, Low: 0, Stable: 0 };
-  data.forEach(d => { if (counts[d.status] !== undefined) counts[d.status]++; });
-  const ctx = document.getElementById("pieChart").getContext("2d");
-  if (pieChart) pieChart.destroy();
-  pieChart = new Chart(ctx, {
-    type: "pie",
-    data: {
-      labels: ["High", "Low", "Stable"],
-      datasets: [{
-        data: [counts.High, counts.Low, counts.Stable],
-        backgroundColor: ["#ff4d4d", "#9fff80", "#ffd966"]
-      }]
-    }
-  });
-}
-
-const dataModal = document.getElementById("dataModal");
-const dataModalTitle = document.getElementById("dataModalTitle");
-const lineTableBody = document.querySelector("#lineTable tbody");
-
-function openDataModal(name) {
-  const data = JSON.parse(localStorage.getItem(COMMODITY_KEY) || "[]");
-  const item = data.find(d => d.type === name);
-  if (!item) return;
-
-  dataModalTitle.textContent = `${name} - Past 6 Weeks`;
-  lineTableBody.innerHTML = "";
-
-  const weeks = ["Week 1","Week 2","Week 3","Week 4","Week 5","Week 6"];
-  const values = [
-    item.prev,
-    item.prev + (item.curr - item.prev) * 0.2,
-    item.prev + (item.curr - item.prev) * 0.4,
-    item.prev + (item.curr - item.prev) * 0.6,
-    item.prev + (item.curr - item.prev) * 0.8,
-    item.curr
-  ];
-
-  values.forEach((v, i) => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `<td>${weeks[i]}</td><td>${v.toFixed(2)}</td>`;
-    lineTableBody.appendChild(tr);
-  });
-
-  dataModal.style.display = "flex";
-}
-function closeDataModal() { dataModal.style.display = "none"; }
-
-
-document.getElementById("commoditySearch").addEventListener("keyup", function() {
-  const filter = this.value.toLowerCase();
-  document.querySelectorAll("#commodityTable tbody tr").forEach(r => {
-    r.style.display = r.innerText.toLowerCase().includes(filter) ? "" : "none";
-  });
+  modal.style.display = "flex";
 });
 
-window.onload = () => { 
-  document.getElementById("userName").textContent = localStorage.getItem("userName") || "User";
-  loadCommodities(); 
-};
+
+  localStorage.setItem("commodityData", JSON.stringify(commodityData));
+
+
+  e.target.closest("tr").children[1].textContent = `Current: ${newCurrent}`;
+  e.target.closest("tr").children[2].textContent = `Previous: ${newPrevious}`;
+
+  chart.data.datasets[0].data = computeAverages("current");
+  chart.data.datasets[1].data = computeAverages("previous");
+  chart.update();
+});
+
+closeModal.addEventListener("click", () => (modal.style.display = "none"));
+window.addEventListener("click", e => {
+  if (e.target === modal) modal.style.display = "none";
+});
+document.getElementById("backBtn").addEventListener("click", () => window.history.back());
 </script>
-</body>
-</html>
