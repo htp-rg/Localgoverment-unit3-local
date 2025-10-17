@@ -135,23 +135,47 @@ th { font-size: .85rem; opacity: .7; }
     <header class="topbar">
       <div style="display:flex; align-items:center; gap:0.5rem;">
         <button class="btn" id="backBtn">← Back</button>
-        <div class="menu-container">
-          <button class="btn" id="menuBtn">☰</button>
-          <div class="dropdown" id="menuDropdown">
-            <p id="userName">User</p>
-             <a href="upgrade.html">Upgrade Personal Details</a>
-            <a href="password.html">Password and Security</a>
-            <a href="#" id="deleteAccount">Delete Account</a>
-            <a href="terms.html">Terms of Service</a>
-            <a href="report.html">Report a Problem</a>
-            <a href="main.html" id="signOut">Sign Out</a>
           </div>
-        </div>
+      <div>
+        <button class="btn" id="exportBtn">Export</button>
       </div>
     </header>
 
+    <div class="content" id="contentArea">
+      <h1>Dashboard</h1>
+      <div class="grid">
+        <div class="card yellow"><h3>Price Variance / Cost Savings</h3><p>₱12,500</p><small>+8% vs last month</small></div>
+        <div class="card green"><h3>On-Time Delivery Rate</h3><p>92%</p><small>+3 pts</small></div>
+        <div class="card red"><h3>Defect Rate / Compliance Score</h3><p>2%</p><small>-1 pt</small></div>
+        <div class="card blue"><h3>Vendor Performance Score</h3><p>87/100</p><small>Stable</small></div>
+      </div>
+
+   <div class="grid">
+        <div class="card">
+          <h3>Supply Chain Flow (Last 6 Weeks)</h3>
+          <canvas id="pipelineChart" height="100"></canvas>
+        </div>
+        <div class="card" id="tasksCard">
+          <h3>Tasks</h3>
+          <ul id="taskList" style="list-style:none;padding:0;margin:0;">
+            <li><input type="checkbox" /> Review vendor contracts <span class="edit-icon">✏️</span> <span class="delete-icon">🗑️</span></li>
+            <li><input type="checkbox" /> Monitor deliveries <span class="edit-icon">✏️</span> <span class="delete-icon">🗑️</span></li>
+            <li><input type="checkbox" /> Update compliance checklist <span class="edit-icon">✏️</span> <span class="delete-icon">🗑️</span></li>
+            <li><input type="checkbox" /> Evaluate supplier pricing <span class="edit-icon">✏️</span> <span class="delete-icon">🗑️</span></li>
+          </ul>
+          <button id="addTaskBtn" class="btn" style="margin-top:.5rem;">➕</button>
+        </div>
+      </div>
        
-      <table id="vendorEngagementsTable">
+          <div class="card" style="margin-top:1rem;">
+  <div style="display:flex; justify-content:space-between; align-items:center;">
+    <h3>Registered Vendors</h3>
+    <div class="search">
+      🔎 <input id="searchInput" type="search" placeholder="Search vendors…">
+    </div>
+  </div>
+
+  <table id="vendorEngagementsTable">
     <thead>
       <tr>
         <th>Name</th>
@@ -197,6 +221,7 @@ th { font-size: .85rem; opacity: .7; }
       </tr>
     </tbody>
   </table>
+
       
 <script>
 let pipelineChart=null;
