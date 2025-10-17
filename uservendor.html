@@ -163,46 +163,12 @@ th { font-size: .85rem; opacity: .7; }
 </div>
 <script>
 const STORAGE_KEYS = { vendors: "vendor_engagements", user: "logged_in_user" };
-let pipelineChart = null;
-
-if (!localStorage.getItem(STORAGE_KEYS.vendors)) {
-  localStorage.setItem(STORAGE_KEYS.vendors, JSON.stringify([
-    { name: "Gacusan, Aira Jane", contact: "0912-345-6789", business: "Takoyaki Store", permit: "BP-00123", email:"aira.gacusan@example.com", status:"Accepted" },
-    { name: "Furigay, Neri Jane", contact: "0923-456-7890", business: "Sound Equipment", permit: "BP-00456", email:"neri.furigay@example.com", status:"Declined" },
-    { name: "Pena, Rona Mae", contact: "0934-567-8901", business: "Tables and Chairs Rental", permit: "BP-00789", email:"rona.pena@example.com", status:"Accepted" },
-    { name: "Dacoco, Jonathan", contact: "0945-678-9012", business: "Atan’s Meat Shop", permit: "BP-00999", email:"jonathan.dacoco@example.com", status:"Declined" }
-  ]));
-}
-  function loadVendors() {
-  const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
-  const tbody = document.querySelector("#vendorEngagementsTable tbody");
-  tbody.innerHTML = "";
-
-  if (!vendors.length) {
-    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#777;">No vendor records found.</td></tr>`;
-    return;
-  }
-
-  vendors.forEach(v => {
-    const row = document.createElement("tr");
-    const statusClass = v.status === "Accepted" ? "status-approved" : "status-declined";
-    const statusSymbol = v.status === "Accepted" ? "✔" : "✖";
-    row.innerHTML = `
-      <td>${v.name}</td>
-      <td>${v.contact}</td>
-      <td>${v.business}</td>
-      <td>${v.permit}</td>
-      <td>${v.email}</td>
-      <td class="${statusClass}">${statusSymbol} ${v.status}</td>
-    `;
-    tbody.appendChild(row);
-  });
-}
 
 function loadUserVendor() {
   const loggedInUser = JSON.parse(localStorage.getItem(STORAGE_KEYS.user) || "{}");
   const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
-  const tbody = document.querySelector("#userVendorTable tbody");
+  const tbody = document.querySelector("#vendorEngagementsTable tbody");
+
   tbody.innerHTML = "";
 
   if (!loggedInUser.email) {
@@ -217,13 +183,14 @@ function loadUserVendor() {
     return;
   }
 
-  const statusClass = userVendor.status === "Accepted" ? "status-approved" : "status-declined";
-  const statusSymbol = userVendor.status === "Accepted" ? "✔" : "✖";
+  const statusClass = userVendor.status === "Approved" ? "status-approved" : "status-declined";
+  const statusSymbol = userVendor.status === "Approved" ? "✔" : "✖";
+
   const row = document.createElement("tr");
   row.innerHTML = `
     <td>${userVendor.name}</td>
     <td>${userVendor.contact}</td>
-    <td>${userVendor.business}</td>
+    <td>${userVendor.nature}</td>
     <td>${userVendor.permit}</td>
     <td>${userVendor.email}</td>
     <td class="${statusClass}">${statusSymbol} ${userVendor.status}</td>
@@ -231,13 +198,11 @@ function loadUserVendor() {
   tbody.appendChild(row);
 }
 
-
 document.getElementById("backBtn").addEventListener("click", () => {
   window.location.href = "userdashboard.html"; 
 });
 
 window.onload = () => {
-  loadVendors();      
-  loadUserVendor();  
+  loadUserVendor(); 
 };
 </script>
