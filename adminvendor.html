@@ -214,7 +214,7 @@ th { font-size: .85rem; opacity: .7; }
 </div>
 
 <script>
-window.onload = function() {
+window.onload = () => {
   const STORAGE_KEYS = { vendors: "vendor_engagements" };
 
   function loadVendors() {
@@ -242,7 +242,7 @@ window.onload = function() {
       return;
     }
 
-   vendors.forEach(v => {
+    vendors.forEach(v => {
       const row = document.createElement("tr");
       const statusClass = v.status === "Approved" ? "status-approved" : "status-declined";
       row.innerHTML = `
@@ -251,12 +251,11 @@ window.onload = function() {
         <td>${v.nature}</td>
         <td>${v.permit}</td>
         <td>${v.email}</td>
-     <td class="${statusClass}">${v.status === "Approved" ? "✔ Accepted" : "✖ Declined"}</td>
+        <td class="${statusClass}">${v.status}</td>
       `;
       tbody.appendChild(row);
     });
   }
-
 
 document.getElementById("exportBtn").onclick = function() {
   const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
