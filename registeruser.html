@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vendor Registration</title>
+<style>
+:root {
+  --text: #111111;
+  --blue: #4e73df;
+  --border: #e6e8eb;
+  --white: #ffffff;
+  --shadow: 0 6px 24px rgba(0,0,0,.06);
+}
+body {
+  margin: 0;
+  font-family: Inter, system-ui, sans-serif;
+  background: #f4f6f8;
+  color: var(--text);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+.container {
+  background: var(--white);
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  max-width: 420px;
+  width: 90%;
+}
+h1 {
+  text-align: center;
+  color: var(--blue);
+  margin-bottom: 1rem;
+}
+label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: .3rem;
+}
+input[type="text"],
+input[type="email"],
+input[type="number"] {
+  width: 100%;
+  padding: .6rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+button {
+  width: 100%;
+  background: var(--blue);
+  color: white;
+  border: none;
+  padding: .8rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+}
+button:hover {
+  background: #2e59d9;
+}
+.success {
+  text-align: center;
+  color: green;
+  margin-top: 1rem;
+  font-weight: 600;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Vendor Registration</h1>
+  <form id="vendorForm">
+    <label for="name">Owner's Name</label>
+    <input type="text" id="name" placeholder="Enter full name" required>
+
+    <label for="contact">Contact Number</label>
+    <input type="text" id="contact" placeholder="e.g. 09123456789" required>
+
+    <label for="permit">Business Permit Number</label>
+    <input type="text" id="permit" placeholder="Enter permit number" required>
+
+    <label for="nature">Nature of Business</label>
+    <input type="text" id="nature" placeholder="e.g. Food, Clothing, Hardware" required>
+
+    <label for="place">Market Place / Location</label>
+    <input type="text" id="place" placeholder="Enter market or barangay name" required>
+
+    <label for="email">Email Address</label>
+    <input type="email" id="email" placeholder="example@gmail.com" required>
+
+    <button type="submit">Submit Registration</button>
+    <div class="success" id="successMsg" style="display:none;">Registration submitted for approval!</div>
+  </form>
+</div>
+
+<script>
+const form = document.getElementById("vendorForm");
+form.addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  const newVendor = {
+    name: document.getElementById("name").value.trim(),
+    contact: document.getElementById("contact").value.trim(),
+    permit: document.getElementById("permit").value.trim(),
+    nature: document.getElementById("nature").value.trim(),
+    place: document.getElementById("place").value.trim(),
+    email: document.getElementById("email").value.trim(),
+  };
+
+  let pending = JSON.parse(localStorage.getItem("pending_vendors") || "[]");
+  pending.push(newVendor);
+  localStorage.setItem("pending_vendors", JSON.stringify(pending));
+
+  document.getElementById("successMsg").style.display = "block";
+  form.reset();
+});
+</script>
+
+</body>
+</html>
