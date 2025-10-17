@@ -128,176 +128,77 @@ th { font-size: .85rem; opacity: .7; }
       <a href="userinspection.html" class="nav-item">Inspection & Compliance</a>
       <a href="userreports.html" class="nav-item">Reports & Analytics</a>
       <a href="usersettings.html" class="nav-item">Settings</a>
-      <a href="login.html" class="nav-item" style="margin-top:2rem; font-weight:bold;">Logout</a>
+      <a href="loginuser.html" class="nav-item" style="margin-top:2rem; font-weight:bold;">Logout</a>
     </nav>
   </aside>
 
-  <section class="main">
-    <header class="topbar">
-      <div style="display:flex; align-items:center; gap:0.5rem;">
-        <button class="btn" id="backBtn">← Back</button>
-        <div class="menu-container">
-          <button class="btn" id="menuBtn">☰</button>
-          <div class="dropdown" id="menuDropdown">
-            <p id="userName">User</p>
-             <a href="upgrade.html">Upgrade Personal Details</a>
-            <a href="password.html">Password and Security</a>
-            <a href="#" id="deleteAccount">Delete Account</a>
-            <a href="terms.html">Terms of Service</a>
-            <a href="report.html">Report a Problem</a>
-            <a href="main.html" id="signOut">Sign Out</a>
-          </div>
-        </div>
-      </div>
-    </header>
-    <div class="content">
+<section class="main">
+  <header class="topbar">
+  <div style="display:flex; align-items:center; gap:0.8rem;">
+    <button class="btn" id="backBtn">← Back</button>
+    <h2>Vendor Management</h2>
+  </div>
+  <button class="btn" id="exportBtn">Export</button>
+</header>
+
+  <div class="content">
       <div class="card">
-        <h1>Vendor Management</h1>
-        <div class="search">🔎 <input id="searchInput" type="search" placeholder="Search…"></div>
+        <h1>Registered Vendors</h1>
         <table id="vendorEngagementsTable">
           <thead>
             <tr>
-              <th>Business Name</th>
+              <th>Name</th>
+              <th>Contact No.</th>
+              <th>Nature of Business</th>
+              <th>Business Permit</th>
+              <th>Email</th>
               <th>Status</th>
-              <th>Owner</th>
-              <th>Due Date</th>
-              <th>Records of Payment</th>
-              <th>Rating</th>
-              <th>Action</th>
             </tr>
           </thead>
-          <tbody>
-           <tr>
-            <td>Takoyaki store</td>
-            <td>✅ Completed</td>
-            <td>Gacusan, Aira Jane</td>
-            <td>03 Sep 2025</td>
-            <td>3,785.00</td>
-            <td class="star">★★★★★</td>
-            <td><button class="btn rateBtn">Rate</button></td>
-          </tr>
-          <tr>
-            <td>Sound equipment</td>
-            <td>✏ In progress</td>
-            <td>Furigay, Neri Jane</td>
-            <td>10 Sep 2025</td>
-            <td>2,345</td>
-            <td class="star">☆☆☆☆☆</td>
-            <td><button class="btn rateBtn">Rate</button></td>
-          </tr>
-          <tr>
-            <td>Tables and chairs</td>
-            <td>⏳ Not started</td>
-            <td>Pena, Rona Mae</td>
-            <td>04 Nov 2025</td>
-            <td>5,199</td>
-            <td class="star">☆☆☆☆☆</td>
-            <td><button class="btn rateBtn">Rate</button></td>
-          </tr>
-          <tr>
-            <td>Atan's Meat Shop</td>
-            <td>⛔ Blocked</td>
-            <td>Dacoco, Jonathan</td>
-            <td>12 Mar 2025</td>
-            <td>1,870</td>
-            <td class="star">★★★☆☆</td>
-            <td><button class="btn rateBtn">Rate</button></td>
-          </tr>
-          </tbody>
+          <tbody></tbody>
         </table>
       </div>
     </div>
   </section>
 </div>
-
-<div class="modal" id="rateModal">
-  <div class="modal-content">
-    <h2>Rate Vendor</h2>
-    <p id="modalVendorName"></p>
-    <select id="ratingSelect">
-      <option value="1">★☆☆☆☆</option>
-      <option value="2">★★☆☆☆</option>
-      <option value="3">★★★☆☆</option>
-      <option value="4">★★★★☆</option>
-      <option value="5">★★★★★</option>
-    </select>
-    <br>
-    <button class="btn" id="saveRatingBtn">Save</button>
-    <button class="btn" onclick="document.getElementById('rateModal').style.display='none'">Cancel</button>
-  </div>
-</div>
-
 <script>
-const STORAGE_KEY = "vendor_engagements";
+const STORAGE_KEYS = { vendors: "vendor_engagements", user: "logged_in_user" };
 
-const menuBtn = document.getElementById("menuBtn");
-const menuDropdown = document.getElementById("menuDropdown");
-menuBtn.addEventListener("click", ()=> menuDropdown.classList.toggle("show"));
-document.addEventListener("click", e => {
-  if(!e.target.closest(".menu-container")) menuDropdown.classList.remove("show");
-});
-
-document.getElementById("searchInput").addEventListener("keyup", function(){
-  const filter = this.value.toLowerCase();
-  document.querySelectorAll("#vendorEngagementsTable tbody tr").forEach(r=>{
-    r.style.display = r.innerText.toLowerCase().includes(filter) ? "" : "none";
-  });
-});
-
-window.onload = ()=>{
-  document.getElementById("userName").textContent = localStorage.getItem("userName") || "User";
-  loadVendors();
-};
-
-function loadVendors(){
-  const vendors = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-  const tbody = document.querySelector("#vendorEngagementsTable tbody");
+function loadUserVendor() {
+  const loggedInUser = JSON.parse(localStorage.getItem(STORAGE_KEYS.user) || "{}");
+  const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
+  const tbody = document.querySelector("#userVendorTable tbody");
   tbody.innerHTML = "";
 
-  vendors.forEach((v, i) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${v.type}</td>
-      <td>${v.status}</td>
-      <td>${v.owner}</td>
-      <td>${v.due}</td>
-      <td>${v.payment}</td>
-      <td class="star">${renderStars(v.rating || 0)}</td>
-      <td><button class="btn rateBtn">Rate</button></td>
-    `;
-    tbody.appendChild(row);
-  });
+  if (!loggedInUser.email) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#777;">Please log in to view your vendor profile.</td></tr>`;
+    return;
+  }
 
-  addRatingEvents();
+  const userVendor = vendors.find(v => v.email === loggedInUser.email);
+
+  if (!userVendor) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#777;">No vendor record found for your account (${loggedInUser.email}).</td></tr>`;
+    return;
+  }
+
+  const row = document.createElement("tr");
+  row.innerHTML = `
+    <td>${userVendor.name}</td>
+    <td>${userVendor.contact}</td>
+    <td>${userVendor.nature}</td>
+    <td>${userVendor.permit}</td>
+    <td>${userVendor.email}</td>
+    <td>${userVendor.status}</td>
+  `;
+  tbody.appendChild(row);
 }
 
-function renderStars(num){ return "★".repeat(num)+"☆".repeat(5-num); }
-
-// Rating modal
-let currentRow = null;
-
-function addRatingEvents(){
-  document.querySelectorAll(".rateBtn").forEach(btn=>{
-    btn.addEventListener("click", e=>{
-      currentRow = e.target.closest("tr");
-      document.getElementById("modalVendorName").textContent = currentRow.cells[0].textContent;
-      document.getElementById("rateModal").style.display = "flex";
-    });
-  });
-}
-
-document.getElementById("saveRatingBtn").addEventListener("click", ()=>{
-  const rating = parseInt(document.getElementById("ratingSelect").value);
-  const vendorName = document.getElementById("modalVendorName").textContent;
-
-  const vendors = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-  const vendor = vendors.find(v => v.type === vendorName);
-  if(vendor) vendor.rating = rating;
-
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(vendors));
-  document.getElementById("rateModal").style.display = "none";
-  loadVendors();
+document.getElementById("backBtn").addEventListener("click", () => {
+  window.location.href = "userdashboard.html"; 
 });
+
+window.onload = loadUserVendor;
 </script>
 </body>
 </html>
