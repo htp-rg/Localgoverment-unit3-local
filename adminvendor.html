@@ -208,19 +208,27 @@ th { font-size: .85rem; opacity: .7; }
 <script>
 const STORAGE_KEYS = { vendors: "vendor_engagements" };
 
-function loadVendors(){
-  const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
+function loadVendors() {
+  const defaultVendors = [
+    { name: "Gacusan, Aira Jane", contact: "0912-345-6789", nature: "Takoyaki Store", permit: "BP-00123", email: "aira.gacusan@example.com", status: "✔ Accepted" },
+    { name: "Furigay, Neri Jane", contact: "0923-456-7890", nature: "Sound Equipment", permit: "BP-00456", email: "neri.furigay@example.com", status: "✖ Declined" },
+    { name: "Pena, Rona Mae", contact: "0934-567-8901", nature: "Tables and Chairs Rental", permit: "BP-00789", email: "rona.pena@example.com", status: "✔ Accepted" },
+    { name: "Dacoco, Jonathan", contact: "0945-678-9012", nature: "Atan’s Meat Shop", permit: "BP-00999", email: "jonathan.dacoco@example.com", status: "✖ Declined" }
+  ];
+
+  let vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
+
+  if (vendors.length === 0) {
+    vendors = defaultVendors;
+    localStorage.setItem(STORAGE_KEYS.vendors, JSON.stringify(defaultVendors));
+  }
+
   const tbody = document.querySelector("#vendorEngagementsTable tbody");
   tbody.innerHTML = "";
 
-  if(vendors.length === 0){
-    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#777;">No vendor records found.</td></tr>`;
-    return;
-  }
-
-  vendors.forEach(v=>{
+  vendors.forEach(v => {
     const row = document.createElement("tr");
-    const statusClass = v.status.includes("Approved") ? "status-approved" : "status-declined";
+    const statusClass = v.status.includes("✔") ? "status-approved" : "status-declined";
     row.innerHTML = `
       <td>${v.name}</td>
       <td>${v.contact}</td>
@@ -235,14 +243,14 @@ function loadVendors(){
 
 document.getElementById("exportBtn").onclick = function() {
   const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
-  if(vendors.length === 0) return alert("No data to export.");
+  if (vendors.length === 0) return alert("No data to export.");
 
   const csvContent = [
     ["Name", "Contact", "Nature", "Permit", "Email", "Status"],
     ...vendors.map(v => [v.name, v.contact, v.nature, v.permit, v.email, v.status])
   ].map(e => e.join(",")).join("\n");
 
-  const blob = new Blob([csvContent], {type: "text/csv"});
+  const blob = new Blob([csvContent], { type: "text/csv" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
   a.download = "vendor_list.csv";
@@ -250,10 +258,13 @@ document.getElementById("exportBtn").onclick = function() {
 };
 
 document.getElementById("backBtn").addEventListener("click", () => {
-  window.location.href = "admindashboard.html";
-});
+  if (document.referrer) {
 
+    window.history.back();
+  } else {
+  
+    window.location.href = "admindashboard.html";
+  }
+});
 window.onload = loadVendors;
 </script>
-</body>
-</html>
