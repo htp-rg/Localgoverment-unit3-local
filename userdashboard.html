@@ -150,53 +150,54 @@ th { font-size: .85rem; opacity: .7; }
       </div>
     </header>
 
-    <div class="content" id="contentArea">
-      <h1>Dashboard</h1>
-      <div class="grid">
-        <div class="card yellow"><h3>Price Variance / Cost Savings</h3><p>₱12,500</p><small>+8% vs last month</small></div>
-        <div class="card green"><h3>On-Time Delivery Rate</h3><p>92%</p><small>+3 pts</small></div>
-        <div class="card red"><h3>Defect Rate / Compliance Score</h3><p>2%</p><small>-1 pt</small></div>
-        <div class="card blue"><h3>Vendor Performance Score</h3><p>87/100</p><small>Stable</small></div>
-      </div>
-
-      <div class="grid">
-        <div class="card">
-          <h3>Supply Chain Flow (Last 6 Weeks)</h3>
-          <canvas id="pipelineChart" height="100"></canvas>
-        </div>
-        <div class="card">
-          <h3>Tasks</h3>
-          <ul id="taskList" style="list-style:none;padding:0;margin:0;"></ul>
-          
-          </ul>
-        </div>
-      </div>
        
-      <div class="card" style="margin-top:1rem;">
-        <h3>Recent Vendor Engagements</h3>
-        <div class="search">🔎 <input id="searchInput" type="search" placeholder="Search…"></div>
-        <table id="vendorEngagementsTable">
-          <thead>
-             <tr>
-              <th>Type of Business</th><th>Status</th><th>Owner</th><th>Due Date</th><th>Records of Payment</th><th>Rating</th>
-            </tr>
-          </thead>
-          <tbody> <tr><td>Takoyaki store</td><td>✅ Completed</td><td>Gacusan, Aira Jane</td><td>03 Sep 2025</td><td>3,785.00</td><td data-stars="5"></td></tr>
-            <tr><td>Sound equipment</td><td>✏ In progress</td><td>Furigay, Neri Jane</td><td>10 Sep 2025</td><td>2,345</td><td data-stars="0"></td></tr>
-            <tr><td>Tables and chairs</td><td>⏳ Not started</td><td>Pena, Rona Mae</td><td>04 Nov 2025</td><td>5,199</td><td data-stars="0"></td></tr>
-            <tr><td>Atan's Meat Shop</td><td>⛔ Blocked</td><td>Dacoco, Jonathan</td><td>12 Mar 2025</td><td>1,870</td><td data-stars="3"></td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-</div>
-
-
-<div class="modal" id="taskModal"><div class="modal-content"></div></div>
-<div class="modal" id="deleteTaskModal"><div class="modal-content"></div></div>
-<div class="modal" id="vendorModal"><div class="modal-content"></div></div>
-
+      <table id="vendorEngagementsTable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Contact No.</th>
+        <th>Nature of Business</th>
+        <th>Business Permit</th>
+        <th>Email</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Gacusan, Aira Jane</td>
+        <td>0912-345-6789</td>
+        <td>Takoyaki Store</td>
+        <td>BP-00123</td>
+        <td>aira.gacusan@example.com</td>
+        <td style="color:green; font-weight:600;">✔ Accepted</td>
+      </tr>
+      <tr>
+        <td>Furigay, Neri Jane</td>
+        <td>0923-456-7890</td>
+        <td>Sound Equipment</td>
+        <td>BP-00456</td>
+        <td>neri.furigay@example.com</td>
+        <td style="color:red; font-weight:600;">✖ Declined</td>
+      </tr>
+      <tr>
+        <td>Pena, Rona Mae</td>
+        <td>0934-567-8901</td>
+        <td>Tables and Chairs Rental</td>
+        <td>BP-00789</td>
+        <td>rona.pena@example.com</td>
+        <td style="color:green; font-weight:600;">✔ Accepted</td>
+      </tr>
+      <tr>
+        <td>Dacoco, Jonathan</td>
+        <td>0945-678-9012</td>
+        <td>Atan’s Meat Shop</td>
+        <td>BP-00999</td>
+        <td>jonathan.dacoco@example.com</td>
+        <td style="color:red; font-weight:600;">✖ Declined</td>
+      </tr>
+    </tbody>
+  </table>
+      
 <script>
 let pipelineChart=null;
 const STORAGE_KEYS={vendors:"vendor_engagements"};
@@ -204,22 +205,29 @@ const STORAGE_TASKS="dashboard_tasks";
 
 function renderStars(num){ return "★".repeat(num)+"☆".repeat(5-num); }
 
-function loadVendors(){
-  const vendors=JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors)||"[]");
-  const tbody=document.querySelector("#vendorEngagementsTable tbody");
-  tbody.innerHTML="";
-  vendors.forEach(v=>{
-    const row=document.createElement("tr");
-    row.innerHTML=`
-      <td>${v.type}</td>
-      <td>${v.status}</td>
-      <td>${v.owner}</td>
-      <td>${v.due}</td>
-      <td>${v.payment}</td>
-      <td><span class="star">${renderStars(v.rating||0)}</span></td>`;
+function loadVendors() {
+  const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
+  const tbody = document.querySelector("#vendorEngagementsTable tbody");
+  tbody.innerHTML = "";
+  vendors.forEach((v, i) => {
+    const row = document.createElement("tr");
+    const statusColor = v.status === "Accepted" ? "green" : "red";
+    const statusIcon = v.status === "Accepted" ? "✔" : "✖";
+    row.innerHTML = `
+      <td>${v.name}</td>
+      <td>${v.contact}</td>
+      <td>${v.business}</td>
+      <td>${v.permit}</td>
+      <td>${v.email}</td>
+      <td style="color:${statusColor};font-weight:600;">${statusIcon} ${v.status}</td>
+      <td>
+        <span class="edit-icon" onclick="editVendor(${i})">✏️</span>
+        <span class="delete-icon" onclick="deleteVendor(${i})">🗑️</span>
+      </td>`;
     tbody.appendChild(row);
   });
 }
+
 
 function loadTasks(){
   const tasks=JSON.parse(localStorage.getItem(STORAGE_TASKS)||"[]");
@@ -230,7 +238,7 @@ function loadTasks(){
     const checkbox=document.createElement("input");
     checkbox.type="checkbox";
     checkbox.checked=t.completed||false;
-    checkbox.disabled=true; // Read-only
+    checkbox.disabled=true; 
     const spanText=document.createElement("span");
     spanText.textContent=" "+t.text;
     li.appendChild(checkbox); li.appendChild(spanText);
