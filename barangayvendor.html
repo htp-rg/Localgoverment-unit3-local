@@ -200,129 +200,130 @@ th { font-size: .85rem; opacity: .7; }
 </div>
 
 <script>
-const STORAGE_KEYS = { vendors: "vendor_engagements", pending: "pending_vendors" };
+window.onload = () => {
+  const STORAGE_KEYS = { vendors: "vendor_engagements", pending: "pending_vendors" };
 
-function loadVendors() {
-  const defaultVendors = [
-    { name: "Gacusan, Aira Jane", contact: "0912-345-6789", nature: "Takoyaki Store", permit: "BP-00123", email: "aira.gacusan@example.com", status: "Approved" },
-    { name: "Furigay, Neri Jane", contact: "0923-456-7890", nature: "Sound Equipment", permit: "BP-00456", email: "neri.furigay@example.com", status: "Declined" },
-    { name: "Pena, Rona Mae", contact: "0934-567-8901", nature: "Tables and Chairs Rental", permit: "BP-00789", email: "rona.pena@example.com", status: "Approved" },
-    { name: "Dacoco, Jonathan", contact: "0945-678-9012", nature: "Atan’s Meat Shop", permit: "BP-00999", email: "jonathan.dacoco@example.com", status: "Declined" }
-  ];
+  function loadVendors() {
+    const defaultVendors = [
+      { name: "Gacusan, Aira Jane", contact: "0912-345-6789", nature: "Takoyaki Store", permit: "BP-00123", email: "aira.gacusan@example.com", status: "Approved" },
+      { name: "Furigay, Neri Jane", contact: "0923-456-7890", nature: "Sound Equipment", permit: "BP-00456", email: "neri.furigay@example.com", status: "Declined" },
+      { name: "Pena, Rona Mae", contact: "0934-567-8901", nature: "Tables and Chairs Rental", permit: "BP-00789", email: "rona.pena@example.com", status: "Approved" },
+      { name: "Dacoco, Jonathan", contact: "0945-678-9012", nature: "Atan’s Meat Shop", permit: "BP-00999", email: "jonathan.dacoco@example.com", status: "Declined" }
+    ];
 
-  let vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
+    let vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
 
-  // If no vendors exist yet, store defaults
-  if (vendors.length === 0) {
-    vendors = defaultVendors;
-    localStorage.setItem(STORAGE_KEYS.vendors, JSON.stringify(defaultVendors));
-  }
+    if (vendors.length === 0) {
+      vendors = defaultVendors;
+      localStorage.setItem(STORAGE_KEYS.vendors, JSON.stringify(defaultVendors));
+    }
 
-  const tbody = document.querySelector("#vendorEngagementsTable tbody");
-  tbody.innerHTML = ""; // clear before rendering
+    const tbody = document.querySelector("#vendorEngagementsTable tbody");
+    if (!tbody) return; 
 
-  if (vendors.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#777;">No vendor records found.</td></tr>`;
-    return;
-  }
+    tbody.innerHTML = "";
 
-  vendors.forEach(v => {
-    const row = document.createElement("tr");
-    const statusClass = v.status === "Approved" ? "status-approved" : "status-declined";
-    row.innerHTML = `
-      <td>${v.name}</td>
-      <td>${v.contact}</td>
-      <td>${v.nature}</td>
-      <td>${v.permit}</td>
-      <td>${v.email}</td>
-      <td class="${statusClass}">${v.status}</td>
-    `;
-    tbody.appendChild(row);
-  });
-}
+    if (vendors.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#777;">No vendor records found.</td></tr>`;
+      return;
+    }
 
-// ----------------- Notification Modal Logic -----------------
-const notifIcon = document.getElementById("notifIcon");
-const notifModal = document.getElementById("notifModal");
-const notifList = document.getElementById("notifList");
-const notifCount = document.getElementById("notifCount");
-
-notifIcon.onclick = () => {
-  notifModal.style.display = "flex";
-  renderPending();
-};
-
-document.getElementById("closeNotifBtn").onclick = () => notifModal.style.display = "none";
-
-function renderPending() {
-  const pending = JSON.parse(localStorage.getItem(STORAGE_KEYS.pending) || "[]");
-  notifList.innerHTML = "";
-
-  if (pending.length === 0) {
-    notifList.innerHTML = "<p>No pending requests.</p>";
-  } else {
-    pending.forEach((p, i) => {
-      const div = document.createElement("div");
-      div.style.border = "1px solid var(--border)";
-      div.style.padding = "0.8rem";
-      div.style.marginBottom = "0.6rem";
-      div.style.borderRadius = "8px";
-      div.innerHTML = `
-        <strong>${p.name}</strong><br>
-        Contact: ${p.contact}<br>
-        Nature: ${p.nature}<br>
-        Business Permit: ${p.permit}<br>
-        Email: ${p.email}<br><br>
-        <button class="btn" onclick="approveVendor(${i})">Approve</button>
-        <button class="btn" onclick="declineVendor(${i})">Decline</button>
+    vendors.forEach(v => {
+      const row = document.createElement("tr");
+      const statusClass = v.status === "Approved" ? "status-approved" : "status-declined";
+      row.innerHTML = `
+        <td>${v.name}</td>
+        <td>${v.contact}</td>
+        <td>${v.nature}</td>
+        <td>${v.permit}</td>
+        <td>${v.email}</td>
+        <td class="${statusClass}">${v.status}</td>
       `;
-      notifList.appendChild(div);
+      tbody.appendChild(row);
     });
   }
 
-  notifCount.textContent = pending.length;
-  notifCount.style.display = pending.length > 0 ? "inline" : "none";
-}
+  const notifIcon = document.getElementById("notifIcon");
+  const notifModal = document.getElementById("notifModal");
+  const notifList = document.getElementById("notifList");
+  const notifCount = document.getElementById("notifCount");
 
-function approveVendor(i) {
-  const pending = JSON.parse(localStorage.getItem(STORAGE_KEYS.pending) || "[]");
-  const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
-  const p = pending[i];
+  function renderPending() {
+    const pending = JSON.parse(localStorage.getItem(STORAGE_KEYS.pending) || "[]");
+    notifList.innerHTML = "";
 
-  vendors.push({ ...p, status: "Approved" });
-  pending.splice(i, 1);
+    if (pending.length === 0) {
+      notifList.innerHTML = "<p>No pending requests.</p>";
+    } else {
+      pending.forEach((p, i) => {
+        const div = document.createElement("div");
+        div.style.border = "1px solid var(--border)";
+        div.style.padding = "0.8rem";
+        div.style.marginBottom = "0.6rem";
+        div.style.borderRadius = "8px";
+        div.innerHTML = `
+          <strong>${p.name}</strong><br>
+          Contact: ${p.contact}<br>
+          Nature: ${p.nature}<br>
+          Business Permit: ${p.permit}<br>
+          Email: ${p.email}<br><br>
+          <button class="btn" onclick="approveVendor(${i})">Approve</button>
+          <button class="btn" onclick="declineVendor(${i})">Decline</button>
+        `;
+        notifList.appendChild(div);
+      });
+    }
 
-  localStorage.setItem(STORAGE_KEYS.vendors, JSON.stringify(vendors));
-  localStorage.setItem(STORAGE_KEYS.pending, JSON.stringify(pending));
-
-  renderPending();
-  loadVendors();
-}
-
-function declineVendor(i) {
-  const pending = JSON.parse(localStorage.getItem(STORAGE_KEYS.pending) || "[]");
-  const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
-  const p = pending[i];
-
-  vendors.push({ ...p, status: "Declined" });
-  pending.splice(i, 1);
-
-  localStorage.setItem(STORAGE_KEYS.vendors, JSON.stringify(vendors));
-  localStorage.setItem(STORAGE_KEYS.pending, JSON.stringify(pending));
-
-  renderPending();
-  loadVendors();
-}
-document.getElementById("backBtn").addEventListener("click", () => {
-  if (document.referrer) {
-
-    window.history.back();
-  } else {
-  
-    window.location.href = "barangayvendor.html";
+    notifCount.textContent = pending.length;
+    notifCount.style.display = pending.length > 0 ? "inline" : "none";
   }
-});
-window.onload = () => {
+
+  notifIcon.onclick = () => {
+    notifModal.style.display = "flex";
+    renderPending();
+  };
+
+  document.getElementById("closeNotifBtn").onclick = () => notifModal.style.display = "none";
+
+  window.approveVendor = function(i) {
+    const pending = JSON.parse(localStorage.getItem(STORAGE_KEYS.pending) || "[]");
+    const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
+    const p = pending[i];
+
+    vendors.push({ ...p, status: "Approved" });
+    pending.splice(i, 1);
+
+    localStorage.setItem(STORAGE_KEYS.vendors, JSON.stringify(vendors));
+    localStorage.setItem(STORAGE_KEYS.pending, JSON.stringify(pending));
+
+    renderPending();
+    loadVendors();
+  };
+
+  window.declineVendor = function(i) {
+    const pending = JSON.parse(localStorage.getItem(STORAGE_KEYS.pending) || "[]");
+    const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
+    const p = pending[i];
+
+    vendors.push({ ...p, status: "Declined" });
+    pending.splice(i, 1);
+
+    localStorage.setItem(STORAGE_KEYS.vendors, JSON.stringify(vendors));
+    localStorage.setItem(STORAGE_KEYS.pending, JSON.stringify(pending));
+
+    renderPending();
+    loadVendors();
+  };
+
+  document.getElementById("backBtn").addEventListener("click", () => {
+    if (document.referrer) {
+      window.history.back();
+    } else {
+      window.location.href = "barangayvendor.html";
+    }
+  });
+
+
   loadVendors();
   renderPending();
 };
