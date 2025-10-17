@@ -155,7 +155,7 @@ th { font-size: .85rem; opacity: .7; }
 </section>
 </div>
 
-<!-- Modal -->
+
 <div class="modal" id="priceModal">
   <div class="modal-content">
     <span class="close" id="closeModal">×</span>
@@ -165,7 +165,7 @@ th { font-size: .85rem; opacity: .7; }
 </div>
 
 <script>
-const commodityData = {
+let commodityData = JSON.parse(localStorage.getItem("commodityData")) || {
   meat: [
     { name: "Pork", current: "₱320-250/kg", previous: "₱300-230/kg" },
     { name: "Beef", current: "₱380-450/kg", previous: "₱360-430/kg" },
@@ -202,7 +202,6 @@ function extractAverage(value) {
   return parseInt(nums[0]);
 }
 
-
 function computeAverages(type) {
   return Object.keys(commodityData).map(category => {
     const items = commodityData[category];
@@ -212,13 +211,13 @@ function computeAverages(type) {
   });
 }
 
+
 const categories = Object.keys(commodityData).map(
   c => c.charAt(0).toUpperCase() + c.slice(1)
 );
 
 const ctx = document.getElementById("commodityChart").getContext("2d");
-
-new Chart(ctx, {
+let chart = new Chart(ctx, {
   type: "bar",
   data: {
     labels: categories,
@@ -243,24 +242,9 @@ new Chart(ctx, {
         title: { display: true, text: "Average Price (PHP)" }
       }
     },
-    plugins: {
-      legend: {
-        position: "top"
-      }
-    }
+    plugins: { legend: { position: "top" } }
   }
 });
-
-
-const tableBody = document.querySelector("#commodityTable tbody");
-for (const [category, items] of Object.entries(commodityData)) {
-  items.forEach(item => {
-    const row = document.createElement("tr");
-    row.innerHTML = `<td>${item.current} (${item.name})</td>
-                     <td>${category.charAt(0).toUpperCase() + category.slice(1)}</td>`;
-    tableBody.appendChild(row);
-  });
-}
 
 
 const select = document.getElementById("commoditySelect");
@@ -274,14 +258,46 @@ select.addEventListener("change", () => {
   if (!value) return;
   modalTitle.textContent = value.charAt(0).toUpperCase() + value.slice(1);
   priceTable.innerHTML = "";
-  commodityData[value].forEach(item => {
+
+  commodityData[value].forEach((item, index) => {
     const row = document.createElement("tr");
-    row.innerHTML = `<td>${item.name}</td>
-                     <td>Current: ${item.current}</td>
-                     <td>Previous: ${item.previous}</td>`;
+    row.innerHTML = `
+      <td>${item.name}</td>
+      <td>Current: ${item.current}</td>
+      <td>Previous: ${item.previous}</td>
+      <td><button class="btn editBtn" data-cat="${value}" data-index="${index}">Edit</button></td>
+    `;
     priceTable.appendChild(row);
   });
+
   modal.style.display = "flex";
+});
+
+
+priceTable.addEventListener("click", (e) => {
+  if (!e.target.classList.contains("editBtn")) return;
+  const category = e.target.dataset.cat;
+  const index = e.target.dataset.index;
+  const item = commodityData[category][index];
+
+  const newCurrent = prompt(`Edit current price for ${item.name}:`, item.current);
+  if (newCurrent === null) return;
+  const newPrevious = prompt(`Edit previous price for ${item.name}:`, item.previous);
+  if (newPrevious === null) return;
+
+  commodityData[category][index].current = newCurrent;
+  commodityData[category][index].previous = newPrevious;
+
+
+  localStorage.setItem("commodityData", JSON.stringify(commodityData));
+
+
+  e.target.closest("tr").children[1].textContent = `Current: ${newCurrent}`;
+  e.target.closest("tr").children[2].textContent = `Previous: ${newPrevious}`;
+
+  chart.data.datasets[0].data = computeAverages("current");
+  chart.data.datasets[1].data = computeAverages("previous");
+  chart.update();
 });
 
 closeModal.addEventListener("click", () => (modal.style.display = "none"));
