@@ -221,6 +221,8 @@ if (!localStorage.getItem(STORAGE_KEYS.vendors)) {
   ]));
 }
   
+let pipelineChart = null;
+
 function initPipelineChart() {
   const ctx = document.getElementById("pipelineChart").getContext("2d");
   if(pipelineChart) pipelineChart.destroy();
@@ -247,7 +249,6 @@ function initPipelineChart() {
       }
     }
   });
-}
 
 function loadVendors() {
   const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
