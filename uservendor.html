@@ -228,10 +228,14 @@ th { font-size: .85rem; opacity: .7; }
 </div>
 
 <script>
+const STORAGE_KEY = "vendor_engagements";
+
 const menuBtn = document.getElementById("menuBtn");
 const menuDropdown = document.getElementById("menuDropdown");
 menuBtn.addEventListener("click", ()=> menuDropdown.classList.toggle("show"));
-document.addEventListener("click", e => { if(!e.target.closest(".menu-container")) menuDropdown.classList.remove("show"); });
+document.addEventListener("click", e => {
+  if(!e.target.closest(".menu-container")) menuDropdown.classList.remove("show");
+});
 
 document.getElementById("searchInput").addEventListener("keyup", function(){
   const filter = this.value.toLowerCase();
@@ -242,56 +246,58 @@ document.getElementById("searchInput").addEventListener("keyup", function(){
 
 window.onload = ()=>{
   document.getElementById("userName").textContent = localStorage.getItem("userName") || "User";
-  loadRatings();
+  loadVendors();
 };
 
+function loadVendors(){
+  const vendors = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+  const tbody = document.querySelector("#vendorEngagementsTable tbody");
+  tbody.innerHTML = "";
+
+  vendors.forEach((v, i) => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${v.type}</td>
+      <td>${v.status}</td>
+      <td>${v.owner}</td>
+      <td>${v.due}</td>
+      <td>${v.payment}</td>
+      <td class="star">${renderStars(v.rating || 0)}</td>
+      <td><button class="btn rateBtn">Rate</button></td>
+    `;
+    tbody.appendChild(row);
+  });
+
+  addRatingEvents();
+}
+
+function renderStars(num){ return "★".repeat(num)+"☆".repeat(5-num); }
+
+// Rating modal
 let currentRow = null;
 
-
-document.querySelectorAll(".rateBtn").forEach((btn)=>{
-  btn.addEventListener("click", (e)=>{
-    currentRow = e.target.closest("tr");
-    document.getElementById("modalVendorName").textContent = currentRow.cells[0].textContent;
-    document.getElementById("rateModal").style.display = "flex";
+function addRatingEvents(){
+  document.querySelectorAll(".rateBtn").forEach(btn=>{
+    btn.addEventListener("click", e=>{
+      currentRow = e.target.closest("tr");
+      document.getElementById("modalVendorName").textContent = currentRow.cells[0].textContent;
+      document.getElementById("rateModal").style.display = "flex";
+    });
   });
-});
-
+}
 
 document.getElementById("saveRatingBtn").addEventListener("click", ()=>{
-  const stars = "★★★★★☆☆☆☆☆";
   const rating = parseInt(document.getElementById("ratingSelect").value);
-  currentRow.querySelector(".star").textContent = stars.slice(0,rating) + "☆☆☆☆☆".slice(rating,5);
+  const vendorName = document.getElementById("modalVendorName").textContent;
 
-  saveRatings();
+  const vendors = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+  const vendor = vendors.find(v => v.type === vendorName);
+  if(vendor) vendor.rating = rating;
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(vendors));
   document.getElementById("rateModal").style.display = "none";
+  loadVendors();
 });
-
-function saveRatings(){
-  const data = [];
-  document.querySelectorAll("#vendorEngagementsTable tbody tr").forEach(row=>{
-    data.push({
-      name: row.cells[0].textContent,
-      status: row.cells[1].textContent,
-      owner: row.cells[2].textContent,
-      due: row.cells[3].textContent,
-      payment: row.cells[4].textContent,
-      rating: row.querySelector(".star").textContent
-    });
-  });
-  localStorage.setItem("vendorData", JSON.stringify(data));
-}
-
-function loadRatings(){
-  const data = JSON.parse(localStorage.getItem("vendorData") || "[]");
-  if(data.length){
-    const rows = document.querySelectorAll("#vendorEngagementsTable tbody tr");
-    data.forEach((vendor,i)=>{
-      if(rows[i]){
-        rows[i].cells[5].textContent = vendor.rating;
-      }
-    });
-  }
-}
 </script>
 </body>
 </html>
