@@ -95,11 +95,10 @@ button:hover {
   <h1>Vendor Login</h1>
   <form id="loginForm">
     <input type="email" id="email" placeholder="Email Address" required>
+    <input type="password" id="password" placeholder="Password" required>
     <button type="submit">Login</button>
   </form>
-  <div class="error-message" id="errorMsg">
-
-  </div>
+  <div class="error-message" id="errorMsg">❌ Invalid email or password.</div>
   <a href="userregister.html" class="back-link">Don't have an account? Register</a>
 </div>
 
@@ -108,8 +107,8 @@ document.getElementById("loginForm").addEventListener("submit", function(e) {
   e.preventDefault();
 
   const email = document.getElementById("email").value.trim().toLowerCase();
+  const password = document.getElementById("password").value.trim();
   const errorMsg = document.getElementById("errorMsg");
-
 
   const approved = JSON.parse(localStorage.getItem("vendor_engagements") || "[]");
   const pending = JSON.parse(localStorage.getItem("pending_vendors") || "[]");
@@ -117,13 +116,12 @@ document.getElementById("loginForm").addEventListener("submit", function(e) {
 
   const vendor = allVendors.find(v => v.email.toLowerCase() === email);
 
-  if (!vendor) {
+  if (!vendor || vendor.password !== password) {
     errorMsg.style.display = "block";
     return;
   }
 
   localStorage.setItem("logged_in_user", JSON.stringify(vendor));
-
 
   window.location.href = "userdashboard.html";
 });
