@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Vendor Registration</title>
+<style>
+:root {
+  --blue: #4e73df;
+  --white: #fff;
+  --border: #e6e8eb;
+  --shadow: 0 6px 24px rgba(0,0,0,0.08);
+  --text: #111;
+}
+
+body {
+  font-family: Inter, system-ui, sans-serif;
+  background: #f5f6fa;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.card {
+  background: var(--white);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  width: 100%;
+  max-width: 500px;
+}
+
+h1 {
+  text-align: center;
+  color: var(--blue);
+  margin-bottom: 1.5rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+input {
+  padding: 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 1rem;
+  width: 100%;
+}
+
+button {
+  padding: 0.8rem;
+  border: none;
+  background: var(--blue);
+  color: white;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.2s ease-in-out;
+}
+
+button:hover {
+  background: #3b5ed7;
+}
+
+.success-message {
+  background: #e0ffe0;
+  color: #007b00;
+  border: 1px solid #007b00;
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+  margin-top: 1rem;
+  display: none;
+}
+
+.back-link {
+  display: block;
+  margin-top: 1rem;
+  text-align: center;
+  color: var(--blue);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+.back-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Vendor Registration</h1>
+  <form id="vendorForm">
+    <input type="text" id="name" placeholder="Full Name" required>
+    <input type="text" id="contact" placeholder="Contact No." required>
+    <input type="text" id="nature" placeholder="Nature of Business" required>
+    <input type="text" id="permit" placeholder="Business Permit No." required>
+    <input type="email" id="email" placeholder="Email Address" required>
+    <button type="submit">Register Vendor</button>
+  </form>
+  <div class="success-message" id="successMsg">
+    ✅ Registration submitted successfully! Await approval.
+  </div>
+  <a href="userlogin.html" class="back-link">Already have an account? Log in</a>
+</div>
+
+<script>
+window.addEventListener("DOMContentLoaded", () => {
+  const pending = JSON.parse(localStorage.getItem("pending_vendors") || "[]");
+  const approved = JSON.parse(localStorage.getItem("vendor_engagements") || "[]");
+
+  const allVendors = [...pending, ...approved];
+
+  if (allVendors.length > 0) {
+    window.location.href = "userlogin.html";
+  }
+});
+
+document.getElementById("vendorForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  const name = document.getElementById("name").value.trim();
+  const contact = document.getElementById("contact").value.trim();
+  const nature = document.getElementById("nature").value.trim();
+  const permit = document.getElementById("permit").value.trim();
+  const email = document.getElementById("email").value.trim();
+
+  if (!name || !contact || !nature || !permit || !email) {
+    alert("Please fill out all fields.");
+    return;
+  }
+
+  const newVendor = { name, contact, nature, permit, email, status: "Pending" };
+  const pendingKey = "pending_vendors";
+
+  let pending = JSON.parse(localStorage.getItem(pendingKey) || "[]");
+
+  if (pending.some(v => v.email === email)) {
+    alert("This email is already registered. Please log in instead.");
+    window.location.href = "userlogin.html";
+    return;
+  }
+
+  pending.push(newVendor);
+  localStorage.setItem(pendingKey, JSON.stringify(pending));
+
+  document.getElementById("vendorForm").reset();
+  const msg = document.getElementById("successMsg");
+  msg.style.display = "block";
+
+  setTimeout(() => msg.style.display = "none", 4000);
+});
+</script>
+</body>
+</html>
