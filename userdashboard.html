@@ -68,15 +68,16 @@ nav { padding: 1rem; }
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 
-.chart-container {
+.card.chart-container {
   position: relative;
-  max-width: 800px;
-  margin: 1.5rem auto;
+  height: 300px; 
+  padding: 1rem;
+  box-sizing: border-box;
 }
 
-.chart-container canvas {
-  width: 100%;
-  height: 100%;
+.card.chart-container canvas {
+  width: 100% !important;
+  height: 100% !important;
   display: block;
 }
 
@@ -253,25 +254,25 @@ function loadVendors() {
   const tbody = document.querySelector("#vendorEngagementsTable tbody");
   tbody.innerHTML = "";
 
-  if (vendors.length === 0) {
+  if (!vendors || vendors.length === 0) {
     tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#777;">No vendor records found.</td></tr>`;
     return;
   }
 
-  vendors.forEach(v => {
-    const statusClass = v.status === "Approved" ? "status-approved" : "status-declined";
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${v.name}</td>
-      <td>${v.contact}</td>
-      <td>${v.business || v.nature || ""}</td>
-      <td>${v.permit}</td>
-      <td>${v.email}</td>
-      <td class="${statusClass}">${v.status}</td>
-    `;
-    tbody.appendChild(row);
-  });
-}
+   vendors.forEach(v => {
+      const row = document.createElement("tr");
+      const statusClass = v.status === "Approved" ? "status-approved" : "status-declined";
+      row.innerHTML = `
+        <td>${v.name}</td>
+        <td>${v.contact}</td>
+        <td>${v.nature}</td>
+        <td>${v.permit}</td>
+        <td>${v.email}</td>
+        <td class="${statusClass}">${v.status}</td>
+      `;
+      tbody.appendChild(row);
+    });
+  }
 
 document.addEventListener("DOMContentLoaded", () => {
   const searchInput = document.getElementById("searchInput");
