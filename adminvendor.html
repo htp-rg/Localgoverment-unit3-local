@@ -151,7 +151,7 @@ th { font-size: .85rem; opacity: .7; }
   <button class="btn" id="exportBtn">Export</button>
 </header>
 
-    <div class="content">
+<div class="content">
       <div class="card">
         <h1>Registered Vendors</h1>
         <table id="vendorEngagementsTable">
@@ -172,7 +172,7 @@ th { font-size: .85rem; opacity: .7; }
               <td>Takoyaki Store</td>
               <td>BP-00123</td>
               <td>aira.gacusan@example.com</td>
-              <td class="status-approved">Accepted</td>
+              <td class="status-approved">✔ Accepted</td>
             </tr>
             <tr>
               <td>Furigay, Neri Jane</td>
@@ -180,7 +180,7 @@ th { font-size: .85rem; opacity: .7; }
               <td>Sound Equipment</td>
               <td>BP-00456</td>
               <td>neri.furigay@example.com</td>
-              <td class="status-declined">Declined</td>
+              <td class="status-declined">✖ Declined</td>
             </tr>
             <tr>
               <td>Pena, Rona Mae</td>
@@ -196,7 +196,7 @@ th { font-size: .85rem; opacity: .7; }
               <td>Atan’s Meat Shop</td>
               <td>BP-00999</td>
               <td>jonathan.dacoco@example.com</td>
-              <td class="status-declined">Declined</td>
+              <td class="status-declined">✖ Declined</td>
             </tr>
           </tbody>
         </table>
@@ -211,9 +211,9 @@ window.onload = function() {
 
   function loadVendors() {
     const defaultVendors = [
-      { name: "Gacusan, Aira Jane", contact: "0912-345-6789", nature: "Takoyaki Store", permit: "BP-00123", email: "aira.gacusan@example.com", status: "Accepted" },
+      { name: "Gacusan, Aira Jane", contact: "0912-345-6789", nature: "Takoyaki Store", permit: "BP-00123", email: "aira.gacusan@example.com", status: "Approved" },
       { name: "Furigay, Neri Jane", contact: "0923-456-7890", nature: "Sound Equipment", permit: "BP-00456", email: "neri.furigay@example.com", status: "Declined" },
-      { name: "Pena, Rona Mae", contact: "0934-567-8901", nature: "Tables and Chairs Rental", permit: "BP-00789", email: "rona.pena@example.com", status: "Accepted" },
+      { name: "Pena, Rona Mae", contact: "0934-567-8901", nature: "Tables and Chairs Rental", permit: "BP-00789", email: "rona.pena@example.com", status: "Approved" },
       { name: "Dacoco, Jonathan", contact: "0945-678-9012", nature: "Atan’s Meat Shop", permit: "BP-00999", email: "jonathan.dacoco@example.com", status: "Declined" }
     ];
 
@@ -226,7 +226,13 @@ window.onload = function() {
 
     const tbody = document.querySelector("#vendorEngagementsTable tbody");
     if (!tbody) return; 
+
     tbody.innerHTML = "";
+
+    if (vendors.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#777;">No vendor records found.</td></tr>`;
+      return;
+    }
 
    vendors.forEach(v => {
       const row = document.createElement("tr");
