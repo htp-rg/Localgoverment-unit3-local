@@ -211,10 +211,10 @@ window.onload = function() {
 
   function loadVendors() {
     const defaultVendors = [
-      { name: "Gacusan, Aira Jane", contact: "0912-345-6789", nature: "Takoyaki Store", permit: "BP-00123", email: "aira.gacusan@example.com", status: "✔ Accepted" },
-      { name: "Furigay, Neri Jane", contact: "0923-456-7890", nature: "Sound Equipment", permit: "BP-00456", email: "neri.furigay@example.com", status: "✖ Declined" },
-      { name: "Pena, Rona Mae", contact: "0934-567-8901", nature: "Tables and Chairs Rental", permit: "BP-00789", email: "rona.pena@example.com", status: "✔ Accepted" },
-      { name: "Dacoco, Jonathan", contact: "0945-678-9012", nature: "Atan’s Meat Shop", permit: "BP-00999", email: "jonathan.dacoco@example.com", status: "✖ Declined" }
+      { name: "Gacusan, Aira Jane", contact: "0912-345-6789", nature: "Takoyaki Store", permit: "BP-00123", email: "aira.gacusan@example.com", status: "Accepted" },
+      { name: "Furigay, Neri Jane", contact: "0923-456-7890", nature: "Sound Equipment", permit: "BP-00456", email: "neri.furigay@example.com", status: "Declined" },
+      { name: "Pena, Rona Mae", contact: "0934-567-8901", nature: "Tables and Chairs Rental", permit: "BP-00789", email: "rona.pena@example.com", status: "Accepted" },
+      { name: "Dacoco, Jonathan", contact: "0945-678-9012", nature: "Atan’s Meat Shop", permit: "BP-00999", email: "jonathan.dacoco@example.com", status: "Declined" }
     ];
 
     let vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
@@ -228,9 +228,9 @@ window.onload = function() {
     if (!tbody) return; 
     tbody.innerHTML = "";
 
-    vendors.forEach(v => {
+   vendors.forEach(v => {
       const row = document.createElement("tr");
-      const statusClass = v.status.includes("✔") ? "status-approved" : "status-declined";
+      const statusClass = v.status === "Approved" ? "status-approved" : "status-declined";
       row.innerHTML = `
         <td>${v.name}</td>
         <td>${v.contact}</td>
@@ -242,6 +242,7 @@ window.onload = function() {
       tbody.appendChild(row);
     });
   }
+
 
 document.getElementById("exportBtn").onclick = function() {
   const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
