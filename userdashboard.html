@@ -149,21 +149,19 @@ th { font-size: .85rem; opacity: .7; }
         <div class="card blue"><h3>Vendor Performance Score</h3><p>87/100</p><small>Stable</small></div>
       </div>
 
-   <div class="grid">
-        <div class="card">
-          <h3>Price Chain Flow (Last 6 Weeks)</h3>
-          <canvas id="pipelineChart" height="100"></canvas>
-        </div>
-       
-          <div class="card" style="margin-top:1rem;">
-  <div style="display:flex; justify-content:space-between; align-items:center;">
-    <h3>Registered Vendors</h3>
-    <div class="search">
-      🔎 <input id="searchInput" type="search" placeholder="Search vendors…">
-    </div>
-  </div>
+      <div class="card chart-container">
+        <h3>Price Chain Flow (Last 6 Weeks)</h3>
+        <canvas id="pipelineChart" height="150"></canvas>
+      </div>
 
-  <table id="vendorEngagementsTable">
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+          <h3>Registered Vendors</h3>
+          <div class="search">
+            🔎 <input id="searchInput" type="search" placeholder="Search vendors…">
+          </div>
+        </div>
+        <table id="vendorEngagementsTable">
     <thead>
       <tr>
         <th>Name</th>
@@ -210,75 +208,78 @@ th { font-size: .85rem; opacity: .7; }
     </tbody>
   </table>
 
-      
 <script>
-let pipelineChart=null;
-const STORAGE_KEYS={vendors:"vendor_engagements"};
-const STORAGE_TASKS="dashboard_tasks";
+const STORAGE_KEYS = { vendors: "vendor_engagements" };
+let pipelineChart = null;
 
-function renderStars(num){ return "★".repeat(num)+"☆".repeat(5-num); }
+function initPipelineChart() {
+  const ctx = document.getElementById("pipelineChart").getContext("2d");
+  if(pipelineChart) pipelineChart.destroy();
+  pipelineChart = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: ["Week 1","Week 2","Week 3","Week 4","Week 5","Week 6"],
+      datasets: [{
+        label: "Deliveries",
+        data: [5,8,6,10,7,9],
+        borderColor: "#0a53c1",
+        backgroundColor: "rgba(10,83,193,0.2)",
+        fill: true,
+        tension: 0.3
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+}
 
 function loadVendors() {
   const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
   const tbody = document.querySelector("#vendorEngagementsTable tbody");
   tbody.innerHTML = "";
-  vendors.forEach((v, i) => {
-    const row = document.createElement("tr");
-    const statusColor = v.status === "Accepted" ? "green" : "red";
+
+  if(vendors.length === 0){
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#777;">No vendors registered yet.</td></tr>`;
+    return;
+  }
+
+  vendors.forEach(v => {
+    const statusClass = v.status === "Accepted" ? "status-approved" : "status-declined";
     const statusIcon = v.status === "Accepted" ? "✔" : "✖";
+    const row = document.createElement("tr");
     row.innerHTML = `
       <td>${v.name}</td>
       <td>${v.contact}</td>
-      <td>${v.business}</td>
+      <td>${v.business || v.nature || ""}</td>
       <td>${v.permit}</td>
       <td>${v.email}</td>
-      <td style="color:${statusColor};font-weight:600;">${statusIcon} ${v.status}</td>
-      <td>
-        <span class="edit-icon" onclick="editVendor(${i})">✏️</span>
-        <span class="delete-icon" onclick="deleteVendor(${i})">🗑️</span>
-      </td>`;
+      <td class="${statusClass}">${statusIcon} ${v.status}</td>
+    `;
     tbody.appendChild(row);
   });
 }
 
-
-function loadTasks(){
-  const tasks=JSON.parse(localStorage.getItem(STORAGE_TASKS)||"[]");
-  const taskList=document.getElementById("taskList");
-  taskList.innerHTML="";
-  tasks.forEach(t=>{
-    const li=document.createElement("li");
-    const checkbox=document.createElement("input");
-    checkbox.type="checkbox";
-    checkbox.checked=t.completed||false;
-    checkbox.disabled=true; 
-    const spanText=document.createElement("span");
-    spanText.textContent=" "+t.text;
-    li.appendChild(checkbox); li.appendChild(spanText);
-    taskList.appendChild(li);
-  });
-}
-
-function initDashboard(){
-  const ctx=document.getElementById("pipelineChart").getContext("2d");
-  if(pipelineChart) pipelineChart.destroy();
-  pipelineChart=new Chart(ctx,{ type:"line", data:{ labels:["Week 1","Week 2","Week 3","Week 4","Week 5","Week 6"], datasets:[{label:"Deliveries",data:[5,8,6,10,7,9],borderColor:"#0a53c1",fill:false}] } });
-}
-
-searchInput.addEventListener("keyup",function(){
-  const filter=this.value.toLowerCase();
-  document.querySelectorAll("#vendorEngagementsTable tbody tr").forEach(r=>{
-    r.style.display=r.innerText.toLowerCase().includes(filter)?"":"none";
+document.addEventListener("DOMContentLoaded", () => {
+  const searchInput = document.getElementById("searchInput");
+  searchInput.addEventListener("keyup", function() {
+    const filter = this.value.toLowerCase();
+    document.querySelectorAll("#vendorEngagementsTable tbody tr").forEach(r => {
+      r.style.display = r.innerText.toLowerCase().includes(filter) ? "" : "none";
+    });
   });
 });
 
-menuBtn.addEventListener("click",()=>menuDropdown.classList.toggle("show"));
-document.addEventListener("click",e=>{ if(!e.target.closest(".menu-container")) menuDropdown.classList.remove("show"); });
-
-window.addEventListener("DOMContentLoaded",()=>{ userName.textContent=localStorage.getItem("userName")||"User"; });
-
-window.onload=()=>{ loadVendors(); loadTasks(); initDashboard(); };
+window.onload = () => {
+  initPipelineChart();
+  loadVendors();
+};
 </script>
 </body>
 </html>
-
