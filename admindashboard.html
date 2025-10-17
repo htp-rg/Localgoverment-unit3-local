@@ -318,7 +318,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
-
+document.getElementById("backBtn").addEventListener("click", () => {
+  if (document.referrer) {
+    window.history.back();
+  } else {
+    window.location.href = "admindashboard.html";
+  }
+});
+  
 window.onload = () => {
   initPipelineChart();
   loadVendors();
