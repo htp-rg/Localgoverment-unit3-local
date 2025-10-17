@@ -279,7 +279,7 @@ function makeTableEditable() {
 
   tbody.addEventListener("dblclick", (e) => {
     const cell = e.target;
-    if (cell.tagName.toLowerCase() === "td" && !cell.isContentEditable) {
+    if (cell.tagName.toLowerCase() === "td" && cell.cellIndex !== 5 && !cell.isContentEditable) {
       cell.contentEditable = true;
       cell.focus();
 
@@ -300,13 +300,13 @@ function saveTableChanges() {
     return {
       name: cells[0].innerText.trim(),
       contact: cells[1].innerText.trim(),
-      nature: cells[2].innerText.trim(),
+      business: cells[2].innerText.trim(),
       permit: cells[3].innerText.trim(),
       email: cells[4].innerText.trim(),
       status: cells[5].innerText.includes("✔") ? "Accepted" : "Declined"
     };
   });
-
+  
   localStorage.setItem(STORAGE_KEYS.vendors, JSON.stringify(vendors));
 }
 document.addEventListener("DOMContentLoaded", () => {
