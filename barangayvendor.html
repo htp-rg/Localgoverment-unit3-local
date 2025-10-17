@@ -65,7 +65,14 @@ th, td {
 }
 th { font-size: .85rem; opacity: .7; }
 
-.star { color: gold; font-size: 1.2rem; }
+.status-approved {
+  color: green;
+  font-weight: 600;
+}
+.status-declined {
+  color: red;
+  font-weight: 600;
+}
 
 #notifIcon {
   font-size: 1.3rem;
@@ -161,15 +168,22 @@ function loadVendors(){
   const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
   const tbody = document.querySelector("#vendorEngagementsTable tbody");
   tbody.innerHTML = "";
+  
+  if (vendors.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#777;">No vendor records found.</td></tr>`;
+    return;
+  }
+
   vendors.forEach(v=>{
     const row = document.createElement("tr");
+    const statusClass = v.status === "Approved" ? "status-approved" : "status-declined";
     row.innerHTML = `
       <td>${v.name}</td>
       <td>${v.contact}</td>
       <td>${v.nature}</td>
       <td>${v.permit}</td>
       <td>${v.email}</td>
-      <td>${v.status}</td>
+      <td class="${statusClass}">${v.status}</td>
     `;
     tbody.appendChild(row);
   });
@@ -219,14 +233,13 @@ function approveVendor(i){
   const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
   const p = pending[i];
   
- 
   vendors.push({
     name: p.name,
     contact: p.contact,
     nature: p.nature,
     permit: p.permit,
     email: p.email,
-    status: "✅ Approved"
+    status: "Approved"
   });
 
   pending.splice(i,1);
@@ -239,16 +252,15 @@ function approveVendor(i){
 function declineVendor(i){
   const pending = JSON.parse(localStorage.getItem(STORAGE_KEYS.pending) || "[]");
   const p = pending[i];
-  
-
   const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
+
   vendors.push({
     name: p.name,
     contact: p.contact,
     nature: p.nature,
     permit: p.permit,
     email: p.email,
-    status: "❌ Declined"
+    status: "Declined"
   });
 
   pending.splice(i,1);
@@ -263,5 +275,4 @@ window.onload = ()=>{
   renderPending();
 };
 </script>
-</body>
 </html>
