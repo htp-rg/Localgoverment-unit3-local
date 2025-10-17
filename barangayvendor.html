@@ -202,14 +202,19 @@ th { font-size: .85rem; opacity: .7; }
 <script>
 const STORAGE_KEYS = { vendors: "vendor_engagements", pending: "pending_vendors" };
 
-function loadVendors(){
-  const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
-  const tbody = document.querySelector("#vendorEngagementsTable tbody");
-  tbody.innerHTML = "";
-  
+function loadVendors() {
+  const defaultVendors = [
+    { name: "Gacusan, Aira Jane", contact: "0912-345-6789", nature: "Takoyaki Store", permit: "BP-00123", email: "aira.gacusan@example.com", status: "✔ Accepted" },
+    { name: "Furigay, Neri Jane", contact: "0923-456-7890", nature: "Sound Equipment", permit: "BP-00456", email: "neri.furigay@example.com", status: "✖ Declined" },
+    { name: "Pena, Rona Mae", contact: "0934-567-8901", nature: "Tables and Chairs Rental", permit: "BP-00789", email: "rona.pena@example.com", status: "✔ Accepted" },
+    { name: "Dacoco, Jonathan", contact: "0945-678-9012", nature: "Atan’s Meat Shop", permit: "BP-00999", email: "jonathan.dacoco@example.com", status: "✖ Declined" }
+  ];
+
+  let vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
+
   if (vendors.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#777;">No vendor records found.</td></tr>`;
-    return;
+    vendors = defaultVendors;
+    localStorage.setItem(STORAGE_KEYS.vendors, JSON.stringify(defaultVendors));
   }
 
   vendors.forEach(v=>{
