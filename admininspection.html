@@ -222,30 +222,8 @@ th { font-size: .85rem; opacity: .7; }
       </div>
     </header>
 
-   <div class="content">
-      <div class="card">
-        <h1>Inspection & Compliance Summary</h1>
-        <table id="inspectionTable">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Nature of Business</th>
-              <th>Interior</th>
-              <th>Merchandise</th>
-              <th>Fire Safety</th>
-              <th>Health</th>
-              <th>Guidelines</th>
-              <th>Sanitizers</th>
-              <th>Distancing</th>
-              <th>Staffing</th>
-              <th>Hygiene</th>
-              <th>Dress Code</th>
-              <th>Submitted</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
+  <div class="content" id="inspectionContainer">
+      <h1>Inspection & Compliance Summary</h1>
     </div>
   </section>
 </div>
@@ -329,33 +307,59 @@ function badgeFor(value) {
 }
 
 function loadInspectionData() {
-  const storedData = JSON.parse(localStorage.getItem("inspection_data") || "[]");
+  const storedData = JSON.parse(localStorage.getItem(INSPECTION_KEY) || "[]");
   const dataToShow = storedData.length ? storedData : sampleData;
-  const tbody = document.querySelector("#inspectionTable tbody");
-  tbody.innerHTML = "";
+  const container = document.getElementById("inspectionContainer");
+  container.innerHTML = "<h1>Inspection & Compliance Summary</h1>";
 
   dataToShow.forEach(entry => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td>${entry.name}</td>
-      <td>${entry.type}</td>
-      <td>${badgeFor(entry.interior)}</td>
-      <td>${badgeFor(entry.merchandise)}</td>
-      <td>${badgeFor(entry.fire)}</td>
-      <td>${badgeFor(entry.health)}</td>
-      <td>${badgeFor(entry.guidelines)}</td>
-      <td>${badgeFor(entry.sanitizers)}</td>
-      <td>${badgeFor(entry.distancing)}</td>
-      <td>${badgeFor(entry.staffing)}</td>
-      <td>${badgeFor(entry.hygiene)}</td>
-      <td>${badgeFor(entry.dresscode)}</td>
-      <td>${entry.submittedAt || '-'}</td>
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <h2>${entry.name}</h2>
+      <p><strong>Nature of Business:</strong> ${entry.type}</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Interior</th>
+            <th>Merchandise</th>
+            <th>Fire Safety</th>
+            <th>Health</th>
+            <th>Guidelines</th>
+            <th>Sanitizers</th>
+            <th>Distancing</th>
+            <th>Staffing</th>
+            <th>Hygiene</th>
+            <th>Dress Code</th>
+            <th>Submitted</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>${badgeFor(entry.interior)}</td>
+            <td>${badgeFor(entry.merchandise)}</td>
+            <td>${badgeFor(entry.fire)}</td>
+            <td>${badgeFor(entry.health)}</td>
+            <td>${badgeFor(entry.guidelines)}</td>
+            <td>${badgeFor(entry.sanitizers)}</td>
+            <td>${badgeFor(entry.distancing)}</td>
+            <td>${badgeFor(entry.staffing)}</td>
+            <td>${badgeFor(entry.hygiene)}</td>
+            <td>${badgeFor(entry.dresscode)}</td>
+            <td>${entry.submittedAt || '-'}</td>
+          </tr>
+        </tbody>
+      </table>
     `;
-    tbody.appendChild(row);
+    container.appendChild(card);
   });
 }
 
-loadInspectionData();
+function saveNewInspection(newEntry) {
+  const data = JSON.parse(localStorage.getItem(INSPECTION_KEY) || "[]");
+  data.push(newEntry);
+  localStorage.setItem(INSPECTION_KEY, JSON.stringify(data));
+}
 
 loadInspectionData();
 </script>
