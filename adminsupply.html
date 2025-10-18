@@ -212,12 +212,7 @@ const SUPPLY_KEY = "supply_data";
 const supplyTableBody = document.querySelector("#supplyTable tbody");
 
 if (!localStorage.getItem(SUPPLY_KEY)) {
-  localStorage.setItem(SUPPLY_KEY, JSON.stringify([
-    { business: "Daisy Poultry", category: "MEAT SHOP", supplier: "James", pickup: "Quezon City", dropoff: "Muñoz", time: "12:00 am - 2:00 pm", report: "Filed", contact: "0970-567-1136", value: "₱4,000.00", quality: 5, status: "⛔ Delayed" },
-    { business: "Takoyaki Supplier", category: "SUPPLIES SHOP", supplier: "Maria", pickup: "Makati", dropoff: "Muñoz", time: "7:00 am - 9:00 am", report: "Filed", contact: "0917-888-9999", value: "₱2,500.00", quality: 5, status: "✅ Completed" },
-    { business: "Catering Supplies", category: "CATERING", supplier: "Sofia", pickup: "Taguig", dropoff: "Muñoz", time: "10:00 am - 12:00 pm", report: "Filed", contact: "0920-555-4444", value: "₱3,200.00", quality: 5, status: "✏ In progress" },
-    { business: "Party Rental", category: "RENTAL SHOP", supplier: "Ramon", pickup: "Manila", dropoff: "Muñoz", time: "3:00 am - 5:00 am", report: "Filed", contact: "0998-222-3333", value: "₱5,000.00", quality: 5, status: "✅ Completed" }
-  ]));
+  localStorage.setItem(SUPPLY_KEY, JSON.stringify([]));
 }
 
 const supplyModal = document.getElementById("supplyModal");
@@ -240,6 +235,11 @@ const addSupplyBtn = document.getElementById("addSupplyBtn");
 function loadSupplies() {
   const data = JSON.parse(localStorage.getItem(SUPPLY_KEY) || "[]");
   supplyTableBody.innerHTML = "";
+  if (data.length === 0) {
+    supplyTableBody.innerHTML = `<tr><td colspan="13" style="text-align:center; opacity:0.6;">No supply records available.</td></tr>`;
+    return;
+  }
+
   data.forEach((supply, i) => {
     const stars = "★".repeat(supply.quality) + "☆".repeat(5 - supply.quality);
     const tr = document.createElement("tr");
@@ -297,7 +297,6 @@ saveSupplyBtn.onclick = () => {
   supplyModal.style.display = "none";
 };
 
-
 function editSupply(i) {
   const data = JSON.parse(localStorage.getItem(SUPPLY_KEY) || "[]")[i];
   document.getElementById("supplyModalTitle").textContent = "Edit Supply";
@@ -317,9 +316,9 @@ function editSupply(i) {
 }
 
 function deleteSupply(i) {
-  if(confirm("Are you sure you want to delete this supply?")) {
+  if (confirm("Are you sure you want to delete this supply?")) {
     const data = JSON.parse(localStorage.getItem(SUPPLY_KEY) || "[]");
-    data.splice(i,1);
+    data.splice(i, 1);
     saveSupplies(data);
     loadSupplies();
   }
@@ -334,19 +333,6 @@ document.getElementById("supplySearch").addEventListener("keyup", function() {
     r.style.display = r.innerText.toLowerCase().includes(filter) ? "" : "none";
   });
 });
-const menuBtn = document.getElementById("menuBtn");
-const menuDropdown = document.getElementById("menuDropdown");
 
-menuBtn.addEventListener("click", () => {
-  menuDropdown.classList.toggle("show");
-});
-
-
-window.addEventListener("click", (e) => {
-  if (!menuBtn.contains(e.target) && !menuDropdown.contains(e.target)) {
-    menuDropdown.classList.remove("show");
-  }
-});
-  document.getElementById("backBtn").addEventListener("click", () => window.history.back());
 window.onload = () => loadSupplies();
 </script>
