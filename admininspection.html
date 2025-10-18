@@ -13,7 +13,77 @@
   --border: #e6e8eb;
   --shadow: 0 6px 24px rgba(0, 0, 0, .06);
 }
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-top: 1rem;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  background: #fff;
+}
 
+thead {
+  background: #0a53c1;
+  color: white;
+}
+
+th {
+  padding: 0.9rem;
+  font-size: 0.9rem;
+  text-align: left;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+}
+
+td {
+  padding: 0.8rem;
+  font-size: 0.88rem;
+  border-bottom: 1px solid #e6e8eb;
+  transition: background 0.3s ease;
+}
+
+tbody tr:nth-child(even) {
+  background: #f8faff;
+}
+
+tbody tr:hover {
+  background: #e8f0ff;
+  transform: scale(1.01);
+  transition: all 0.2s ease;
+}
+
+td:last-child {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+
+.badge {
+  display: inline-block;
+  padding: 0.3rem 0.6rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: white;
+  text-align: center;
+  min-width: 80px;
+}
+
+.badge.very-good { background: #2ecc71; }  
+.badge.good { background: #27ae60; }       
+.badge.fair { background: #f1c40f; }      
+.badge.poor { background: #e67e22; }        
+.badge.very-poor { background: #e74c3c; }   
+
+@media (max-width: 900px) {
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
 * { box-sizing: border-box; }
 body {
   margin: 0;
@@ -246,8 +316,20 @@ const sampleData = [
   }
 ];
 
+function badgeFor(value) {
+  if (!value) return '-';
+  const val = value.toLowerCase();
+  let cls = '';
+  if (val.includes('very good')) cls = 'very-good';
+  else if (val.includes('good')) cls = 'good';
+  else if (val.includes('fair')) cls = 'fair';
+  else if (val.includes('poor')) cls = 'poor';
+  else if (val.includes('very poor')) cls = 'very-poor';
+  return `<span class="badge ${cls}">${value}</span>`;
+}
+
 function loadInspectionData() {
-  const storedData = JSON.parse(localStorage.getItem(INSPECTION_KEY) || "[]");
+  const storedData = JSON.parse(localStorage.getItem("inspection_data") || "[]");
   const dataToShow = storedData.length ? storedData : sampleData;
   const tbody = document.querySelector("#inspectionTable tbody");
   tbody.innerHTML = "";
@@ -257,21 +339,23 @@ function loadInspectionData() {
     row.innerHTML = `
       <td>${entry.name}</td>
       <td>${entry.type}</td>
-      <td>${entry.interior || '-'}</td>
-      <td>${entry.merchandise || '-'}</td>
-      <td>${entry.fire || '-'}</td>
-      <td>${entry.health || '-'}</td>
-      <td>${entry.guidelines || '-'}</td>
-      <td>${entry.sanitizers || '-'}</td>
-      <td>${entry.distancing || '-'}</td>
-      <td>${entry.staffing || '-'}</td>
-      <td>${entry.hygiene || '-'}</td>
-      <td>${entry.dresscode || '-'}</td>
+      <td>${badgeFor(entry.interior)}</td>
+      <td>${badgeFor(entry.merchandise)}</td>
+      <td>${badgeFor(entry.fire)}</td>
+      <td>${badgeFor(entry.health)}</td>
+      <td>${badgeFor(entry.guidelines)}</td>
+      <td>${badgeFor(entry.sanitizers)}</td>
+      <td>${badgeFor(entry.distancing)}</td>
+      <td>${badgeFor(entry.staffing)}</td>
+      <td>${badgeFor(entry.hygiene)}</td>
+      <td>${badgeFor(entry.dresscode)}</td>
       <td>${entry.submittedAt || '-'}</td>
     `;
     tbody.appendChild(row);
   });
 }
+
+loadInspectionData();
 
 loadInspectionData();
 </script>
