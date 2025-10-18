@@ -92,34 +92,112 @@ button:hover {
 </head>
 <body>
 <div class="card">
-  <h1>User Login</h1>
-  <form id="loginForm">
-    <input type="email" id="email" placeholder="Email Address" required>
-    <input type="password" id="password" placeholder="Password" required>
-    <button type="submit">Login</button>
-  </form>
-  <div class="error-message" id="errorMsg">❌ Invalid email or password.</div>
+   <div class="container">
+    <h1>MARKET AND TRADE MONITORING SYSTEM</h1>
+    <h2>Login as Barangay</h2>
+
+    <form id="loginForm">
+      <label for="email">Email:</label>
+      <input type="email" id="email" required placeholder="Enter your email">
+
+      <label for="password">Password:</label>
+      <input type="password" id="password" required placeholder="Enter your password">
+
+      <input type="text" id="codeInput" placeholder="Enter OTP">
+      <button type="button" id="sendCodeBtn">Send Code</button>
+      <div id="timer"></div>
+      <button type="button" id="resendBtn">Resend Code</button>
+
+      <button type="submit">Login</button>
+    </form>
+
+    <div id="message"></div>
+  </div>
   <a href="userregister.html" class="back-link">Don't have an account? Register</a>
 </div>
 
 <script>
-document.getElementById("loginForm").addEventListener("submit", function(e) {
-  e.preventDefault();
+  emailjs.init("WNhDz1AGE05xoWJ5TQr2Y"); 
 
-  const email = document.getElementById("email").value.trim().toLowerCase();
-  const password = document.getElementById("password").value.trim();
-  const errorMsg = document.getElementById("errorMsg");
+    let otp = null;
+    let otpExpiry = null;
+    let timerInterval = null;
 
-  const approved = JSON.parse(localStorage.getItem("vendor_engagements") || "[]");
-  const pending = JSON.parse(localStorage.getItem("pending_vendors") || "[]");
-  const allVendors = [...approved, ...pending];
+    const sendBtn = document.getElementById("sendCodeBtn");
+    const resendBtn = document.getElementById("resendBtn");
+    const timerDiv = document.getElementById("timer");
 
-  const vendor = allVendors.find(v => v.email.toLowerCase() === email);
+    function startTimer() {
+      let timeLeft = 60;
+      sendBtn.disabled = true;
+      timerDiv.textContent = `Please wait ${timeLeft}s to resend OTP`;
 
-  if (!vendor || vendor.password !== password) {
-    errorMsg.style.display = "block";
-    return;
-  }
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        timerDiv.textContent = `Please wait ${timeLeft}s to resend OTP`;
+        if(timeLeft <= 0) {
+          clearInterval(timerInterval);
+          sendBtn.disabled = false;
+          resendBtn.style.display = "block";
+          timerDiv.textContent = "";
+        }
+      }, 1000);
+    }
+
+    function sendOTP(email) {
+      otp = Math.floor(100000 + Math.random() * 900000);
+      otpExpiry = new Date(Date.now() + 15*60*1000);
+
+      const templateParams = {
+        to_email: email,
+        passcode: otp,
+        time: otpExpiry.toLocaleTimeString()
+      };
+
+      emailjs.send('service_dvrf2ar', 'template_tseir4g', templateParams)
+        .then(() => {
+          document.getElementById("message").textContent = `OTP sent to ${email}`;
+          startTimer();
+        })
+        .catch(err => {
+          console.error(err);
+          document.getElementById("message").textContent = "Failed to send OTP";
+        });
+    }
+
+    sendBtn.addEventListener("click", () => {
+      const email = document.getElementById("email").value.trim();
+      if(!email) return alert("Enter your email");
+      sendOTP(email);
+    });
+
+    resendBtn.addEventListener("click", () => {
+      const email = document.getElementById("email").value.trim();
+      if(!email) return alert("Enter your email");
+      sendOTP(email);
+      resendBtn.style.display = "none";
+    });
+
+    document.getElementById("loginForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const password = document.getElementById("password").value;
+      const codeInput = document.getElementById("codeInput").value.trim();
+      const correctPassword = "Barangay.login1";
+
+      if(!otp) {
+        document.getElementById("message").textContent = "Request OTP first";
+        return;
+      }
+      if(new Date() > otpExpiry) {
+        document.getElementById("message").textContent = "OTP expired! Request again";
+        return;
+      }
+      if(password === correctPassword && codeInput == otp) {
+        window.location.href = "barangayvendor.html";
+      } else {
+        document.getElementById("message").textContent = "Invalid password or OTP";
+      }
+    });
 
   localStorage.setItem("logged_in_user", JSON.stringify(vendor));
 
