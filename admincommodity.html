@@ -456,4 +456,13 @@ window.addEventListener("click", e => {
   if (e.target === modal) modal.style.display = "none";
 });
 document.getElementById("backBtn").addEventListener("click", () => window.history.back());
+  
+  function setupLogout() {
+  const logoutLink = document.querySelector('a[href="main.html"]');
+  logoutLink.addEventListener("click", function (e) {
+    e.preventDefault();
+    localStorage.removeItem("loggedUser");
+    window.location.href = "main.html";
+  });
+}
 </script>
