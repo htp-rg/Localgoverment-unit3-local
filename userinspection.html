@@ -13,6 +13,69 @@
   --border: #e6e8eb;
   --shadow: 0 6px 24px rgba(0, 0, 0, .06);
 }
+  
+table {
+  width: 95%; 
+  margin: 1rem auto; 
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  background: #fff;
+}
+
+th, td {
+  padding: 0.2rem;
+  text-align: left;
+  font-size: 0.85rem;
+  border-bottom: 1px solid #e6e8eb;
+}
+thead {
+  background: #0a53c1;
+  color: white;
+}
+
+tbody tr:nth-child(even) {
+  background: #f8faff;
+}
+
+tbody tr:hover {
+  background: #e8f0ff;
+  transform: scale(1.01);
+  transition: all 0.2s ease;
+}
+
+td:last-child {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+
+.badge {
+  display: inline-block;
+  padding: 0.3rem 0.6rem;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: white;
+  text-align: center;
+  min-width: 80px;
+}
+
+.badge.very-good { background: #2ecc71; }  
+.badge.good { background: #27ae60; }       
+.badge.fair { background: #f1c40f; }      
+.badge.poor { background: #e67e22; }        
+.badge.very-poor { background: #e74c3c; }   
+
+@media (max-width: 900px) {
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
 * { box-sizing: border-box; }
 body {
   margin: 0;
@@ -31,7 +94,6 @@ body {
   text-transform: uppercase;
   padding: 1rem;
   border-bottom: 1px solid var(--border);
-  color: var(--black);
 }
 nav { padding: 1rem; }
 .nav-item {
@@ -53,16 +115,15 @@ nav { padding: 1rem; }
 .content { padding: 1rem; overflow: auto; }
 .card {
   border: 1px solid var(--border);
-  border-radius: 12px; padding: 1rem;
+  border-radius: 12px;
+  padding: 0.8rem 1rem;
   box-shadow: var(--shadow);
-  max-width: 800px;
-  margin: auto;
 }
-fieldset { margin-bottom: 1rem; border: none; }
-legend { font-weight: bold; margin-bottom: .5rem; }
-label { display: block; margin: .4rem 0; }
 
-  .menu-container { position: relative; display: inline-block; }
+.menu-containr {
+  position: relative;
+  display: inline-block;
+}
 .dropdown {
   display: none;
   position: absolute;
@@ -76,19 +137,46 @@ label { display: block; margin: .4rem 0; }
   z-index: 1000;
 }
 .dropdown p {
-  margin: 0; padding: 0.8rem;
+  margin: 0;
+  padding: 0.8rem;
   font-weight: bold;
   border-bottom: 1px solid var(--border);
 }
 .dropdown a {
-  display: block; padding: 0.8rem;
-  text-decoration: none; color: var(--text);
+  display: block;
+  padding: 0.8rem;
+  text-decoration: none;
+  color: var(--text);
   border-bottom: 1px solid var(--border);
 }
 .dropdown a:hover { background: var(--ink-20); }
 .dropdown a:last-child { border-bottom: none; }
 .dropdown.show { display: block; }
 
+.search { margin-bottom: 1rem; }
+.search input { width: 90%; padding: .5rem; border-radius: 8px; border: 1px solid var(--border); }
+.modal {
+  display: none; 
+  position: fixed; 
+  z-index: 10000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.4); 
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: var(--white);
+  padding: 1.5rem;
+  border-radius: 12px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: var(--shadow);
+}
 </style>
 </head>
 <body>
@@ -108,129 +196,18 @@ label { display: block; margin: .4rem 0; }
     </nav>
   </aside>
 
-   <section class="main">
-   <header class="topbar">
-  <div style="display:flex; align-items:center; gap:0.5rem;">
-    <button class="btn" id="backBtn" type="button">← Back</button>
-    <div class="menu-container">
-      <button class="btn" id="menuBtn" type="button">☰</button>
-      <div class="dropdown" id="menuDropdown">
-        <p id="userName">User</p>
-        <a href="upgrade.html">Upgrade Personal Details</a>
-            <a href="password.html">Password and Security</a>
-            <a href="#" id="deleteAccount">Delete Account</a>
-            <a href="terms.html">Terms of Service</a>
-            <a href="report.html">Report a Problem</a>
-            <a href="main.html" id="signOut">Sign Out</a>
+  <section class="main">
+    <header class="topbar">
+      <div style="display:flex; align-items:center; gap:0.5rem;">
+        <button class="btn" id="backBtn">← Back</button>
+          </div>
+      <div>
+        <button class="btn" id="exportBtn">Export</button>
       </div>
-    </div>
-  </div>
-</header>
+    </header>
 
-    <div class="content">
-      <div class="card">
-        <h1>Inspection & Compliance Survey</h1>
-        <form id="inspectionForm">
-          <fieldset>
-            <legend>Business Information</legend>
-            <label>Type of Business: <input type="text" id="businessType" required></label>
-            <label>Name of Business: <input type="text" id="businessName" required></label>
-            <label>Location: <input type="text" id="businessLocation" required></label>
-          </fieldset>
-
-          <fieldset>
-            <legend>Interior Inspection</legend>
-            <label><input type="radio" name="interior" value="Very Good" required> Very Good</label>
-            <label><input type="radio" name="interior" value="Good"> Good</label>
-            <label><input type="radio" name="interior" value="Fair"> Fair</label>
-            <label><input type="radio" name="interior" value="Poor"> Poor</label>
-            <label><input type="radio" name="interior" value="Very Poor"> Very Poor</label>
-          </fieldset>
-
-          <fieldset>
-            <legend>Merchandise Display</legend>
-            <label><input type="radio" name="merchandise" value="Very Good" required> Very Good</label>
-            <label><input type="radio" name="merchandise" value="Good"> Good</label>
-            <label><input type="radio" name="merchandise" value="Fair"> Fair</label>
-            <label><input type="radio" name="merchandise" value="Poor"> Poor</label>
-            <label><input type="radio" name="merchandise" value="Very Poor"> Very Poor</label>
-          </fieldset>
-
-          <fieldset>
-            <legend>Fire Safety</legend>
-            <label><input type="radio" name="fire" value="Very Good" required> Very Good</label>
-            <label><input type="radio" name="fire" value="Good"> Good</label>
-            <label><input type="radio" name="fire" value="Fair"> Fair</label>
-            <label><input type="radio" name="fire" value="Poor"> Poor</label>
-            <label><input type="radio" name="fire" value="Very Poor"> Very Poor</label>
-          </fieldset>
-
-          <fieldset>
-            <legend>Health and Safety</legend>
-            <label><input type="radio" name="health" value="Very Good" required> Very Good</label>
-            <label><input type="radio" name="health" value="Good"> Good</label>
-            <label><input type="radio" name="health" value="Fair"> Fair</label>
-            <label><input type="radio" name="health" value="Poor"> Poor</label>
-            <label><input type="radio" name="health" value="Very Poor"> Very Poor</label>
-          </fieldset>
-
-          <fieldset>
-            <legend>Compliance with Local Health Guidelines</legend>
-            <label><input type="radio" name="guidelines" value="Very Good" required> Very Good</label>
-            <label><input type="radio" name="guidelines" value="Good"> Good</label>
-            <label><input type="radio" name="guidelines" value="Fair"> Fair</label>
-            <label><input type="radio" name="guidelines" value="Poor"> Poor</label>
-            <label><input type="radio" name="guidelines" value="Very Poor"> Very Poor</label>
-          </fieldset>
-
-          <fieldset>
-            <legend>Availability of Hand Sanitizers and Masks</legend>
-            <label><input type="radio" name="sanitizers" value="Very Good" required> Very Good</label>
-            <label><input type="radio" name="sanitizers" value="Good"> Good</label>
-            <label><input type="radio" name="sanitizers" value="Fair"> Fair</label>
-            <label><input type="radio" name="sanitizers" value="Poor"> Poor</label>
-            <label><input type="radio" name="sanitizers" value="Very Poor"> Very Poor</label>
-          </fieldset>
-
-          <fieldset>
-            <legend>Social Distancing Markers</legend>
-            <label><input type="radio" name="distancing" value="Very Good" required> Very Good</label>
-            <label><input type="radio" name="distancing" value="Good"> Good</label>
-            <label><input type="radio" name="distancing" value="Fair"> Fair</label>
-            <label><input type="radio" name="distancing" value="Poor"> Poor</label>
-            <label><input type="radio" name="distancing" value="Very Poor"> Very Poor</label>
-          </fieldset>
-
-          <fieldset>
-            <legend>Employee Practices - Adequate Staffing Levels</legend>
-            <label><input type="radio" name="staffing" value="Very Good" required> Very Good</label>
-            <label><input type="radio" name="staffing" value="Good"> Good</label>
-            <label><input type="radio" name="staffing" value="Fair"> Fair</label>
-            <label><input type="radio" name="staffing" value="Poor"> Poor</label>
-            <label><input type="radio" name="staffing" value="Very Poor"> Very Poor</label>
-          </fieldset>
-
-          <fieldset>
-            <legend>Employee Appearance and Hygiene</legend>
-            <label><input type="radio" name="hygiene" value="Very Good" required> Very Good</label>
-            <label><input type="radio" name="hygiene" value="Good"> Good</label>
-            <label><input type="radio" name="hygiene" value="Fair"> Fair</label>
-            <label><input type="radio" name="hygiene" value="Poor"> Poor</label>
-            <label><input type="radio" name="hygiene" value="Very Poor"> Very Poor</label>
-          </fieldset>
-
-          <fieldset>
-            <legend>Compliance with Store Policies and Dress Code</legend>
-            <label><input type="radio" name="dresscode" value="Very Good" required> Very Good</label>
-            <label><input type="radio" name="dresscode" value="Good"> Good</label>
-            <label><input type="radio" name="dresscode" value="Fair"> Fair</label>
-            <label><input type="radio" name="dresscode" value="Poor"> Poor</label>
-            <label><input type="radio" name="dresscode" value="Very Poor"> Very Poor</label>
-          </fieldset>
-
-          <button type="submit" class="btn" style="margin-top:1rem;">Submit Survey</button>
-        </form>
-      </div>
+  <div class="content" id="inspectionContainer">
+      <h1>Inspection & Compliance Summary</h1>
     </div>
   </section>
 </div>
@@ -238,46 +215,154 @@ label { display: block; margin: .4rem 0; }
 <script>
 const INSPECTION_KEY = "inspection_data";
 
-document.getElementById("inspectionForm").addEventListener("submit", function(e){
-  e.preventDefault();
-
-  const entry = {
-    type: document.getElementById("businessType").value,
-    name: document.getElementById("businessName").value,
-    location: document.getElementById("businessLocation").value,
-    interior: document.querySelector("input[name='interior']:checked").value,
-    merchandise: document.querySelector("input[name='merchandise']:checked").value,
-    fire: document.querySelector("input[name='fire']:checked").value,
-    health: document.querySelector("input[name='health']:checked").value,
-    guidelines: document.querySelector("input[name='guidelines']:checked").value,
-    sanitizers: document.querySelector("input[name='sanitizers']:checked").value,
-    distancing: document.querySelector("input[name='distancing']:checked").value,
-    staffing: document.querySelector("input[name='staffing']:checked").value,
-    hygiene: document.querySelector("input[name='hygiene']:checked").value,
-    dresscode: document.querySelector("input[name='dresscode']:checked").value,
-    submittedAt: new Date().toLocaleString()
-  };
-
-  const data = JSON.parse(localStorage.getItem(INSPECTION_KEY) || "[]");
-  data.push(entry);
-  localStorage.setItem(INSPECTION_KEY, JSON.stringify(data));
-
-  alert("Survey submitted successfully!");
-  this.reset();
-});
-
-  const menuBtn = document.getElementById("menuBtn");
-const menuDropdown = document.getElementById("menuDropdown");
-
-menuBtn.addEventListener("click", () => {
-  menuDropdown.classList.toggle("show");
-});
-
-window.addEventListener("click", (e) => {
-  if (!menuBtn.contains(e.target) && !menuDropdown.contains(e.target)) {
-    menuDropdown.classList.remove("show");
+const sampleData = [
+  {
+    name: "Gacusan, Aira Jane",
+    type: "Takoyaki Store",
+    interior: "Very Good",
+    merchandise: "Good",
+    fire: "Good",
+    health: "Very Good",
+    guidelines: "Good",
+    sanitizers: "Very Good",
+    distancing: "Good",
+    staffing: "Good",
+    hygiene: "Very Good",
+    dresscode: "Good",
+    submittedAt: "Oct 15, 2025 10:30 AM"
+  },
+  {
+    name: "Furigay, Neri Jane",
+    type: "Sound Equipment",
+    interior: "Good",
+    merchandise: "Fair",
+    fire: "Good",
+    health: "Fair",
+    guidelines: "Good",
+    sanitizers: "Fair",
+    distancing: "Good",
+    staffing: "Fair",
+    hygiene: "Good",
+    dresscode: "Fair",
+    submittedAt: "Oct 15, 2025 11:10 AM"
+  },
+  {
+    name: "Pena, Rona Mae",
+    type: "Tables and Chairs Rental",
+    interior: "Very Good",
+    merchandise: "Good",
+    fire: "Very Good",
+    health: "Very Good",
+    guidelines: "Very Good",
+    sanitizers: "Good",
+    distancing: "Very Good",
+    staffing: "Good",
+    hygiene: "Good",
+    dresscode: "Very Good",
+    submittedAt: "Oct 16, 2025 09:45 AM"
+  },
+  {
+    name: "Dacoco, Jonathan",
+    type: "Atan’s Meat Shop",
+    interior: "Good",
+    merchandise: "Good",
+    fire: "Fair",
+    health: "Good",
+    guidelines: "Good",
+    sanitizers: "Fair",
+    distancing: "Good",
+    staffing: "Fair",
+    hygiene: "Good",
+    dresscode: "Fair",
+    submittedAt: "Oct 16, 2025 08:20 AM"
   }
-});
+];
+
+function badgeFor(value) {
+  if (!value) return '-';
+  const val = value.toLowerCase();
+  let cls = '';
+  if (val.includes('very good')) cls = 'very-good';
+  else if (val.includes('good')) cls = 'good';
+  else if (val.includes('fair')) cls = 'fair';
+  else if (val.includes('poor')) cls = 'poor';
+  else if (val.includes('very poor')) cls = 'very-poor';
+  return `<span class="badge ${cls}">${value}</span>`;
+}
+
+function loadInspectionData() {
+  const loggedUser = localStorage.getItem("loggedUser");
+  const storedData = JSON.parse(localStorage.getItem(INSPECTION_KEY) || "[]");
+  const dataToShow = storedData.length ? storedData : sampleData;
+  const container = document.getElementById("inspectionContainer");
+  container.innerHTML = "<h1>Inspection & Compliance Summary</h1>";
+
+  if (!loggedUser) {
+    container.innerHTML += "<p style='color:red;'>No user logged in.</p>";
+    return;
+  }
+
+  const userData = dataToShow.filter(entry => entry.name === loggedUser);
+
+  if (userData.length === 0) {
+    container.innerHTML += `<p>No inspection record found for <strong>${loggedUser}</strong>.</p>`;
+    return;
+  }
+
+  userData.forEach(entry => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <h2>${entry.name}</h2>
+      <p><strong>Nature of Business:</strong> ${entry.type}</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Interior</th>
+            <th>Merchandise</th>
+            <th>Fire Safety</th>
+            <th>Health</th>
+            <th>Guidelines</th>
+            <th>Sanitizers</th>
+            <th>Distancing</th>
+            <th>Staffing</th>
+            <th>Hygiene</th>
+            <th>Dress Code</th>
+            <th>Submitted</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>${badgeFor(entry.interior)}</td>
+            <td>${badgeFor(entry.merchandise)}</td>
+            <td>${badgeFor(entry.fire)}</td>
+            <td>${badgeFor(entry.health)}</td>
+            <td>${badgeFor(entry.guidelines)}</td>
+            <td>${badgeFor(entry.sanitizers)}</td>
+            <td>${badgeFor(entry.distancing)}</td>
+            <td>${badgeFor(entry.staffing)}</td>
+            <td>${badgeFor(entry.hygiene)}</td>
+            <td>${badgeFor(entry.dresscode)}</td>
+            <td>${entry.submittedAt || '-'}</td>
+          </tr>
+        </tbody>
+      </table>
+    `;
+    container.appendChild(card);
+  });
+}
+
+
+function setupLogout() {
+  const logoutLink = document.querySelector('a[href="login.html"]');
+  logoutLink.addEventListener("click", function (e) {
+    e.preventDefault();
+    localStorage.removeItem("loggedUser");
+    window.location.href = "main.html";
+  });
+}
+
+
+loadInspectionData();
+setupLogout();
 </script>
-</body>
-</html>
