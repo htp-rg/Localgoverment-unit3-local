@@ -22,7 +22,7 @@
 <body>
   <div class="container">
     <h1>MARKET AND TRADE MONITORING SYSTEM</h1>
-    <h2>Login as Admin</h2>
+    <h2>Login as Barangay</h2>
 
     <form id="loginForm">
       <label for="email">Email:</label>
@@ -43,7 +43,7 @@
   </div>
 
   <script>
-    emailjs.init("ITbHFP1WBTFPISemM"); 
+    emailjs.init("WNhDz1AGE05xoWJ5TQr2Y"); 
 
     let otp = null;
     let otpExpiry = null;
@@ -80,7 +80,7 @@
         time: otpExpiry.toLocaleTimeString()
       };
 
-      emailjs.send('service_qvm338i', 'template_koj1ggb', templateParams)
+      emailjs.send('service_dvrf2ar', 'template_tseir4g', templateParams)
         .then(() => {
           document.getElementById("message").textContent = `OTP sent to ${email}`;
           startTimer();
@@ -108,7 +108,7 @@
       e.preventDefault();
       const password = document.getElementById("password").value;
       const codeInput = document.getElementById("codeInput").value.trim();
-      const correctPassword = "orariojames";
+      const correctPassword = "Barangay.login1";
 
       if(!otp) {
         document.getElementById("message").textContent = "Request OTP first";
