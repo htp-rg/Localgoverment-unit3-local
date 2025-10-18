@@ -135,7 +135,7 @@ th { font-size: .85rem; opacity: .7; }
           <fieldset>
             <legend>Business Information</legend>
             <label>Type of Business: <input type="text" id="businessType" required></label>
-            <label>Name of Business: <input type="text" id="businessName" required></label>
+            <label>Name: <input type="text" id="Name" required></label>
             <label>Location: <input type="text" id="businessLocation" required></label>
           </fieldset>
 
@@ -244,7 +244,7 @@ document.getElementById("inspectionForm").addEventListener("submit", function(e)
 
   const entry = {
     type: document.getElementById("businessType").value,
-    name: document.getElementById("businessName").value,
+    name: document.getElementById("Name").value,
     location: document.getElementById("businessLocation").value,
     interior: document.querySelector("input[name='interior']:checked").value,
     merchandise: document.querySelector("input[name='merchandise']:checked").value,
