@@ -152,127 +152,128 @@ th { font-size: .85rem; opacity: .7; }
       </div>
     </header>
 
-    <div class="content">
-      <div class="content">
-  <div class="card">
-    <h1>Inspection and Compliance Survey</h1>
-
-    <input type="text" id="inspectionSearch" placeholder="Search Supply…" style="margin-bottom:1rem;width:100%;padding:.5rem;">
-
-    <table id="inspectionTable">
-      <thead>
-        <tr>
-          <th>Business Name</th>
-          <th>Interior Inspection</th>
-          <th>Merchandise Display</th>
-          <th>Fire Safety</th>
-          <th>Health Compliance</th>
-          <th>Hand Sanitizers & Masks</th>
-          <th>Social Distancing</th>
-          <th>Adequate Staffing</th>
-          <th>Employee Hygiene</th>
-          <th>Policy & Dress Code</th>
-        </tr>
-      </thead>
-      <tbody>
-    
-      </tbody>
-    </table>
-  </div>
+   <div class="content">
+      <div class="card">
+        <h1>Inspection & Compliance Summary</h1>
+        <table id="inspectionTable">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Nature of Business</th>
+              <th>Interior</th>
+              <th>Merchandise</th>
+              <th>Fire Safety</th>
+              <th>Health</th>
+              <th>Guidelines</th>
+              <th>Sanitizers</th>
+              <th>Distancing</th>
+              <th>Staffing</th>
+              <th>Hygiene</th>
+              <th>Dress Code</th>
+              <th>Submitted</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
 </div>
 
 <script>
-const STORAGE_KEY_INSPECTIONS = "inspection_compliance_data";
+const INSPECTION_KEY = "inspection_data";
 
-if (!localStorage.getItem(STORAGE_KEY_INSPECTIONS)) {
-  const sampleData = [
-    {
-      business: "Atan's Meat Shop",
-      interior: "Good",
-      display: "Very Good",
-      fire: "Fair",
-      health: "Good",
-      sanitizers: "Very Good",
-      distancing: "Good",
-      staffing: "Good",
-      hygiene: "Very Good",
-      policy: "Good"
-    },
-    {
-      business: "Takoyaki Store",
-      interior: "Very Good",
-      display: "Good",
-      fire: "Good",
-      health: "Very Good",
-      sanitizers: "Good",
-      distancing: "Fair",
-      staffing: "Good",
-      hygiene: "Good",
-      policy: "Very Good"
-    },
-    {
-      business: "Sound Equipment",
-      interior: "Fair",
-      display: "Good",
-      fire: "Fair",
-      health: "Fair",
-      sanitizers: "Good",
-      distancing: "Good",
-      staffing: "Fair",
-      hygiene: "Good",
-      policy: "Fair"
-    },
-    {
-      business: "Tables and Chairs",
-      interior: "Good",
-      display: "Fair",
-      fire: "Good",
-      health: "Good",
-      sanitizers: "Fair",
-      distancing: "Good",
-      staffing: "Good",
-      hygiene: "Fair",
-      policy: "Good"
-    }
-  ];
-  localStorage.setItem(STORAGE_KEY_INSPECTIONS, JSON.stringify(sampleData));
-}
+const sampleData = [
+  {
+    name: "Gacusan, Aira Jane",
+    type: "Takoyaki Store",
+    interior: "Very Good",
+    merchandise: "Good",
+    fire: "Good",
+    health: "Very Good",
+    guidelines: "Good",
+    sanitizers: "Very Good",
+    distancing: "Good",
+    staffing: "Good",
+    hygiene: "Very Good",
+    dresscode: "Good",
+    submittedAt: "Oct 15, 2025 10:30 AM"
+  },
+  {
+    name: "Furigay, Neri Jane",
+    type: "Sound Equipment",
+    interior: "Good",
+    merchandise: "Fair",
+    fire: "Good",
+    health: "Fair",
+    guidelines: "Good",
+    sanitizers: "Fair",
+    distancing: "Good",
+    staffing: "Fair",
+    hygiene: "Good",
+    dresscode: "Fair",
+    submittedAt: "Oct 15, 2025 11:10 AM"
+  },
+  {
+    name: "Pena, Rona Mae",
+    type: "Tables and Chairs Rental",
+    interior: "Very Good",
+    merchandise: "Good",
+    fire: "Very Good",
+    health: "Very Good",
+    guidelines: "Very Good",
+    sanitizers: "Good",
+    distancing: "Very Good",
+    staffing: "Good",
+    hygiene: "Good",
+    dresscode: "Very Good",
+    submittedAt: "Oct 16, 2025 09:45 AM"
+  },
+  {
+    name: "Dacoco, Jonathan",
+    type: "Atan’s Meat Shop",
+    interior: "Good",
+    merchandise: "Good",
+    fire: "Fair",
+    health: "Good",
+    guidelines: "Good",
+    sanitizers: "Fair",
+    distancing: "Good",
+    staffing: "Fair",
+    hygiene: "Good",
+    dresscode: "Fair",
+    submittedAt: "Oct 16, 2025 08:20 AM"
+  }
+];
 
-
-function loadInspections() {
-  const inspections = JSON.parse(localStorage.getItem(STORAGE_KEY_INSPECTIONS) || "[]");
+function loadInspectionData() {
+  const storedData = JSON.parse(localStorage.getItem(INSPECTION_KEY) || "[]");
+  const dataToShow = storedData.length ? storedData : sampleData;
   const tbody = document.querySelector("#inspectionTable tbody");
   tbody.innerHTML = "";
 
-  inspections.forEach(i => {
+  dataToShow.forEach(entry => {
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td>${i.business}</td>
-      <td>${i.interior}</td>
-      <td>${i.display}</td>
-      <td>${i.fire}</td>
-      <td>${i.health}</td>
-      <td>${i.sanitizers}</td>
-      <td>${i.distancing}</td>
-      <td>${i.staffing}</td>
-      <td>${i.hygiene}</td>
-      <td>${i.policy}</td>
+      <td>${entry.name}</td>
+      <td>${entry.type}</td>
+      <td>${entry.interior || '-'}</td>
+      <td>${entry.merchandise || '-'}</td>
+      <td>${entry.fire || '-'}</td>
+      <td>${entry.health || '-'}</td>
+      <td>${entry.guidelines || '-'}</td>
+      <td>${entry.sanitizers || '-'}</td>
+      <td>${entry.distancing || '-'}</td>
+      <td>${entry.staffing || '-'}</td>
+      <td>${entry.hygiene || '-'}</td>
+      <td>${entry.dresscode || '-'}</td>
+      <td>${entry.submittedAt || '-'}</td>
     `;
     tbody.appendChild(row);
   });
 }
-const menuBtn = document.getElementById("menuBtn");
-const menuDropdown = document.getElementById("menuDropdown");
 
-
-menuBtn.addEventListener("click", () => {
-  menuDropdown.classList.toggle("show");
-});
-
-document.addEventListener("click", (e) => {
-  if (!e.target.closest(".menu-container")) {
-    menuDropdown.classList.remove("show");
-  }
-});
-window.onload = loadInspections;
+loadInspectionData();
 </script>
+</body>
+</html>
