@@ -344,7 +344,7 @@ function saveNewInspection(newEntry) {
   data.push(newEntry);
   localStorage.setItem(INSPECTION_KEY, JSON.stringify(data));
 }
-
+document.getElementById("backBtn").addEventListener("click", () => window.history.back());
 loadInspectionData();
 </script>
 </body>
