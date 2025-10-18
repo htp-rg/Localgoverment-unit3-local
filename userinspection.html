@@ -291,30 +291,34 @@ function badgeFor(value) {
 }
 
 function loadInspectionData() {
-  const loggedUser = localStorage.getItem("loggedUser");
+  const loggedInUser = JSON.parse(localStorage.getItem("loggedUser"));
   const storedData = JSON.parse(localStorage.getItem(INSPECTION_KEY) || "[]");
   const dataToShow = storedData.length ? storedData : sampleData;
   const container = document.getElementById("inspectionContainer");
   container.innerHTML = "<h1>Inspection & Compliance Summary</h1>";
 
-  if (!loggedUser) {
-    container.innerHTML += "<p style='color:red;'>No user logged in.</p>";
+  if (!loggedInUser || !loggedInUser.email) {
+    container.innerHTML += `<p style="text-align:center; color:#777;">Please log in to view your inspection record.</p>`;
     return;
   }
 
-  const userData = dataToShow.filter(entry => entry.name === loggedUser);
+  const userData = dataToShow.filter(
+    entry => entry.email === loggedInUser.email || entry.name === loggedInUser.name
+  );
 
   if (userData.length === 0) {
-    container.innerHTML += `<p>No inspection record found for <strong>${loggedUser}</strong>.</p>`;
+    container.innerHTML += `<p style="text-align:center; color:#777;">No inspection record found for your account (${loggedInUser.email}).</p>`;
     return;
   }
 
+ 
   userData.forEach(entry => {
     const card = document.createElement("div");
     card.className = "card";
     card.innerHTML = `
-      <h2>${entry.name}</h2>
-      <p><strong>Nature of Business:</strong> ${entry.type}</p>
+      <h2 style="background:#0a53c1; color:white; padding:0.6rem 1rem; border-radius:8px;">
+        ${entry.name} – ${entry.type}
+      </h2>
       <table>
         <thead>
           <tr>
@@ -351,8 +355,7 @@ function loadInspectionData() {
     container.appendChild(card);
   });
 }
-
-
+  
 function setupLogout() {
   const logoutLink = document.querySelector('a[href="login.html"]');
   logoutLink.addEventListener("click", function (e) {
