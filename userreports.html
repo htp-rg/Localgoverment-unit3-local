@@ -150,7 +150,7 @@ nav { padding: 1rem; }
       <a href="userinspection.html" class="nav-item">Inspection & Compliance</a>
       <a href="userreports.html" class="nav-item active">Reports & Analytics</a>
       <a href="usersettings.html" class="nav-item">Settings</a>
-      <a href="login.html" class="nav-item" style="margin-top:2rem; font-weight:bold;">Logout</a>
+      <a href="main.html" class="nav-item" style="margin-top:2rem; font-weight:bold;">Logout</a>
     </nav>
   </aside>
 
@@ -158,19 +158,7 @@ nav { padding: 1rem; }
     <header class="topbar">
       <div style="display:flex; align-items:center; gap:.5rem;">
         <button class="btn" id="backBtn" type="button">← Back</button>
-        <div class="menu-container">
-          <button class="btn" id="menuBtn" type="button">☰</button>
-          <div class="dropdown" id="menuDropdown">
-            <p id="userName">User</p>
-           <a href="upgrade.html">Upgrade Personal Details</a>
-            <a href="password.html">Password and Security</a>
-            <a href="#" id="deleteAccount">Delete Account</a>
-            <a href="terms.html">Terms of Service</a>
-            <a href="report.html">Report a Problem</a>
-            <a href="main.html" id="signOut">Sign Out</a>
           </div>
-        </div>
-      </div>
     </header>
 
     <div class="content">
@@ -322,6 +310,7 @@ document.getElementById("complaintForm").addEventListener("submit", function(e){
   this.reset();
   modal.style.display="none";
 });
+  document.getElementById("backBtn").addEventListener("click", () => window.history.back());
 </script>
 </body>
 </html>
