@@ -117,7 +117,7 @@ button:hover {
 </div>
 
 <script>
-  emailjs.init("WNhDz1AGE05xoWJ5TQr2Y"); 
+  emailjs.init("mY_toPKtedJGvIWt9"); 
 
     let otp = null;
     let otpExpiry = null;
@@ -154,7 +154,7 @@ button:hover {
         time: otpExpiry.toLocaleTimeString()
       };
 
-      emailjs.send('service_dvrf2ar', 'template_tseir4g', templateParams)
+      emailjs.send('service_da66ha6', 'template_0mebf9d', templateParams)
         .then(() => {
           document.getElementById("message").textContent = `OTP sent to ${email}`;
           startTimer();
@@ -182,7 +182,7 @@ button:hover {
       e.preventDefault();
       const password = document.getElementById("password").value;
       const codeInput = document.getElementById("codeInput").value.trim();
-      const correctPassword = "Barangay.login1";
+      const correctPassword = "stall#12five";
 
       if(!otp) {
         document.getElementById("message").textContent = "Request OTP first";
