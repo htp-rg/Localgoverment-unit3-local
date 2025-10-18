@@ -5,151 +5,149 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>User Login</title>
 <style>
-    body { font-family: Arial; background: #f2f2f2; margin: 0; padding: 0; }
-    .container { max-width: 400px; margin: 60px auto; padding: 20px; border-radius: 8px; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    h1, h2 { text-align: center; color: #333; }
-    label { display: block; margin-top: 15px; font-weight: bold; }
-    input, button { padding: 10px; border-radius: 5px; border: 1px solid #ccc; width: 100%; margin-top: 5px; font-size: 14px; box-sizing: border-box; }
-    button { cursor: pointer; border: none; color: #fff; }
-    #sendCodeBtn { background: #4285f4; margin-top: 10px; }
-    #resendBtn { background: orange; margin-top: 5px; display: none; }
-    #loginForm button[type="submit"] { background: green; margin-top: 15px; }
-    #timer { text-align: center; font-size: 12px; color: #555; margin-top: 5px; }
-    #message { text-align: center; margin-top: 10px; color: red; }
-.error-message {
-  background: #ffe0e0;
-  color: #b00000;
-  border: 1px solid #b00000;
-  border-radius: 8px;
-  padding: 0.8rem;
-  text-align: center;
-  margin-top: 1rem;
-  display: none;
-}
-
-.back-link {
-  display: block;
-  margin-top: 1rem;
-  text-align: center;
-  color: var(--blue);
-  text-decoration: none;
-  font-size: 0.9rem;
-}
-.back-link:hover { text-decoration: underline; }
-  </style>
+  body { font-family: Arial, sans-serif; background: #f2f2f2; margin: 0; padding: 0; }
+  .container {
+    max-width: 400px; margin: 60px auto; padding: 20px;
+    border-radius: 8px; background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  h1, h2 { text-align: center; color: #333; }
+  label { display: block; margin-top: 15px; font-weight: bold; }
+  input, button {
+    padding: 10px; border-radius: 5px; border: 1px solid #ccc;
+    width: 100%; margin-top: 5px; font-size: 14px; box-sizing: border-box;
+  }
+  button { cursor: pointer; border: none; color: #fff; }
+  #sendCodeBtn { background: #4285f4; margin-top: 10px; }
+  #resendBtn { background: orange; margin-top: 5px; display: none; }
+  #loginForm button[type="submit"] { background: green; margin-top: 15px; }
+  #timer { text-align: center; font-size: 12px; color: #555; margin-top: 5px; }
+  #message { text-align: center; margin-top: 10px; color: red; }
+  .back-link {
+    display: block; margin-top: 1rem; text-align: center;
+    color: #0a53c1; text-decoration: none; font-size: 0.9rem;
+  }
+  .back-link:hover { text-decoration: underline; }
+</style>
 </head>
 <body>
-<div class="card">
-   <div class="container">
-    <h1>MARKET AND TRADE MONITORING SYSTEM</h1>
-    <h2>Login as User</h2>
 
-    <form id="loginForm">
-      <label for="email">Email:</label>
-      <input type="email" id="email" required placeholder="Enter your email">
+<div class="container">
+  <h1>MARKET AND TRADE MONITORING SYSTEM</h1>
+  <h2>Login as User</h2>
 
-      <label for="password">Password:</label>
-      <input type="password" id="password" required placeholder="Enter your password">
+  <form id="loginForm">
+    <label for="email">Email:</label>
+    <input type="email" id="email" required placeholder="Enter your email">
 
-      <input type="text" id="codeInput" placeholder="Enter OTP">
-      <button type="button" id="sendCodeBtn">Send Code</button>
-      <div id="timer"></div>
-      <button type="button" id="resendBtn">Resend Code</button>
+    <label for="password">Password:</label>
+    <input type="password" id="password" required placeholder="Enter your password">
 
-      <button type="submit">Login</button>
-    </form>
+    <input type="text" id="codeInput" placeholder="Enter OTP">
 
-    <div id="message"></div>
-  </div>
+    <button type="button" id="sendCodeBtn">Send Code</button>
+    <div id="timer"></div>
+    <button type="button" id="resendBtn">Resend Code</button>
+
+    <button type="submit">Login</button>
+  </form>
+
+  <div id="message"></div>
+
   <a href="userregister.html" class="back-link">Don't have an account? Register</a>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
 <script>
-  emailjs.init("mY_toPKtedJGvIWt9"); 
+emailjs.init("mY_toPKtedJGvIWt9"); // Your EmailJS public key
 
-    let otp = null;
-    let otpExpiry = null;
-    let timerInterval = null;
+let otp = null;
+let otpExpiry = null;
+let timerInterval = null;
 
-    const sendBtn = document.getElementById("sendCodeBtn");
-    const resendBtn = document.getElementById("resendBtn");
-    const timerDiv = document.getElementById("timer");
+const sendBtn = document.getElementById("sendCodeBtn");
+const resendBtn = document.getElementById("resendBtn");
+const timerDiv = document.getElementById("timer");
+const messageDiv = document.getElementById("message");
 
-    function startTimer() {
-      let timeLeft = 60;
-      sendBtn.disabled = true;
-      timerDiv.textContent = `Please wait ${timeLeft}s to resend OTP`;
+function startTimer() {
+  let timeLeft = 60;
+  sendBtn.disabled = true;
+  timerDiv.textContent = `Please wait ${timeLeft}s to resend OTP`;
 
-      timerInterval = setInterval(() => {
-        timeLeft--;
-        timerDiv.textContent = `Please wait ${timeLeft}s to resend OTP`;
-        if(timeLeft <= 0) {
-          clearInterval(timerInterval);
-          sendBtn.disabled = false;
-          resendBtn.style.display = "block";
-          timerDiv.textContent = "";
-        }
-      }, 1000);
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    timerDiv.textContent = `Please wait ${timeLeft}s to resend OTP`;
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      sendBtn.disabled = false;
+      resendBtn.style.display = "block";
+      timerDiv.textContent = "";
     }
+  }, 1000);
+}
 
-    function sendOTP(email) {
-      otp = Math.floor(100000 + Math.random() * 900000);
-      otpExpiry = new Date(Date.now() + 15*60*1000);
+function sendOTP(email) {
+  otp = Math.floor(100000 + Math.random() * 900000);
+  otpExpiry = new Date(Date.now() + 15 * 60 * 1000);
 
-      const templateParams = {
-        to_email: email,
-        passcode: otp,
-        time: otpExpiry.toLocaleTimeString()
-      };
+  const templateParams = {
+    to_email: email,
+    passcode: otp,
+    time: otpExpiry.toLocaleTimeString()
+  };
 
-      emailjs.send('service_da66ha6', 'template_0mebf9d', templateParams)
-        .then(() => {
-          document.getElementById("message").textContent = `OTP sent to ${email}`;
-          startTimer();
-        })
-        .catch(err => {
-          console.error(err);
-          document.getElementById("message").textContent = "Failed to send OTP";
-        });
-    }
-
-    sendBtn.addEventListener("click", () => {
-      const email = document.getElementById("email").value.trim();
-      if(!email) return alert("Enter your email");
-      sendOTP(email);
+  emailjs.send('service_da66ha6', 'template_0mebf9d', templateParams)
+    .then(() => {
+      messageDiv.style.color = "green";
+      messageDiv.textContent = `OTP sent to ${email}`;
+      startTimer();
+    })
+    .catch(err => {
+      console.error(err);
+      messageDiv.style.color = "red";
+      messageDiv.textContent = "Failed to send OTP.";
     });
+}
 
-    resendBtn.addEventListener("click", () => {
-      const email = document.getElementById("email").value.trim();
-      if(!email) return alert("Enter your email");
-      sendOTP(email);
-      resendBtn.style.display = "none";
-    });
+sendBtn.addEventListener("click", () => {
+  const email = document.getElementById("email").value.trim();
+  if (!email) return alert("Please enter your email first");
+  sendOTP(email);
+});
 
-    document.getElementById("loginForm").addEventListener("submit", (e) => {
-      e.preventDefault();
-      const password = document.getElementById("password").value;
-      const codeInput = document.getElementById("codeInput").value.trim();
-      const correctPassword = "stall#12five";
+resendBtn.addEventListener("click", () => {
+  const email = document.getElementById("email").value.trim();
+  if (!email) return alert("Please enter your email first");
+  sendOTP(email);
+  resendBtn.style.display = "none";
+});
 
-      if(!otp) {
-        document.getElementById("message").textContent = "Request OTP first";
-        return;
-      }
-      if(new Date() > otpExpiry) {
-        document.getElementById("message").textContent = "OTP expired! Request again";
-        return;
-      }
-      if(password === correctPassword && codeInput == otp) {
-        window.location.href = "userdashboard.html";
-      } else {
-        document.getElementById("message").textContent = "Invalid password or OTP";
-      }
-    });
+document.getElementById("loginForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const password = document.getElementById("password").value;
+  const codeInput = document.getElementById("codeInput").value.trim();
+  const correctPassword = "stall#12five";
 
-  localStorage.setItem("logged_in_user", JSON.stringify(vendor));
-
-  window.location.href = "userdashboard.html";
+  if (!otp) {
+    messageDiv.textContent = "Please request OTP first.";
+    return;
+  }
+  if (new Date() > otpExpiry) {
+    messageDiv.textContent = "OTP expired! Request again.";
+    return;
+  }
+  if (password === correctPassword && codeInput == otp) {
+ 
+    messageDiv.style.color = "green";
+    messageDiv.textContent = "Login successful! Redirecting...";
+    setTimeout(() => {
+      window.location.href = "userdashboard.html";
+    }, 1200);
+  } else {
+    messageDiv.textContent = "Invalid password or OTP.";
+  }
 });
 </script>
 </body>
