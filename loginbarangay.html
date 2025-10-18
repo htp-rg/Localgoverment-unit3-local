@@ -80,7 +80,7 @@
         time: otpExpiry.toLocaleTimeString()
       };
 
-      emailjs.send('service_dvrf2ar', 'template_tseir4g', templateParams)
+      emailjs.send('service_dvrf2ar','template_tseir4g', templateParams)
         .then(() => {
           document.getElementById("message").textContent = `OTP sent to ${email}`;
           startTimer();
