@@ -1,35 +1,84 @@
 <!DOCTYPE html>
-<html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<title>Barangay Market Interactive Map</title>
-<meta charset="UTF-8" />
+<meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Admin Dashboard - Barangay Market Map</title>
+<title>Barangay Public Market Map</title>
 
-<!-- LEAFLET MAP LIBRARY -->
-<!-- Leaflet -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
 <style>
-body{
-  margin:0;
-  font-family:Arial, sans-serif;
-:root {
-  --text:#111;
+:root{
   --blue:#0a53c1;
-  --white:#fff;
   --border:#e6e8eb;
 }
 
-#map{
+body{
+  margin:0;
+  font-family:Inter,system-ui,sans-serif;
+  display:grid;
+  grid-template-columns:240px 1fr;
   height:100vh;
+}
+
+/* SIDEBAR */
+.sidebar{
+  background:#4e73df;
+  color:white;
+}
+.brand{
+  padding:1rem;
+  font-weight:bold;
+  border-bottom:1px solid rgba(255,255,255,.2);
+}
+nav{padding:1rem;}
+.nav-item{
+  display:block;
+  color:white;
+  text-decoration:none;
+  padding:.6rem;
+  border-radius:6px;
+  margin-bottom:5px;
+}
+.nav-item:hover,.nav-item.active{
+  background:white;
+  color:#4e73df;
+}
+
+/* MAIN */
+.main{
+  display:grid;
+  grid-template-rows:60px 1fr;
+}
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 1rem;
+  border-bottom:1px solid var(--border);
+}
+.content{
+  padding:1rem;
+  display:flex;
+  flex-direction:column;
+}
+
+#marketMap{
+  flex:1;
+  border-radius:12px;
+  border:2px solid var(--blue);
+}
+
+.info-panel{
+  margin-top:10px;
+  padding:12px;
+  border:1px solid var(--border);
+  border-radius:10px;
   background:#f4f6f8;
 }
 
-/* Legend */
+/* LEGEND */
 .legend{
   background:white;
   padding:10px;
@@ -37,11 +86,6 @@ body{
   box-shadow:0 4px 12px rgba(0,0,0,.1);
   font-size:13px;
 }
-
-.legend div{
-  margin-bottom:6px;
-}
-
 .box{
   width:14px;
   height:14px;
@@ -49,128 +93,186 @@ body{
   margin-right:6px;
   border-radius:3px;
 }
+
+/* BLINK EFFECT */
+.blink{
+  animation:blink 1s infinite;
+}
+@keyframes blink{
+  0%{fill-opacity:0.9;}
+  50%{fill-opacity:0.2;}
+  100%{fill-opacity:0.9;}
+}
 </style>
 </head>
+
 <body>
 
-<div id="map"></div>
+<aside class="sidebar">
+  <div class="brand">LGU 3 ADMIN SYSTEM</div>
+  <nav>
+    <a href="#" class="nav-item active">Dashboard</a>
+    <a href="#" class="nav-item">Vendor Management</a>
+    <a href="#" class="nav-item">Commodity & Price Monitoring</a>
+    <a href="#" class="nav-item">Inspection & Compliance</a>
+    <a href="#" class="nav-item">Reports & AI Analytics</a>
+    <a href="#" class="nav-item">Settings</a>
+    <a href="#" class="nav-item" style="margin-top:2rem;font-weight:bold;">Logout</a>
+  </nav>
+</aside>
+
+<section class="main">
+  <header class="topbar">
+    <button>← Back</button>
+    <button>Export</button>
+  </header>
+
+  <div class="content">
+    <h2>Barangay Public Market Map</h2>
+    <div id="marketMap"></div>
+    <div class="info-panel" id="stallInfo">
+      Click a stall to view vendor information.
+    </div>
+  </div>
+</section>
 
 <script>
 
-/* ====== MAP INITIALIZATION ====== */
+/* =============================
+   MAP SETUP WITH BLUEPRINT
+============================= */
 
-const imageWidth = 2000;  // adjust if needed
-const imageHeight = 1200; // adjust if needed
+const imageWidth = 2000;
+const imageHeight = 1200;
 
-const map = L.map('map', {
-  crs: L.CRS.Simple,
-  minZoom: -2,
-  maxZoom: 4
+const map = L.map('marketMap',{
+  crs:L.CRS.Simple,
+  minZoom:-2,
+  maxZoom:4
 });
 
-const bounds = [[0,0], [imageHeight, imageWidth]];
+const bounds = [[0,0],[imageHeight,imageWidth]];
 
-/* ====== LOAD MARKET IMAGE ====== */
-/* PUT YOUR IMAGE FILE NAME HERE */
-const image = L.imageOverlay("Messenger_creation_0D91EB5E-B5A0-45C0-B80A-DC3D7F8AEED0.jpeg", bounds).addTo(map);
+// YOUR REAL BLUEPRINT IMAGE
+L.imageOverlay(
+  "Messenger_creation_0D91EB5E-B5A0-45C0-B80A-DC3D7F8AEED0.jpeg",
+  bounds
+).addTo(map);
+
 map.fitBounds(bounds);
 
 
-/* ====== VENDOR DATA ====== */
+/* =============================
+   VENDOR DATA
+============================= */
 
 const vendors = {
-  32:{name:"Lily's Textile Stall", section:"Textile", status:"Occupied"},
-  5:{name:"Pedro Fish Vendor", section:"Fish", status:"Occupied"},
-  18:{name:"Maria Meat Shop", section:"Meat", status:"Occupied"},
-  60:{name:"ABC Grocery", section:"Grocery", status:"Occupied"},
-  77:{name:"Dry Goods Store", section:"Dry Goods", status:"Occupied"},
-  90:{name:"Reserved Stall", section:"Textile", status:"Reserved"},
-  15:{name:"Violation Stall", section:"Fish", status:"Violation"}
+  5:{name:"Pedro Fish Vendor",section:"Fish",status:"Occupied"},
+  15:{name:"Violation Fish Stall",section:"Fish",status:"Violation"},
+  18:{name:"Maria Meat Shop",section:"Meat",status:"Occupied"},
+  60:{name:"ABC Grocery",section:"Grocery",status:"Occupied"},
+  77:{name:"Dry Goods Store",section:"Dry Goods",status:"Occupied"},
+  90:{name:"Textile Reserved",section:"Textile",status:"Reserved"},
+  120:{name:"Carinderia ni Aling Nena",section:"Carinderia",status:"Occupied"}
 };
 
 
-/* ====== STATUS COLORS ====== */
+/* =============================
+   COLOR SYSTEM
+============================= */
 
 function getColor(status){
-  switch(status){
-    case "Occupied": return "blue";
-    case "Violation": return "red";
-    case "Reserved": return "orange";
-    default: return "gray";
-  }
+  if(status==="Occupied") return "#0a53c1";
+  if(status==="Violation") return "#e63946";
+  if(status==="Reserved") return "#ffb703";
+  return "#adb5bd";
 }
 
 
-/* ====== ADD STALL MARKERS ====== */
-/* You must adjust coordinates to match real stall locations */
+/* =============================
+   ADD RECTANGULAR STALL BLOCK
+============================= */
 
-function addStall(no, x, y, section){
+function addStall(no,x,y,section){
 
   const vendor = vendors[no];
   const status = vendor ? vendor.status : "Vacant";
 
-  const marker = L.circleMarker([y, x],{
-    radius:8,
+  const stall = L.rectangle([
+    [y,x],
+    [y+40,x+40]
+  ],{
     color:getColor(status),
+    weight:2,
     fillColor:getColor(status),
-    fillOpacity:0.8
+    fillOpacity:0.8,
+    className: status==="Violation" ? "blink" : ""
   }).addTo(map);
-body{margin:0;font-family:Inter,system-ui,sans-serif;background:#fff;color:#111}
 
-  marker.bindPopup(`
-    <b>Stall No:</b> ${no}<br>
-    <b>Section:</b> ${section}<br>
-    <b>Status:</b> ${status}<br>
-    <b>Vendor:</b> ${vendor ? vendor.name : "Vacant"}
-  `);
+  stall.bindTooltip("Stall "+no);
+
+  stall.on("click",()=>{
+    document.getElementById("stallInfo").innerHTML = `
+      <strong>Stall No:</strong> ${no}<br>
+      <strong>Section:</strong> ${section}<br>
+      <strong>Status:</strong> ${status}<br>
+      <strong>Vendor:</strong> ${vendor ? vendor.name : "Vacant"}
+    `;
+  });
 }
 
 
-/* ====== WET SECTION (TOP AREA) ====== */
+/* =============================
+   WET SECTION
+============================= */
 
-addStall(1, 300, 200, "Fish");
-addStall(5, 450, 220, "Fish");
-addStall(15, 600, 240, "Fish");
+for(let i=1;i<=20;i++){
+  addStall(i, 300 + (i*45), 200, "Fish");
+}
 
-addStall(18, 900, 220, "Meat");
-addStall(22, 1050, 240, "Meat");
+for(let i=21;i<=40;i++){
+  addStall(i, 300 + ((i-20)*45), 300, "Meat");
+}
 
 
-/* ====== DRY SECTION (BOTTOM AREA) ====== */
-/* LAYOUT */
-.app{display:grid;grid-template-columns:240px 1fr;height:100vh}
-.sidebar{background:#4e73df;color:white}
-.brand{padding:1rem;font-weight:bold;border-bottom:1px solid rgba(255,255,255,.2)}
-nav{padding:1rem}
-.nav-item{display:block;color:white;text-decoration:none;padding:.6rem;border-radius:6px;margin-bottom:5px}
-.nav-item:hover,.nav-item.active{background:white;color:#4e73df}
+/* =============================
+   DRY SECTION
+============================= */
 
-addStall(60, 500, 600, "Grocery");
-addStall(77, 800, 650, "Dry Goods");
-addStall(90, 1000, 700, "Textile");
-addStall(32, 1100, 750, "Textile");
-addStall(120, 1300, 800, "Carinderia");
-.main{display:grid;grid-template-rows:60px 1fr}
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 1rem;border-bottom:1px solid var(--border)}
-.content{padding:1rem;overflow:hidden}
+for(let i=41;i<=60;i++){
+  addStall(i, 300 + ((i-40)*45), 600, "Dry Goods");
+}
 
-h1{color:var(--blue);margin-bottom:10px}
+for(let i=61;i<=80;i++){
+  addStall(i, 300 + ((i-60)*45), 700, "Grocery");
+}
 
-/* ====== LEGEND CONTROL ====== */
+for(let i=81;i<=110;i++){
+  addStall(i, 300 + ((i-80)*35), 800, "Textile");
+}
+
+for(let i=111;i<=130;i++){
+  addStall(i, 300 + ((i-110)*45), 900, "Carinderia");
+}
+
+
+/* =============================
+   LEGEND
+============================= */
 
 const legend = L.control({position:"bottomright"});
 
-legend.onAdd = function(){
-  const div = L.DomUtil.create("div","legend");
-  div.innerHTML = `
+legend.onAdd=function(){
+  const div=L.DomUtil.create("div","legend");
+  div.innerHTML=`
     <div><b>Legend</b></div>
-    <div><span class="box" style="background:blue"></span>Occupied</div>
-    <div><span class="box" style="background:gray"></span>Vacant</div>
-    <div><span class="box" style="background:red"></span>Violation</div>
-    <div><span class="box" style="background:orange"></span>Reserved</div>
+    <div><span class="box" style="background:#0a53c1"></span>Occupied</div>
+    <div><span class="box" style="background:#adb5bd"></span>Vacant</div>
+    <div><span class="box" style="background:#e63946"></span>Violation</div>
+    <div><span class="box" style="background:#ffb703"></span>Reserved</div>
     <hr>
-    <div>Wet Section: Fish, Meat</div>
-    <div>Dry Section: Grocery, Dry Goods, Textile, Carinderia</div>
+    <div><b>Wet Section:</b> Fish, Meat</div>
+    <div><b>Dry Section:</b> Grocery, Dry Goods, Textile, Carinderia</div>
   `;
   return div;
 };
@@ -178,5 +280,289 @@ legend.onAdd = function(){
 legend.addTo(map);
 
 </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Barangay Public Market Map</title>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<style>
+:root{
+  --blue:#0a53c1;
+  --border:#e6e8eb;
+}
+
+body{
+  margin:0;
+  font-family:Inter,system-ui,sans-serif;
+  display:grid;
+  grid-template-columns:240px 1fr;
+  height:100vh;
+}
+
+/* SIDEBAR */
+.sidebar{
+  background:#4e73df;
+  color:white;
+}
+.brand{
+  padding:1rem;
+  font-weight:bold;
+  border-bottom:1px solid rgba(255,255,255,.2);
+}
+nav{padding:1rem;}
+.nav-item{
+  display:block;
+  color:white;
+  text-decoration:none;
+  padding:.6rem;
+  border-radius:6px;
+  margin-bottom:5px;
+}
+.nav-item:hover,.nav-item.active{
+  background:white;
+  color:#4e73df;
+}
+
+/* MAIN */
+.main{
+  display:grid;
+  grid-template-rows:60px 1fr;
+}
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 1rem;
+  border-bottom:1px solid var(--border);
+}
+.content{
+  padding:1rem;
+  display:flex;
+  flex-direction:column;
+}
+
+#marketMap{
+  flex:1;
+  border-radius:12px;
+  border:2px solid var(--blue);
+}
+
+.info-panel{
+  margin-top:10px;
+  padding:12px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:#f4f6f8;
+}
+
+/* LEGEND */
+.legend{
+  background:white;
+  padding:10px;
+  border-radius:10px;
+  box-shadow:0 4px 12px rgba(0,0,0,.1);
+  font-size:13px;
+}
+.box{
+  width:14px;
+  height:14px;
+  display:inline-block;
+  margin-right:6px;
+  border-radius:3px;
+}
+
+/* BLINK EFFECT */
+.blink{
+  animation:blink 1s infinite;
+}
+@keyframes blink{
+  0%{fill-opacity:0.9;}
+  50%{fill-opacity:0.2;}
+  100%{fill-opacity:0.9;}
+}
+</style>
+</head>
+
+<body>
+
+<aside class="sidebar">
+  <div class="brand">LGU 3 ADMIN SYSTEM</div>
+  <nav>
+    <a href="#" class="nav-item active">Dashboard</a>
+    <a href="#" class="nav-item">Vendor Management</a>
+    <a href="#" class="nav-item">Commodity & Price Monitoring</a>
+    <a href="#" class="nav-item">Inspection & Compliance</a>
+    <a href="#" class="nav-item">Reports & AI Analytics</a>
+    <a href="#" class="nav-item">Settings</a>
+    <a href="#" class="nav-item" style="margin-top:2rem;font-weight:bold;">Logout</a>
+  </nav>
+</aside>
+
+<section class="main">
+  <header class="topbar">
+    <button>← Back</button>
+    <button>Export</button>
+  </header>
+
+  <div class="content">
+    <h2>Barangay Public Market Map</h2>
+    <div id="marketMap"></div>
+    <div class="info-panel" id="stallInfo">
+      Click a stall to view vendor information.
+    </div>
+  </div>
+</section>
+
+<script>
+
+/* =============================
+   MAP SETUP WITH BLUEPRINT
+============================= */
+
+const imageWidth = 2000;
+const imageHeight = 1200;
+
+const map = L.map('marketMap',{
+  crs:L.CRS.Simple,
+  minZoom:-2,
+  maxZoom:4
+});
+
+const bounds = [[0,0],[imageHeight,imageWidth]];
+
+// YOUR REAL BLUEPRINT IMAGE
+L.imageOverlay(
+  "Messenger_creation_0D91EB5E-B5A0-45C0-B80A-DC3D7F8AEED0.jpeg",
+  bounds
+).addTo(map);
+
+map.fitBounds(bounds);
 
 
+/* =============================
+   VENDOR DATA
+============================= */
+
+const vendors = {
+  5:{name:"Pedro Fish Vendor",section:"Fish",status:"Occupied"},
+  15:{name:"Violation Fish Stall",section:"Fish",status:"Violation"},
+  18:{name:"Maria Meat Shop",section:"Meat",status:"Occupied"},
+  60:{name:"ABC Grocery",section:"Grocery",status:"Occupied"},
+  77:{name:"Dry Goods Store",section:"Dry Goods",status:"Occupied"},
+  90:{name:"Textile Reserved",section:"Textile",status:"Reserved"},
+  120:{name:"Carinderia ni Aling Nena",section:"Carinderia",status:"Occupied"}
+};
+
+
+/* =============================
+   COLOR SYSTEM
+============================= */
+
+function getColor(status){
+  if(status==="Occupied") return "#0a53c1";
+  if(status==="Violation") return "#e63946";
+  if(status==="Reserved") return "#ffb703";
+  return "#adb5bd";
+}
+
+
+/* =============================
+   ADD RECTANGULAR STALL BLOCK
+============================= */
+
+function addStall(no,x,y,section){
+
+  const vendor = vendors[no];
+  const status = vendor ? vendor.status : "Vacant";
+
+  const stall = L.rectangle([
+    [y,x],
+    [y+40,x+40]
+  ],{
+    color:getColor(status),
+    weight:2,
+    fillColor:getColor(status),
+    fillOpacity:0.8,
+    className: status==="Violation" ? "blink" : ""
+  }).addTo(map);
+
+  stall.bindTooltip("Stall "+no);
+
+  stall.on("click",()=>{
+    document.getElementById("stallInfo").innerHTML = `
+      <strong>Stall No:</strong> ${no}<br>
+      <strong>Section:</strong> ${section}<br>
+      <strong>Status:</strong> ${status}<br>
+      <strong>Vendor:</strong> ${vendor ? vendor.name : "Vacant"}
+    `;
+  });
+}
+
+
+/* =============================
+   WET SECTION
+============================= */
+
+for(let i=1;i<=20;i++){
+  addStall(i, 300 + (i*45), 200, "Fish");
+}
+
+for(let i=21;i<=40;i++){
+  addStall(i, 300 + ((i-20)*45), 300, "Meat");
+}
+
+
+/* =============================
+   DRY SECTION
+============================= */
+
+for(let i=41;i<=60;i++){
+  addStall(i, 300 + ((i-40)*45), 600, "Dry Goods");
+}
+
+for(let i=61;i<=80;i++){
+  addStall(i, 300 + ((i-60)*45), 700, "Grocery");
+}
+
+for(let i=81;i<=110;i++){
+  addStall(i, 300 + ((i-80)*35), 800, "Textile");
+}
+
+for(let i=111;i<=130;i++){
+  addStall(i, 300 + ((i-110)*45), 900, "Carinderia");
+}
+
+
+/* =============================
+   LEGEND
+============================= */
+
+const legend = L.control({position:"bottomright"});
+
+legend.onAdd=function(){
+  const div=L.DomUtil.create("div","legend");
+  div.innerHTML=`
+    <div><b>Legend</b></div>
+    <div><span class="box" style="background:#0a53c1"></span>Occupied</div>
+    <div><span class="box" style="background:#adb5bd"></span>Vacant</div>
+    <div><span class="box" style="background:#e63946"></span>Violation</div>
+    <div><span class="box" style="background:#ffb703"></span>Reserved</div>
+    <hr>
+    <div><b>Wet Section:</b> Fish, Meat</div>
+    <div><b>Dry Section:</b> Grocery, Dry Goods, Textile, Carinderia</div>
+  `;
+  return div;
+};
+
+legend.addTo(map);
+
+</script>
+</body>
+</html>
