@@ -14,14 +14,8 @@
   --border: #e6e8eb;
   --shadow: 0 6px 24px rgba(0, 0, 0, .06);
 }
-.status-approved {
-  color: green;
-  font-weight: 600;
-}
-.status-declined {
-  color: red;
-  font-weight: 600;
-}
+.status-approved { color: green; font-weight: 600; }
+.status-declined { color: red; font-weight: 600; }
 
 * { box-sizing: border-box; }
 body {
@@ -34,9 +28,8 @@ body {
 
 .sidebar {
   border-right: 1px solid var(--border);
-  background: #4e73df; 
+  background: #4e73df;
 }
-
 .brand {
   font-weight: 800;
   text-transform: uppercase;
@@ -61,24 +54,11 @@ nav { padding: 1rem; }
   border-radius: 8px; cursor: pointer;
 }
 .content { padding: 1rem; overflow: auto; }
-.grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
-.grid.card-grid {
+
+.grid {
   display: grid;
   gap: 1rem;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-}
-
-.card.chart-container {
-  position: relative;
-  height: 300px; 
-  padding: 2rem;
-  box-sizing: content-box;
-}
-
-.card.chart-container canvas {
-  width: 90% !important;
-  height: 80% !important;
-  display: block;
 }
 
 .card {
@@ -87,10 +67,14 @@ nav { padding: 1rem; }
   padding: 1rem;
   box-shadow: var(--shadow);
 }
-.card.blue1 { background: #e3f2fd; color: #0a53c1; }  
-.card.blue2 { background: #90caf9; color: #0a53c1; }  
-.card.blue3 { background: #42a5f5; color: #fff; }     
-.card.blue4 { background: #0a53c1; color: #fff; }     
+
+.card.blue1 { background: #e3f2fd; color: #0a53c1; }
+.card.blue2 { background: #90caf9; color: #0a53c1; }
+.card.blue3 { background: #42a5f5; color: #fff; }
+
+.card.chart-container {
+  height: 300px;
+}
 
 table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; }
 th, td {
@@ -99,24 +83,20 @@ th, td {
 }
 th { font-size: .85rem; opacity: .7; }
 
-.star { font-size: 1.2rem; color: gold; }
-
-.menu-container {
-  position: relative;
-  display: inline-block;
+.chat-message {
+  max-width: 70%;
+  padding: .5rem .8rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
 }
-
-#taskList li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.3rem 0;
-}
+.chat-user { background: #0a53c1; color: white; align-self: flex-end; }
+.chat-bot { background: #e6e6e6; color: #111; align-self: flex-start; }
+.chat-timestamp { font-size: 0.7rem; opacity: 0.6; text-align: right; }
 </style>
 </head>
 <body>
 <div class="app">
-  <aside class="sidebar open" id="sidebar">
+  <aside class="sidebar">
     <div class="brand">LGU 3 ADMIN SYSTEM</div>
     <nav>
       <a href="admindashboard.html" class="nav-item active">Dashboard</a>
@@ -125,247 +105,181 @@ th { font-size: .85rem; opacity: .7; }
       <a href="admininspection.html" class="nav-item">Inspection and Compliance</a>
       <a href="reports.html" class="nav-item">Reports and Dashboard with AI Analytic</a>
       <a href="adminsettings.html" class="nav-item">Settings</a>
-      <a href="main.html" class="nav-item logout-btn" style="margin-top: 2rem; font-weight: bold;">Logout</a>
+      <a href="main.html" class="nav-item" style="margin-top:2rem;font-weight:bold;">Logout</a>
     </nav>
   </aside>
 
- <section class="main">
+  <section class="main">
     <header class="topbar">
-      <div style="display:flex; align-items:center; gap:0.5rem;">
-        <button class="btn" id="backBtn">← Back</button>
-          </div>
-      <div>
-        <button class="btn" id="exportBtn">Export</button>
-      </div>
+      <button class="btn" id="backBtn">← Back</button>
+      <button class="btn">Export</button>
     </header>
 
-   <div class="content" id="contentArea">
-  <h1>Dashboard</h1>
+    <div class="content">
+      <h1>Dashboard</h1>
 
-  <div class="grid card-grid">
-    <div class="card blue1"><h3>Price Variance / Cost Savings</h3><p>₱12,500</p><small>+8% vs last month</small></div>
-    <div class="card blue2"><h3>Defect Rate / Compliance Score</h3><p>2%</p><small>-1 pt</small></div>
-    <div class="card blue3"><h3>Vendor Performance Score</h3><p>87/100</p><small>Stable</small></div>
-  </div>
+    
+      <div class="grid">
+        <div class="card blue1"><h3>Price Variance / Cost Savings</h3><p>₱12,500</p><small>+8% vs last month</small></div>
+        <div class="card blue2"><h3>Defect Rate / Compliance Score</h3><p>2%</p><small>-1 pt</small></div>
+        <div class="card blue3"><h3>Vendor Performance Score</h3><p>87/100</p><small>Stable</small></div>
+      </div>
 
- <div class="card chart-container">
-  <h3>Price Chain Flow (Last 6 Weeks)</h3>
-  <canvas id="pipelineChart"></canvas>
+   
+      <div class="card chart-container">
+        <h3>Price Chain Flow (Last 6 Weeks)</h3>
+        <canvas id="pipelineChart"></canvas>
+      </div>
+
+   
+      <div class="card" style="margin-top:1.5rem;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <h3>Registered Vendors</h3>
+          🔎 <input id="searchInput" type="search" placeholder="Search vendors…">
+        </div>
+        <table id="vendorEngagementsTable">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Contact No.</th>
+              <th>Nature of Business</th>
+              <th>Business Permit</th>
+              <th>Email</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <h2 style="margin-top:2rem;">Reports and Dashboard with AI Analytic</h2>
+
+      <div class="grid">
+        <div class="card">
+          <h3>Vendor Performance Dashboard</h3>
+          <canvas id="vendorChart"></canvas>
+        </div>
+
+        <div class="card">
+          <h3>Recent Complaints</h3>
+          <select id="complaintSelect" style="width:100%;padding:.4rem;">
+            <option value="">-- Select Complaint Ref No. --</option>
+          </select>
+          <button id="viewComplaintBtn" class="btn" style="margin-top:.5rem;">View Complaint</button>
+          <p id="complaintMessage" style="margin-top:.5rem;"></p>
+        </div>
+
+        <div class="card">
+          <h3>AI Chat Support</h3>
+          <div id="chatboxContainer" style="height:250px;overflow-y:auto;border:1px solid #ccc;padding:.5rem;border-radius:8px;"></div>
+          <div style="display:flex;gap:.5rem;margin-top:.5rem;">
+            <input id="chatInput" type="text" placeholder="Type your question..." style="flex:1;padding:.4rem;">
+            <button id="chatSendBtn" class="btn">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 </div>
-     
-  <div class="card" style="margin-top:1.5rem;">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
-      <h3>Registered Vendors</h3>
-      <div class="search">
-        🔎 <input id="searchInput" type="search" placeholder="Search vendors…">
-      </div>
-    </div>
-    <table id="vendorEngagementsTable">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Contact No.</th>
-        <th>Nature of Business</th>
-        <th>Business Permit</th>
-        <th>Email</th>
-        <th>Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Gacusan, Aira Jane</td>
-        <td>0912-345-6789</td>
-        <td>Takoyaki Store</td>
-        <td>BP-00123</td>
-        <td>aira.gacusan@example.com</td>
-        <td style="color:green; font-weight:600;">✔ Accepted</td>
-      </tr>
-      <tr>
-        <td>Furigay, Neri Jane</td>
-        <td>0923-456-7890</td>
-        <td>Sound Equipment</td>
-        <td>BP-00456</td>
-        <td>neri.furigay@example.com</td>
-        <td style="color:red; font-weight:600;">✖ Declined</td>
-      </tr>
-      <tr>
-        <td>Pena, Rona Mae</td>
-        <td>0934-567-8901</td>
-        <td>Tables and Chairs Rental</td>
-        <td>BP-00789</td>
-        <td>rona.pena@example.com</td>
-        <td style="color:green; font-weight:600;">✔ Accepted</td>
-      </tr>
-      <tr>
-        <td>Dacoco, Jonathan</td>
-        <td>0945-678-9012</td>
-        <td>Atan’s Meat Shop</td>
-        <td>BP-00999</td>
-        <td>jonathan.dacoco@example.com</td>
-        <td style="color:red; font-weight:600;">✖ Declined</td>
-      </tr>
-    </tbody>
-  </table>
-<div class="content">
 
-  <div class="grid">
-    <div class="card">
-      <h3>Vendor Performance Dashboard</h3>
-      <canvas id="vendorChart" height="120"></canvas>
-    </div>
-
-    <div class="card">
-      <h3>Recent Complaints</h3>
-      <div id="complaintsContainer" style="display:none;">
-        <p id="complaintMessage" style="background:#fce8b2;padding:.5rem;border-radius:6px;"></p>
-      </div>
-      <select id="complaintSelect" style="margin-top:.5rem;width:100%;padding:.4rem;">
-        <option value="">-- Select Complaint Ref No. --</option>
-      </select>
-      <button id="viewComplaintBtn" class="btn" style="margin-top:.5rem;">View Complaint</button>
-    </div>
-
-    <div class="card">
-      <h3>AI Chat Support</h3>
-      <div id="chatboxContainer" style="
-           border:1px solid #ccc;
-           padding:10px;
-           border-radius:8px;
-           height:300px;
-           overflow-y:auto;
-           display:flex;
-           flex-direction:column;
-           gap:.5rem;
-           background:#f9f9f9;"></div>
-      <div style="margin-top:.5rem;display:flex;gap:.5rem;">
-        <input id="chatInput" type="text" placeholder="Type your question..." style="flex:1;padding:.5rem;border:1px solid #ccc;border-radius:6px;">
-        <button id="chatSendBtn" class="btn">Send</button>
-      </div>
-    </div>
-  </div>
 <script>
 const STORAGE_KEYS = { vendors: "vendor_engagements" };
-let pipelineChart = null;
-  
+
+
 if (!localStorage.getItem(STORAGE_KEYS.vendors)) {
   localStorage.setItem(STORAGE_KEYS.vendors, JSON.stringify([
-    { name: "Gacusan, Aira Jane", contact: "0912-345-6789", business: "Takoyaki Store", permit: "BP-00123", email:"aira.gacusan@example.com", status:"Accepted" },
-    { name: "Furigay, Neri Jane", contact: "0923-456-7890", business: "Sound Equipment", permit: "BP-00456", email:"neri.furigay@example.com", status:"Declined" },
-    { name: "Pena, Rona Mae", contact: "0934-567-8901", business: "Tables and Chairs Rental", permit: "BP-00789", email:"rona.pena@example.com", status:"Accepted" },
-    { name: "Dacoco, Jonathan", contact: "0945-678-9012", business: "Atan’s Meat Shop", permit: "BP-00999", email:"jonathan.dacoco@example.com", status:"Declined" }
+    { name:"Gacusan, Aira Jane", contact:"0912-345-6789", business:"Takoyaki Store", permit:"BP-00123", email:"aira.gacusan@example.com", status:"Accepted" },
+    { name:"Furigay, Neri Jane", contact:"0923-456-7890", business:"Sound Equipment", permit:"BP-00456", email:"neri.furigay@example.com", status:"Declined" },
+    { name:"Pena, Rona Mae", contact:"0934-567-8901", business:"Tables and Chairs Rental", permit:"BP-00789", email:"rona.pena@example.com", status:"Accepted" },
+    { name:"Dacoco, Jonathan", contact:"0945-678-9012", business:"Atan’s Meat Shop", permit:"BP-00999", email:"jonathan.dacoco@example.com", status:"Declined" }
   ]));
 }
-  
-function initPipelineChart() {
-  const ctx = document.getElementById("pipelineChart").getContext("2d");
-  if (pipelineChart) pipelineChart.destroy();
 
-  pipelineChart = new Chart(ctx, {
-    type: "line",
-    data: {
-      labels: ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5", "Week 6"],
-      datasets: [{
-        label: "Deliveries",
-        data: [5, 8, 6, 10, 7, 9],
-        borderColor: "#0a53c1",
-        backgroundColor: "rgba(10,83,193,0.2)",
-        fill: true,
-        tension: 0.3
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        y: { beginAtZero: true },
-        x: { grid: { display: false } }
-      }
-    }
-  });
-} 
 
 function loadVendors() {
-  const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
+  const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors));
   const tbody = document.querySelector("#vendorEngagementsTable tbody");
   tbody.innerHTML = "";
-
-  if (!vendors || vendors.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#777;">No vendor records found.</td></tr>`;
-    return;
-  }
-
-   vendors.forEach(v => {
-      const row = document.createElement("tr");
-      const statusClass = v.status === "Approved" ? "status-approved" : "status-declined";
-      row.innerHTML = `
-        <td>${v.name}</td>
-        <td>${v.contact}</td>
-        <td>${v.nature}</td>
-        <td>${v.permit}</td>
-        <td>${v.email}</td>
-        <td class="${statusClass}">${v.status}</td>
-      `;
-      tbody.appendChild(row);
-    });
-  }
-function makeTableEditable() {
-  const tbody = document.querySelector("#vendorEngagementsTable tbody");
-
-  tbody.addEventListener("dblclick", (e) => {
-    const cell = e.target;
-    if (cell.tagName.toLowerCase() === "td" && cell.cellIndex !== 5 && !cell.isContentEditable) {
-      cell.contentEditable = true;
-      cell.focus();
-
-      cell.addEventListener("blur", () => {
-        cell.contentEditable = false;
-        saveTableChanges();
-      }, { once: true });
-    }
+  vendors.forEach(v => {
+    const tr = document.createElement("tr");
+    const cls = v.status==="Accepted" ? "status-approved" : "status-declined";
+    tr.innerHTML = `
+      <td>${v.name}</td>
+      <td>${v.contact}</td>
+      <td>${v.business}</td>
+      <td>${v.permit}</td>
+      <td>${v.email}</td>
+      <td class="${cls}">${v.status}</td>
+    `;
+    tbody.appendChild(tr);
   });
 }
-function initComplaints() { const container = document.getElementById("complaintsContainer"); const message = document.getElementById("complaintMessage"); const select = document.getElementById("complaintSelect"); const viewBtn = document.getElementById("viewComplaintBtn"); let defaultComplaints = { "RPT-001": "Vendor delayed chicken delivery", "RPT-002": "Incomplete Takoyaki supplies", "RPT-003": "Catering delivery arrived late", "RPT-004": "Rental items missing on arrival" }; let complaints = JSON.parse(localStorage.getItem("complaints")); const isValid = complaints && Object.keys(complaints).some(k => k.startsWith("RPT-")); if (!isValid) { complaints = defaultComplaints; localStorage.setItem("complaints", JSON.stringify(complaints)); } select.innerHTML = <option value="">-- Select Complaint Ref No. --</option>; Object.keys(complaints).forEach(ref => { const opt = document.createElement("option"); opt.value = ref; opt.textContent = ref; select.appendChild(opt); }); container.innerHTML = ""; container.style.display = "none"; viewBtn.onclick = () => { const ref = select.value; if (ref && complaints[ref]) { container.innerHTML = ""; const keys = Object.keys(complaints); const number = keys.indexOf(ref) + 1; const p = document.createElement("p"); p.style.background = "#fce8b2"; p.style.padding = ".5rem"; p.style.borderRadius = "6px"; p.style.marginBottom = ".5rem"; p.textContent = ${number}. (${ref}) ${complaints[ref]}; container.appendChild(p); container.style.display = "block"; message.textContent = ${number}. (${ref}) ${complaints[ref]}; } else { alert("Please select a complaint Ref No. first."); } }; } function initReports() { const ctx = document.getElementById("vendorChart"); if (ctx) { new Chart(ctx, { type: "bar", data: { labels: ["Takoyaki", "Meat Shop", "Catering", "Rental"], datasets: [{ label: "Performance", data: [87, 65, 72, 90], backgroundColor: "#0a53c1" }] }, options: { responsive: true, scales: { y: { beginAtZero:true, max:100 } } } }); } const chatBox = document.getElementById("chatboxContainer"); const chatInput = document.getElementById("chatInput"); const chatSendBtn = document.getElementById("chatSendBtn"); function addMessage(sender, text) { const div = document.createElement("div"); const time = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}); div.className = chat-message ${sender==="You"?"chat-user":"chat-bot"}; div.innerHTML = ${text}<div class="chat-timestamp">${time}</div>; chatBox.appendChild(div); chatBox.scrollTop = chatBox.scrollHeight; } function botReply(msg) { msg = msg.toLowerCase(); if(msg.includes("status")) return "📊 Current reports show most vendors are on track, with 2 pending complaints."; if(msg.includes("performance")) return "✅ Vendor performance is averaging 85%, with rentals leading at 90%."; if(msg.includes("complaint")) return "⚠️ There are 4 active complaints. Select a Ref No. to view details."; if(msg.includes("hello")||msg.includes("hi")) return "👋 Hello! How can I assist you today?"; return "🤖 Sorry, I don’t have an answer for that. Try asking about 'status', 'performance', or 'complaints'."; } chatSendBtn.onclick = () => { const text = chatInput.value.trim(); if(text){ addMessage("You", text); setTimeout(()=>addMessage("Bot", botReply(text)),500); chatInput.value=""; } }; chatInput.addEventListener("keypress", e=>{ if(e.key==="Enter") chatSendBtn.click(); }); } window.onload = () => { document.getElementById("adminName").textContent = localStorage.getItem("adminName") || "Admin"; initReports(); initComplaints(); };
-function saveTableChanges() {
-  const tbody = document.querySelector("#vendorEngagementsTable tbody");
-  const rows = tbody.querySelectorAll("tr");
 
-  const vendors = Array.from(rows).map(row => {
-    const cells = row.querySelectorAll("td");
-    return {
-      name: cells[0].innerText.trim(),
-      contact: cells[1].innerText.trim(),
-      business: cells[2].innerText.trim(),
-      permit: cells[3].innerText.trim(),
-      email: cells[4].innerText.trim(),
-      status: cells[5].innerText.includes("✔") ? "Accepted" : "Declined"
-    };
-  });
-  
-  localStorage.setItem(STORAGE_KEYS.vendors, JSON.stringify(vendors));
-}
-document.addEventListener("DOMContentLoaded", () => {
-  const searchInput = document.getElementById("searchInput");
-  searchInput.addEventListener("keyup", function() {
-    const filter = this.value.toLowerCase();
-    document.querySelectorAll("#vendorEngagementsTable tbody tr").forEach(r => {
-      r.style.display = r.innerText.toLowerCase().includes(filter) ? "" : "none";
-    });
+
+document.getElementById("searchInput").addEventListener("keyup", function() {
+  const filter = this.value.toLowerCase();
+  document.querySelectorAll("#vendorEngagementsTable tbody tr").forEach(r=>{
+    r.style.display = r.innerText.toLowerCase().includes(filter) ? "" : "none";
   });
 });
-document.getElementById("backBtn").addEventListener("click", () => {
-  if (document.referrer) {
-    window.history.back();
-  } else {
-    window.location.href = "admindashboard.html";
+
+
+new Chart(document.getElementById("pipelineChart"), {
+  type:"line",
+  data:{
+    labels:["Week 1","Week 2","Week 3","Week 4","Week 5","Week 6"],
+    datasets:[{data:[5,8,6,10,7,9],borderColor:"#0a53c1",fill:true}]
   }
 });
-  
-window.onload = () => {
-  initPipelineChart();
-  loadVendors();
-  makeTableEditable(); 
+
+new Chart(document.getElementById("vendorChart"), {
+  type:"bar",
+  data:{
+    labels:["Takoyaki","Meat Shop","Catering","Rental"],
+    datasets:[{data:[87,65,72,90],backgroundColor:"#0a53c1"}]
+  },
+  options:{scales:{y:{beginAtZero:true,max:100}}}
+});
+
+
+const complaints = {
+  "RPT-001":"Vendor delayed chicken delivery",
+  "RPT-002":"Incomplete Takoyaki supplies",
+  "RPT-003":"Catering delivery arrived late",
+  "RPT-004":"Rental items missing on arrival"
 };
+const select = document.getElementById("complaintSelect");
+Object.keys(complaints).forEach(ref=>{
+  const opt=document.createElement("option");
+  opt.value=ref; opt.textContent=ref;
+  select.appendChild(opt);
+});
+document.getElementById("viewComplaintBtn").onclick=()=>{
+  const ref=select.value;
+  document.getElementById("complaintMessage").textContent = complaints[ref] || "";
+};
+
+
+function addMessage(sender,text){
+  const div=document.createElement("div");
+  div.className="chat-message "+(sender==="user"?"chat-user":"chat-bot");
+  div.innerHTML=text;
+  document.getElementById("chatboxContainer").appendChild(div);
+}
+document.getElementById("chatSendBtn").onclick=()=>{
+  const input=document.getElementById("chatInput");
+  const msg=input.value.trim();
+  if(!msg) return;
+  addMessage("user",msg);
+  let reply="🤖 Ask about status, performance, or complaints.";
+  if(msg.includes("status")) reply="Most vendors are performing well.";
+  if(msg.includes("performance")) reply="Average vendor performance is 85%.";
+  if(msg.includes("complaint")) reply="There are 4 active complaints.";
+  setTimeout(()=>addMessage("bot",reply),400);
+  input.value="";
+};
+
+loadVendors();
 </script>
 </body>
 </html>
