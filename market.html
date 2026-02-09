@@ -1,135 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Dashboard</title>
 
 <style>
 :root {
-  --text: #111;
-  --border: #e6e8eb;
-  --shadow: 0 6px 24px rgba(0,0,0,.06);
+  --border:#e6e8eb;
+  --shadow:0 6px 24px rgba(0,0,0,.06);
 }
 
-* { box-sizing: border-box; }
+*{box-sizing:border-box;}
 
-body {
-  margin: 0;
-  font-family: Inter, system-ui, sans-serif;
-  background: #fff;
-  color: var(--text);
+body{
+  margin:0;
+  font-family:Inter,system-ui,sans-serif;
+  background:#fff;
 }
 
-.app {
-  display: grid;
-  grid-template-columns: 240px 1fr;
-  min-height: 100vh;
+.app{
+  display:grid;
+  grid-template-columns:240px 1fr;
+  min-height:100vh;
 }
 
 /* SIDEBAR */
-.sidebar {
-  background: #4e73df;
-  color: white;
+.sidebar{
+  background:#4e73df;
+  color:white;
 }
 
-.brand {
-  font-weight: 800;
-  padding: 1rem;
-  border-bottom: 1px solid rgba(255,255,255,.2);
+.brand{
+  padding:1rem;
+  font-weight:800;
+  border-bottom:1px solid rgba(255,255,255,.2);
 }
 
-nav { padding: 1rem; }
+nav{padding:1rem;}
 
-.nav-item {
-  display: block;
-  padding: .6rem;
-  border-radius: 8px;
-  text-decoration: none;
-  color: white;
+.nav-item{
+  display:block;
+  padding:.6rem;
+  color:white;
+  text-decoration:none;
+  border-radius:8px;
 }
 
 .nav-item:hover,
-.nav-item.active {
-  background: rgba(255,255,255,.2);
+.nav-item.active{
+  background:rgba(255,255,255,.2);
 }
 
 /* MAIN */
-.main {
-  display: grid;
-  grid-template-rows: 64px 1fr;
+.main{
+  display:grid;
+  grid-template-rows:64px 1fr;
 }
 
-.topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 1rem;
-  border-bottom: 1px solid var(--border);
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 1rem;
+  border-bottom:1px solid var(--border);
 }
 
-.btn {
-  border: 1px solid var(--text);
-  background: transparent;
-  padding: .4rem .8rem;
-  border-radius: 8px;
-  cursor: pointer;
+.btn{
+  padding:.4rem .8rem;
+  border:1px solid black;
+  background:white;
+  border-radius:8px;
+  cursor:pointer;
 }
 
-.content {
-  padding: 1rem;
-  overflow: auto;
+.content{
+  padding:1rem;
+  overflow:auto;
 }
 
-/* MAP CONTAINER */
-.map-container {
-  position: relative;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  box-shadow: var(--shadow);
-  overflow: hidden;
+/* MARKET MAP */
+.market-map{
+  border:1px solid var(--border);
+  border-radius:12px;
+  box-shadow:var(--shadow);
+  padding:20px;
 }
 
-.map-container img {
-  width: 100%;
-  display: block;
+/* SECTION */
+.section{
+  margin-bottom:40px;
 }
 
-/* SECTION OVERLAYS */
-.section-label {
-  position: absolute;
-  padding: 10px 15px;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.3s ease;
+.section h3{
+  margin-bottom:10px;
 }
 
-.wet {
-  background: rgba(0, 123, 255, 0.8);
-  color: white;
-  top: 30%;
-  left: 20%;
+.wet-section{
+  background:#e3f2fd;
+  padding:20px;
+  border-radius:12px;
 }
 
-.dry {
-  background: rgba(40, 167, 69, 0.85);
-  color: white;
-  top: 65%;
-  left: 40%;
+.dry-section{
+  background:#e8f5e9;
+  padding:20px;
+  border-radius:12px;
 }
 
-.section-label:hover {
-  transform: scale(1.05);
+/* STALL GRID */
+.stalls{
+  display:grid;
+  grid-template-columns:repeat(10, 1fr);
+  gap:10px;
+}
+
+.stall{
+  height:50px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:6px;
+  font-weight:600;
+  cursor:pointer;
+  color:white;
+}
+
+.available{
+  background:#28a745;
+}
+
+.occupied{
+  background:#dc3545;
 }
 
 /* INFO BOX */
-.info-box {
-  margin-top: 1rem;
-  padding: 1rem;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  box-shadow: var(--shadow);
+.info-box{
+  margin-top:20px;
+  padding:15px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  box-shadow:var(--shadow);
 }
 </style>
 </head>
@@ -138,85 +149,128 @@ nav { padding: 1rem; }
 
 <div class="app">
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="brand">LGU 3 ADMIN SYSTEM</div>
-    <nav>
-      <a href="#" class="nav-item active">Dashboard</a>
-      <a href="#" class="nav-item">Vendor Management</a>
-      <a href="#" class="nav-item">Commodity Monitoring</a>
-      <a href="#" class="nav-item">Inspection</a>
-      <a href="#" class="nav-item">Reports</a>
-      <a href="#" class="nav-item">Settings</a>
-      <a href="#" class="nav-item" style="margin-top:2rem;font-weight:bold;">Logout</a>
-    </nav>
-  </aside>
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="brand">LGU 3 ADMIN SYSTEM</div>
+  <nav>
+    <a href="#" class="nav-item active">Dashboard</a>
+    <a href="#" class="nav-item">Vendor Management</a>
+    <a href="#" class="nav-item">Commodity Monitoring</a>
+    <a href="#" class="nav-item">Inspection</a>
+    <a href="#" class="nav-item">Reports</a>
+    <a href="#" class="nav-item">Settings</a>
+    <a href="#" class="nav-item" style="margin-top:2rem;font-weight:bold;">Logout</a>
+  </nav>
+</aside>
 
-  <!-- MAIN -->
-  <section class="main">
+<!-- MAIN -->
+<section class="main">
 
-    <header class="topbar">
-      <button class="btn">← Back</button>
-      <button class="btn">Export</button>
-    </header>
+<header class="topbar">
+  <button class="btn" onclick="showAnalytics()">AI Analytics</button>
+</header>
 
-    <div class="content">
+<div class="content">
 
-      <h2>Public Market Blueprint</h2>
+<h2>Public Market Layout</h2>
 
-      <!-- MAP -->
-      <div class="map-container">
-        <img src="/mnt/data/Messenger_creation_0D91EB5E-B5A0-45C0-B80A-DC3D7F8AEED0.jpeg" alt="Market Blueprint">
+<div class="market-map">
 
-        <!-- Clickable Sections -->
-        <div class="section-label wet" onclick="showSection('wet')">
-          Wet Market Section
-        </div>
+  <!-- WET SECTION -->
+  <div class="section wet-section">
+    <h3>Wet Market Section (Fish, Meat, Vegetables)</h3>
+    <div class="stalls" id="wetStalls"></div>
+  </div>
 
-        <div class="section-label dry" onclick="showSection('dry')">
-          Dry Goods Section
-        </div>
-      </div>
+  <!-- DRY SECTION -->
+  <div class="section dry-section">
+    <h3>Dry Goods Section (Textile, Grocery, Dry Goods)</h3>
+    <div class="stalls" id="dryStalls"></div>
+  </div>
 
-      <!-- Info Display -->
-      <div class="info-box" id="infoBox">
-        Click a section on the map to view details.
-      </div>
+</div>
 
-    </div>
+<div class="info-box" id="infoBox">
+Click a stall to see details.
+</div>
 
-  </section>
+</div>
+</section>
 </div>
 
 <script>
-function showSection(type) {
-  const box = document.getElementById("infoBox");
 
-  if (type === "wet") {
-    box.innerHTML = `
-      <h3>Wet Market Area</h3>
-      <p>Includes:</p>
-      <ul>
-        <li>Fish Section</li>
-        <li>Meat Section</li>
-        <li>Vegetable Stalls</li>
-      </ul>
-      <p>Status: Active Monitoring Enabled</p>
-    `;
-  }
+/* SAMPLE STALL DATABASE */
+const wetStallsData = [
+  {id:1,status:"Occupied"},
+  {id:2,status:"Available"},
+  {id:3,status:"Occupied"},
+  {id:4,status:"Available"},
+  {id:5,status:"Available"},
+  {id:6,status:"Occupied"},
+  {id:7,status:"Available"},
+  {id:8,status:"Available"},
+  {id:9,status:"Occupied"},
+  {id:10,status:"Available"}
+];
 
-  if (type === "dry") {
-    box.innerHTML = `
-      <h3>Dry Goods Area</h3>
-      <p>Includes:</p>
-      <ul>
-        <li>Textile Section</li>
-        <li>Grocery Section</li>
-        <li>Dry Goods Stalls</li>
-      </ul>
-      <p>Status: Compliance Tracking Active</p>
-    `;
-  }
+const dryStallsData = [
+  {id:11,status:"Available"},
+  {id:12,status:"Occupied"},
+  {id:13,status:"Available"},
+  {id:14,status:"Available"},
+  {id:15,status:"Occupied"},
+  {id:16,status:"Available"},
+  {id:17,status:"Available"},
+  {id:18,status:"Occupied"},
+  {id:19,status:"Available"},
+  {id:20,status:"Available"}
+];
+
+/* GENERATE STALLS */
+function renderStalls(data, containerId, section){
+  const container=document.getElementById(containerId);
+
+  data.forEach(stall=>{
+    const div=document.createElement("div");
+    div.classList.add("stall");
+    div.classList.add(stall.status==="Occupied" ? "occupied":"available");
+    div.innerText=stall.id;
+
+    div.onclick=function(){
+      document.getElementById("infoBox").innerHTML=
+      `<h3>Stall #${stall.id}</h3>
+       <p><strong>Section:</strong> ${section}</p>
+       <p><strong>Status:</strong> ${stall.status}</p>`;
+    };
+
+    container.appendChild(div);
+  });
+}
+
+renderStalls(wetStallsData,"wetStalls","Wet Market");
+renderStalls(dryStallsData,"dryStalls","Dry Goods");
+
+/* AI ANALYTICS */
+function showAnalytics(){
+  const total = wetStallsData.length + dryStallsData.length;
+  const occupied =
+    wetStallsData.filter(s=>s.status==="Occupied").length +
+    dryStallsData.filter(s=>s.status==="Occupied").length;
+
+  const available = total - occupied;
+
+  document.getElementById("infoBox").innerHTML =
+  `<h3>AI Market Analytics</h3>
+   <p>Total Stalls: ${total}</p>
+   <p>Occupied: ${occupied}</p>
+   <p>Available: ${available}</p>
+   <hr>
+   <p><strong>Insight:</strong> ${
+     occupied > available
+     ? "High occupancy rate. Consider expansion planning."
+     : "There are multiple available stalls. Vendor recruitment recommended."
+   }</p>`;
 }
 </script>
 
