@@ -4,292 +4,344 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Admin Dashboard - Barangay Market Map</title>
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 :root {
   --text: #111;
   --blue: #0a53c1;
-  --wet: #e6f2ff;
-  --dry: #fff8e6;
+  --white: #fff;
   --border: #e6e8eb;
   --shadow: 0 6px 24px rgba(0,0,0,.06);
+  --wet: #e6f2ff;
+  --dry: #fff8e6;
+  --walkway: #f4f6f8;
 }
 
+/* GLOBAL */
 *{box-sizing:border-box;}
 body{
   margin:0;
   font-family:Inter,system-ui,sans-serif;
-  background:#fff;
+  background:var(--white);
   color:var(--text);
 }
 
-/* LAYOUT */
+/* APP LAYOUT */
 .app{display:grid;grid-template-columns:240px 1fr;min-height:100vh;}
-.sidebar{background:#4e73df;color:#fff;}
-.brand{padding:1rem;font-weight:800;}
+.sidebar{
+  border-right:1px solid var(--border);
+  background:#4e73df;
+}
+.brand{font-weight:800;text-transform:uppercase;padding:1rem;border-bottom:1px solid var(--border);color:#fff;}
 nav{padding:1rem;}
-.nav-item{display:block;color:#fff;padding:.6rem;border-radius:6px;text-decoration:none;margin-bottom:5px;}
-.nav-item:hover{background:#fff;color:#0a53c1;}
-
+.nav-item{display:block;padding:.6rem;border-radius:8px;text-decoration:none;color:#fff;margin-bottom:5px;}
+.nav-item:hover, .nav-item.active{background:var(--white); color:var(--blue);}
 .main{display:grid;grid-template-rows:64px 1fr;}
-.topbar{display:flex;justify-content:space-between;align-items:center;padding:0 1rem;border-bottom:1px solid var(--border);}
-.btn{border:1px solid #111;background:none;padding:.4rem .8rem;border-radius:6px;cursor:pointer;}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 1rem;border-bottom:1px solid var(--border);}
+.btn{border:1px solid var(--text);background:transparent;padding:.4rem .8rem;border-radius:8px;cursor:pointer;}
+.content{padding:1rem;overflow:auto;}
 
-.content{padding:20px;overflow:auto;}
-
-h1{color:var(--blue);margin-bottom:15px;}
+h1{color:var(--blue);margin-bottom:10px;}
 
 /* MARKET MAP */
 .market-map{
-  border:3px solid var(--blue);
+  border:2px solid var(--blue);
   border-radius:12px;
-  padding:20px;
-  box-shadow:var(--shadow);
-  min-width:1100px;
-}
-
-/* ZONES */
-.zone{
   padding:15px;
-  border-radius:12px;
-  margin-bottom:20px;
+  background:var(--white);
+  box-shadow:var(--shadow);
+  overflow:auto;
+  min-width:1000px;
 }
 
-.wet-zone{
-  background:var(--wet);
-  border:2px solid #b3d7ff;
-}
-
-.dry-zone{
-  background:var(--dry);
-  border:2px solid #ffe49d;
-}
-
-.zone-title{
-  font-weight:bold;
-  font-size:16px;
-  margin-bottom:10px;
-}
-
-/* PASSAGEWAYS */
-.passage-horizontal{
+/* WALKWAYS */
+.walkway{
   text-align:center;
-  padding:8px;
   font-weight:bold;
-  background:#f4f6f8;
+  padding:8px;
   margin:10px 0;
   border-radius:6px;
+  background:var(--walkway);
+  color:#333;
 }
 
-.center-entrance{
+/* ENTRANCE / EXIT */
+.entrance{
   text-align:center;
-  background:#d9edf7;
-  padding:12px;
   font-weight:bold;
-  border-radius:8px;
-  margin-top:15px;
+  color:green;
+  margin-top:10px;
+}
+.exit{
+  text-align:center;
+  font-weight:bold;
+  color:red;
+  margin-top:10px;
 }
 
 /* SECTION ROW */
 .section-row{
   display:flex;
-  gap:30px;
+  gap:20px;
+  margin-bottom:15px;
 }
 
 /* SECTION */
 .section{
-  background:#fff;
-  padding:10px;
-  border-radius:10px;
   border:1px dashed #ccc;
+  padding:8px;
+  border-radius:8px;
+  background:#fafafa;
 }
-
 .section-title{
-  font-weight:bold;
   font-size:13px;
-  margin-bottom:8px;
+  font-weight:bold;
+  margin-bottom:6px;
 }
 
 /* STALL GRID */
 .stall-grid{
   display:grid;
-  grid-template-columns:repeat(10, 34px);
-  gap:5px;
+  grid-template-columns:repeat(10, 32px);
+  gap:4px;
 }
 
+/* STALL STYLE */
 .stall{
-  width:34px;
-  height:34px;
+  width:32px;
+  height:32px;
+  border:1px solid #999;
+  border-radius:4px;
   font-size:10px;
   display:flex;
   align-items:center;
   justify-content:center;
-  border-radius:4px;
-  border:1px solid #999;
   cursor:pointer;
   transition:.15s;
 }
-
 .stall:hover{transform:scale(1.1);}
+.stall.active{background:var(--blue) !important;color:#fff;}
 
-/* Colors */
-.fish{background:#cce5ff;}
-.meat{background:#ffd6d6;}
-.drygoods{background:#fff3cd;}
-.grocery{background:#d4edda;}
-.textile{background:#e2d9ff;}
-.carinderia{background:#ffe0f0;}
+/* SECTION COLORS */
+.fish{ background:#d0e7ff; }
+.meat{ background:#ffd6d6; }
+.grocery{ background:#d4edda; }
+.drygoods{ background:#fff3cd; }
+.textile{ background:#e2d9ff; }
+.carinderia{ background:#ffe0f0; }
 
-/* Status */
+/* OCCUPANCY */
 .occupied{border:2px solid var(--blue);}
-.vacant{opacity:.5;}
+.vacant{opacity:.6;}
 .violation{background:red;color:#fff;}
-.reserved{background:yellow;}
+.reserved{background:yellow;color:#111;}
 
+/* INFO PANEL */
 .info-panel{
   margin-top:15px;
   padding:12px;
+  border:1px solid var(--border);
+  border-radius:10px;
   background:#f4f6f8;
-  border-radius:8px;
+  font-size:14px;
+}
+
+/* LEGEND */
+.legend{
+  margin-top:12px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  font-size:12px;
+}
+.legend span{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.legend-box{
+  width:14px;
+  height:14px;
+  border-radius:3px;
+  border:1px solid #999;
 }
 </style>
 </head>
 <body>
 
 <div class="app">
-
   <aside class="sidebar">
     <div class="brand">LGU 3 ADMIN SYSTEM</div>
+    <nav>
+      <a href="admindashboard.html" class="nav-item active">Dashboard</a>
+      <a href="adminvendor.html" class="nav-item">Vendor Management</a>
+      <a href="admincommodity.html" class="nav-item">Commodity & Price Monitoring</a>
+      <a href="admininspection.html" class="nav-item">Inspection & Compliance</a>
+      <a href="reports.html" class="nav-item">Reports & AI Analytics</a>
+      <a href="adminsettings.html" class="nav-item">Settings</a>
+      <a href="main.html" class="nav-item" style="margin-top:2rem;font-weight:bold;">Logout</a>
+    </nav>
   </aside>
 
   <section class="main">
     <header class="topbar">
-      <button class="btn">← Back</button>
+      <button class="btn" id="backBtn">← Back</button>
       <button class="btn">Export</button>
     </header>
-
     <div class="content">
+      <div class="container">
+        <h1>Barangay Public Market Map</h1>
 
-      <h1>Barangay Public Market Map</h1>
+        <div class="search-box">
+          🔍 Search Stall No: 
+          <input type="text" id="searchStall" placeholder="e.g. 32">
+        </div>
 
-      <div class="market-map">
+        <div class="market-map">
 
-        <!-- WET ZONE -->
-        <div class="zone wet-zone">
-          <div class="zone-title">WET MARKET ZONE</div>
+          <!-- ENTRANCE -->
+          <div class="entrance">⬇ Entrance (Main Street)</div>
 
+          <!-- WET ZONE -->
+          <div class="walkway">WET MARKET ZONE</div>
           <div class="section-row">
             <div class="section">
               <div class="section-title">FISH SECTION</div>
               <div class="stall-grid" id="fishSection"></div>
             </div>
-
             <div class="section">
               <div class="section-title">MEAT SECTION</div>
               <div class="stall-grid" id="meatSection"></div>
             </div>
           </div>
-        </div>
 
-        <div class="passage-horizontal">MAIN PASSAGEWAY</div>
+          <div class="walkway">Main Walkway</div>
 
-        <!-- DRY ZONE -->
-        <div class="zone dry-zone">
-          <div class="zone-title">DRY MARKET ZONE</div>
-
+          <!-- DRY ZONE -->
+          <div class="walkway">DRY MARKET ZONE</div>
           <div class="section-row">
             <div class="section">
-              <div class="section-title">DRY GOODS</div>
+              <div class="section-title">DRY GOODS SECTION</div>
               <div class="stall-grid" id="drygoodsSection"></div>
             </div>
-
             <div class="section">
-              <div class="section-title">GROCERY</div>
+              <div class="section-title">GROCERY SECTION</div>
               <div class="stall-grid" id="grocerySection"></div>
             </div>
           </div>
 
-          <div class="passage-horizontal">INNER PASSAGEWAY</div>
+          <div class="walkway">Inner Walkway</div>
 
           <div class="section-row">
             <div class="section">
-              <div class="section-title">TEXTILE</div>
+              <div class="section-title">TEXTILE SECTION</div>
               <div class="stall-grid" id="textileSection"></div>
             </div>
-
             <div class="section">
-              <div class="section-title">CARINDERIA</div>
+              <div class="section-title">CARINDERIA SECTION</div>
               <div class="stall-grid" id="carinderiaSection"></div>
             </div>
           </div>
+
+          <!-- EXIT -->
+          <div class="exit">⬆ Exit (Back Street)</div>
+
         </div>
 
-        <div class="center-entrance">
-          ⬇ CENTER ENTRANCE PATHWAY (K-5th Street)
+        <div class="info-panel" id="stallInfo">
+          Click a stall to view vendor information.
         </div>
 
+        <div class="legend">
+          <span><div class="legend-box fish"></div> Fish</span>
+          <span><div class="legend-box meat"></div> Meat</span>
+          <span><div class="legend-box grocery"></div> Grocery</span>
+          <span><div class="legend-box drygoods"></div> Dry Goods</span>
+          <span><div class="legend-box textile"></div> Textile</span>
+          <span><div class="legend-box carinderia"></div> Carinderia</span>
+          <span><div class="legend-box" style="border:2px solid #0a53c1;"></div> Occupied</span>
+          <span><div class="legend-box" style="opacity:.6;"></div> Vacant</span>
+          <span><div class="legend-box" style="background:red;color:white;"></div> Violation</span>
+          <span><div class="legend-box" style="background:yellow;color:#111;"></div> Reserved</span>
+        </div>
       </div>
-
-      <div class="info-panel" id="stallInfo">
-        Click a stall to view vendor information.
-      </div>
-
     </div>
   </section>
 </div>
 
 <script>
 const KEY="barangay_market_vendors";
-
 if(!localStorage.getItem(KEY)){
-localStorage.setItem(KEY,JSON.stringify({
-32:{name:"Lily's Textile Stall",section:"Textile",status:"Occupied"},
-5:{name:"Pedro Fish Vendor",section:"Fish",status:"Occupied"},
-18:{name:"Maria Meat Shop",section:"Meat",status:"Occupied"},
-60:{name:"ABC Grocery",section:"Grocery",status:"Occupied"},
-77:{name:"Dry Goods Store",section:"Dry Goods",status:"Occupied"},
-90:{name:"Reserved Stall",section:"Textile",status:"Reserved"},
-15:{name:"Violation Stall",section:"Fish",status:"Violation"}
-}));
+  localStorage.setItem(KEY,JSON.stringify({
+    32:{name:"Lily's Textile Stall",section:"Textile",status:"Occupied"},
+    5:{name:"Pedro Fish Vendor",section:"Fish",status:"Occupied"},
+    18:{name:"Maria Meat Shop",section:"Meat",status:"Occupied"},
+    60:{name:"ABC Grocery",section:"Grocery",status:"Occupied"},
+    77:{name:"Dry Goods Store",section:"Dry Goods",status:"Occupied"},
+    90:{name:"Reserved Stall",section:"Textile",status:"Reserved"},
+    15:{name:"Violation Stall",section:"Fish",status:"Violation"}
+  }));
 }
-
 const vendors=JSON.parse(localStorage.getItem(KEY));
 
 function createStalls(containerId,start,end,className){
-const container=document.getElementById(containerId);
-for(let i=start;i<=end;i++){
-const div=document.createElement("div");
-div.className=`stall ${className}`;
-div.dataset.no=i;
-div.innerText=i;
+  const container=document.getElementById(containerId);
+  for(let i=start;i<=end;i++){
+    const div=document.createElement("div");
+    div.className=`stall ${className}`;
+    div.dataset.no=i;
+    div.innerText=i;
 
-if(vendors[i]){
-div.classList.add(vendors[i].status.toLowerCase());
-}else{
-div.classList.add("vacant");
+    if(vendors[i]){
+      div.classList.add(vendors[i].status.toLowerCase());
+    }else{
+      div.classList.add("vacant");
+    }
+
+    div.addEventListener("click",()=>{
+      document.querySelectorAll(".stall").forEach(s=>s.classList.remove("active"));
+      div.classList.add("active");
+      const vendor=vendors[i];
+      document.getElementById("stallInfo").innerHTML=vendor?`
+        <strong>${vendor.name}</strong><br>Stall No: ${i}<br>Section: ${vendor.section}<br>Status: ${vendor.status}`
+        : `<strong>Vacant Stall</strong><br>Stall No: ${i}<br>Status: Vacant`;
+    });
+
+    div.addEventListener("dblclick",()=>{
+      const name=prompt("Enter vendor name:", vendors[i]?.name||"");
+      const status=prompt("Enter status (Occupied, Vacant, Violation, Reserved):", vendors[i]?.status||"Vacant");
+      if(name){
+        vendors[i]={name, section:className, status};
+        localStorage.setItem(KEY,JSON.stringify(vendors));
+        div.classList.remove("vacant","occupied","violation","reserved");
+        div.classList.add(status.toLowerCase());
+        alert("Vendor updated!");
+      }
+    });
+
+    container.appendChild(div);
+  }
 }
 
-div.addEventListener("click",()=>{
-const vendor=vendors[i];
-document.getElementById("stallInfo").innerHTML=vendor?`
-<strong>${vendor.name}</strong><br>
-Stall No: ${i}<br>
-Section: ${vendor.section}<br>
-Status: ${vendor.status}
-`:`<strong>Vacant Stall</strong><br>Stall No: ${i}`;
-});
-
-container.appendChild(div);
-}
-}
-
+/* CREATE STALLS */
 createStalls("fishSection",1,20,"fish");
 createStalls("meatSection",21,40,"meat");
 createStalls("drygoodsSection",41,60,"drygoods");
 createStalls("grocerySection",61,80,"grocery");
 createStalls("textileSection",81,110,"textile");
 createStalls("carinderiaSection",111,130,"carinderia");
-</script>
 
+/* SEARCH */
+document.getElementById("searchStall").addEventListener("input", function(){
+  const value=this.value.trim();
+  document.querySelectorAll(".stall").forEach(s=>{
+    s.style.outline="none";
+    if(value && s.dataset.no===value){
+      s.scrollIntoView({behavior:"smooth", block:"center"});
+      s.style.outline="3px solid red";
+    }
+  });
+});
+</script>
 </body>
 </html>
