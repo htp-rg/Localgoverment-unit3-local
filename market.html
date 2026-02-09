@@ -102,21 +102,59 @@ h1{color:var(--blue);margin-bottom:10px}
 <script>
 
 /* =============================
-   MAP SETUP (Google-map style)
+   MAP SETUP
 ============================= */
 
 const mapWidth = 1600;
-const mapHeight = 900;
+const mapHeight = 1000;
 
 const map = L.map('marketMap',{
   crs:L.CRS.Simple,
   minZoom:-2,
-  maxZoom:3
+  maxZoom:3,
+  zoomControl:true
 });
 
 const bounds = [[0,0],[mapHeight,mapWidth]];
-L.rectangle(bounds,{color:"#ccc",weight:1}).addTo(map);
 map.fitBounds(bounds);
+
+
+/* =============================
+   MARKET LAYOUT (REAL ZONES)
+============================= */
+
+// WET SECTION BACKGROUND
+const wetZone = L.rectangle([[50,100],[400,1500]],{
+  color:"#1d3557",
+  weight:2,
+  fillColor:"#d0e7ff",
+  fillOpacity:0.6
+}).addTo(map);
+
+// DRY SECTION BACKGROUND
+const dryZone = L.rectangle([[450,100],[950,1500]],{
+  color:"#2a9d8f",
+  weight:2,
+  fillColor:"#e9f7ef",
+  fillOpacity:0.6
+}).addTo(map);
+
+// Labels
+L.marker([80,120],{
+  icon: L.divIcon({
+    className:'',
+    html:'<h3 style="color:#1d3557;">WET SECTION</h3>',
+    iconSize:[200,40]
+  })
+}).addTo(map);
+
+L.marker([480,120],{
+  icon: L.divIcon({
+    className:'',
+    html:'<h3 style="color:#2a9d8f;">DRY SECTION</h3>',
+    iconSize:[200,40]
+  })
+}).addTo(map);
 
 
 /* =============================
@@ -134,18 +172,18 @@ const vendors = {
 };
 
 /* =============================
-   STATUS COLOR
+   STATUS COLORS
 ============================= */
 
 function getColor(status){
-  if(status==="Occupied") return "blue";
-  if(status==="Violation") return "red";
-  if(status==="Reserved") return "orange";
-  return "gray";
+  if(status==="Occupied") return "#0a53c1";
+  if(status==="Violation") return "#e63946";
+  if(status==="Reserved") return "#ffb703";
+  return "#adb5bd";
 }
 
 /* =============================
-   ADD STALL
+   CREATE STALL BLOCK (REAL SHAPE)
 ============================= */
 
 function addStall(no,x,y,section){
@@ -153,14 +191,17 @@ function addStall(no,x,y,section){
   const vendor = vendors[no];
   const status = vendor ? vendor.status : "Vacant";
 
-  const marker = L.circleMarker([y,x],{
-    radius:8,
+  const stall = L.rectangle([
+    [y, x],
+    [y+25, x+25]
+  ],{
     color:getColor(status),
+    weight:2,
     fillColor:getColor(status),
     fillOpacity:0.8
   }).addTo(map);
 
-  marker.on("click",()=>{
+  stall.on("click",()=>{
     document.getElementById("stallInfo").innerHTML = `
       <strong>Stall No:</strong> ${no}<br>
       <strong>Section:</strong> ${section}<br>
@@ -170,31 +211,46 @@ function addStall(no,x,y,section){
   });
 }
 
-/* =============================
-   WET SECTION (TOP AREA)
-============================= */
-for(let i=1;i<=20;i++){
-  addStall(i, 200 + (i*40), 200, "Fish");
-}
-for(let i=21;i<=40;i++){
-  addStall(i, 200 + ((i-20)*40), 300, "Meat");
-}
 
 /* =============================
-   DRY SECTION (BOTTOM AREA)
+   WET SECTION LAYOUT
 ============================= */
+
+// Fish Row
+for(let i=1;i<=20;i++){
+  addStall(i, 200 + (i*40), 150, "Fish");
+}
+
+// Meat Row
+for(let i=21;i<=40;i++){
+  addStall(i, 200 + ((i-20)*40), 250, "Meat");
+}
+
+
+/* =============================
+   DRY SECTION LAYOUT
+============================= */
+
+// Dry Goods
 for(let i=41;i<=60;i++){
-  addStall(i, 200 + ((i-40)*40), 500, "Dry Goods");
+  addStall(i, 200 + ((i-40)*40), 550, "Dry Goods");
 }
+
+// Grocery
 for(let i=61;i<=80;i++){
-  addStall(i, 200 + ((i-60)*40), 600, "Grocery");
+  addStall(i, 200 + ((i-60)*40), 650, "Grocery");
 }
+
+// Textile
 for(let i=81;i<=110;i++){
-  addStall(i, 200 + ((i-80)*30), 700, "Textile");
+  addStall(i, 200 + ((i-80)*30), 750, "Textile");
 }
+
+// Carinderia
 for(let i=111;i<=130;i++){
-  addStall(i, 200 + ((i-110)*40), 800, "Carinderia");
+  addStall(i, 200 + ((i-110)*40), 850, "Carinderia");
 }
+
 
 /* =============================
    LEGEND
@@ -204,11 +260,11 @@ const legend = L.control({position:"bottomright"});
 legend.onAdd=function(){
   const div=L.DomUtil.create("div","legend");
   div.innerHTML=`
-  <div><b>Legend</b></div>
-  <div><span class="box" style="background:blue"></span>Occupied</div>
-  <div><span class="box" style="background:gray"></span>Vacant</div>
-  <div><span class="box" style="background:red"></span>Violation</div>
-  <div><span class="box" style="background:orange"></span>Reserved</div>
+  <div><b>Status</b></div>
+  <div><span class="box" style="background:#0a53c1"></span>Occupied</div>
+  <div><span class="box" style="background:#adb5bd"></span>Vacant</div>
+  <div><span class="box" style="background:#e63946"></span>Violation</div>
+  <div><span class="box" style="background:#ffb703"></span>Reserved</div>
   <hr>
   <div><b>Wet Section</b>: Fish, Meat</div>
   <div><b>Dry Section</b>: Grocery, Dry Goods, Textile, Carinderia</div>
@@ -218,6 +274,7 @@ legend.onAdd=function(){
 legend.addTo(map);
 
 </script>
+
 
 </body>
 </html>
