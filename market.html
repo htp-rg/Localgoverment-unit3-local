@@ -3,15 +3,18 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Barangay Market Map</title>
+<title>Admin Dashboard - Barangay Market Map</title>
 <style>
 :root {
   --text: #111;
   --blue: #0a53c1;
   --white: #fff;
   --border: #e6e8eb;
+  --shadow: 0 6px 24px rgba(0,0,0,.06);
 
-  --walkway-color: #555;
+  --walkway-color: #555555;
+  --horizontal-walkway: #666666;
+
   --wet-color: #0a3d91;
   --dry-color: #ff8c00;
 }
@@ -51,14 +54,25 @@ h1{color:var(--blue);margin-bottom:10px;}
   box-shadow:0 6px 24px rgba(0,0,0,.06);
   overflow:auto;
   min-width:1000px;
-  display:grid;
-  grid-template-columns: auto 40px auto;
-  gap:20px;
-  justify-content:center;
-  position:relative;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  align-items:center;
 }
 
 /* WALKWAYS */
+.horizontal-walkway{
+  width:100%;
+  max-width:900px;
+  height:40px;
+  background:var(--horizontal-walkway);
+  border-radius:6px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  font-weight:bold;
+}
 .vertical-walkway{
   width:40px;
   background:var(--walkway-color);
@@ -68,19 +82,6 @@ h1{color:var(--blue);margin-bottom:10px;}
   justify-content:center;
   color:#fff;
   font-weight:bold;
-  grid-row:1 / span 7;
-  justify-self:center;
-}
-.horizontal-walkway{
-  height:40px;
-  background:var(--walkway-color);
-  border-radius:6px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#fff;
-  font-weight:bold;
-  grid-column:1 / span 3;
 }
 
 /* ENTRANCE / EXIT */
@@ -88,15 +89,23 @@ h1{color:var(--blue);margin-bottom:10px;}
   text-align:center;
   font-weight:bold;
   color:green;
-  margin-bottom:10px;
-  grid-column:2;
+  margin:10px 0;
 }
 .exit{
   text-align:center;
   font-weight:bold;
   color:red;
-  margin-top:10px;
-  grid-column:2;
+  margin:10px 0;
+}
+
+/* SECTION ROW */
+.section-row{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  margin:0 auto;
+  padding:0;
 }
 
 /* SECTION */
@@ -220,55 +229,59 @@ h1{color:var(--blue);margin-bottom:10px;}
 
         <div class="market-map">
 
-          <!-- Entrance -->
+          <!-- ENTRANCE -->
           <div class="entrance">🚪 Entrance</div>
 
-          <!-- Vertical walkway spanning all rows -->
-          <div class="vertical-walkway">↕</div>
+          <!-- Entrance vertical walkway connecting all horizontal walkways -->
+          <div class="vertical-walkway" style="height:60px;">WALK</div>
 
-          <!-- Fish Section -->
-          <div class="section fish-section">
-            <div class="section-title">FISH SECTION</div>
-            <div class="stall-grid" id="fishSection"></div>
+          <!-- Fish & Meat Section Row -->
+          <div class="section-row">
+            <div class="section fish-section">
+              <div class="section-title">FISH SECTION</div>
+              <div class="stall-grid" id="fishSection"></div>
+            </div>
+            <div class="vertical-walkway"></div>
+            <div class="section meat-section">
+              <div class="section-title">MEAT SECTION</div>
+              <div class="stall-grid" id="meatSection"></div>
+            </div>
           </div>
 
-          <!-- Meat Section -->
-          <div class="section meat-section">
-            <div class="section-title">MEAT SECTION</div>
-            <div class="stall-grid" id="meatSection"></div>
-          </div>
-
-          <!-- Main Horizontal Walkway -->
+          <!-- Main horizontal walkway -->
           <div class="horizontal-walkway">MAIN WALKWAY</div>
 
-          <!-- Dry Goods Section -->
-          <div class="section drygoods-section">
-            <div class="section-title">DRY GOODS SECTION</div>
-            <div class="stall-grid" id="drygoodsSection"></div>
+          <!-- Dry Goods & Grocery -->
+          <div class="section-row">
+            <div class="section drygoods-section">
+              <div class="section-title">DRY GOODS SECTION</div>
+              <div class="stall-grid" id="drygoodsSection"></div>
+            </div>
+            <div class="vertical-walkway"></div>
+            <div class="section grocery-section">
+              <div class="section-title">GROCERY SECTION</div>
+              <div class="stall-grid" id="grocerySection"></div>
+            </div>
           </div>
 
-          <!-- Grocery Section -->
-          <div class="section grocery-section">
-            <div class="section-title">GROCERY SECTION</div>
-            <div class="stall-grid" id="grocerySection"></div>
-          </div>
-
-          <!-- Inner Horizontal Walkway -->
+          <!-- Inner horizontal walkway -->
           <div class="horizontal-walkway">INNER WALKWAY</div>
 
-          <!-- Textile Section -->
-          <div class="section textile-section">
-            <div class="section-title">TEXTILE SECTION</div>
-            <div class="stall-grid" id="textileSection"></div>
+          <!-- Textile & Carinderia -->
+          <div class="section-row">
+            <div class="section textile-section">
+              <div class="section-title">TEXTILE SECTION</div>
+              <div class="stall-grid" id="textileSection"></div>
+            </div>
+            <div class="vertical-walkway"></div>
+            <div class="section carinderia-section">
+              <div class="section-title">CARINDERIA SECTION</div>
+              <div class="stall-grid" id="carinderiaSection"></div>
+            </div>
           </div>
 
-          <!-- Carinderia Section -->
-          <div class="section carinderia-section">
-            <div class="section-title">CARINDERIA SECTION</div>
-            <div class="stall-grid" id="carinderiaSection"></div>
-          </div>
-
-          <!-- Exit -->
+          <!-- Exit vertical walkway -->
+          <div class="vertical-walkway" style="height:60px;"></div>
           <div class="exit">🚪 Exit</div>
 
         </div>
