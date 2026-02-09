@@ -12,8 +12,9 @@
   --border: #e6e8eb;
   --shadow: 0 6px 24px rgba(0,0,0,.06);
   --walkway: #f4f6f8;
-  --middle-walkway: #555555;
+  --vertical-walkway: #555555;
   --horizontal-walkway: #666666;
+  --walkway-gap: 15px;
 }
 
 /* GLOBAL */
@@ -53,7 +54,7 @@ h1{color:var(--blue);margin-bottom:10px;}
   min-width:1000px;
   display:flex;
   flex-direction:column;
-  gap:10px;
+  gap:var(--walkway-gap);
 }
 
 /* WALKWAYS */
@@ -70,7 +71,6 @@ h1{color:var(--blue);margin-bottom:10px;}
   height:40px;
   background:var(--horizontal-walkway);
   border-radius:6px;
-  margin:10px 0;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -79,23 +79,18 @@ h1{color:var(--blue);margin-bottom:10px;}
 }
 
 /* ENTRANCE / EXIT */
-.entrance{
+.entrance, .exit{
   text-align:center;
   font-weight:bold;
-  color:green;
-  margin-top:10px;
+  margin:10px 0;
 }
-.exit{
-  text-align:center;
-  font-weight:bold;
-  color:red;
-  margin-top:10px;
-}
+.entrance{color:green;}
+.exit{color:red;}
 
 /* SECTION ROW WITH CORRIDOR */
 .section-row{
   display:flex;
-  gap:0;
+  gap:0; /* vertical walkway in middle, no extra gap */
   align-items:flex-start;
 }
 
@@ -105,8 +100,7 @@ h1{color:var(--blue);margin-bottom:10px;}
   padding:8px;
   border-radius:8px;
   background:#fafafa;
-  display:flex;
-  flex-direction:column;
+  margin:0 var(--walkway-gap);
 }
 .section-title{
   font-size:13px;
@@ -117,14 +111,8 @@ h1{color:var(--blue);margin-bottom:10px;}
 /* VERTICAL WALKWAY */
 .middle-walkway{
   width:40px;
-  background:var(--middle-walkway);
+  background:var(--vertical-walkway);
   border-radius:4px;
-  flex-shrink:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#fff;
-  font-weight:bold;
 }
 
 /* STALL GRID */
@@ -237,7 +225,7 @@ h1{color:var(--blue);margin-bottom:10px;}
               <div class="section-title">FISH SECTION</div>
               <div class="stall-grid" id="fishSection"></div>
             </div>
-            <div class="middle-walkway" style="height:140px;"> </div>
+            <div class="middle-walkway"></div>
             <div class="section">
               <div class="section-title">MEAT SECTION</div>
               <div class="stall-grid" id="meatSection"></div>
@@ -253,7 +241,7 @@ h1{color:var(--blue);margin-bottom:10px;}
               <div class="section-title">DRY GOODS SECTION</div>
               <div class="stall-grid" id="drygoodsSection"></div>
             </div>
-            <div class="middle-walkway" style="height:140px;"></div>
+            <div class="middle-walkway"></div>
             <div class="section">
               <div class="section-title">GROCERY SECTION</div>
               <div class="stall-grid" id="grocerySection"></div>
@@ -267,7 +255,7 @@ h1{color:var(--blue);margin-bottom:10px;}
               <div class="section-title">TEXTILE SECTION</div>
               <div class="stall-grid" id="textileSection"></div>
             </div>
-            <div class="middle-walkway" style="height:140px;"></div>
+            <div class="middle-walkway"></div>
             <div class="section">
               <div class="section-title">CARINDERIA SECTION</div>
               <div class="stall-grid" id="carinderiaSection"></div>
