@@ -4,7 +4,6 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Admin Dashboard - Barangay Market Map</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 :root {
   --text: #111;
@@ -15,6 +14,7 @@
   --wet: #e6f2ff;
   --dry: #fff8e6;
   --walkway: #f4f6f8;
+  --middle-walkway: #555555;
 }
 
 /* GLOBAL */
@@ -49,7 +49,7 @@ h1{color:var(--blue);margin-bottom:10px;}
   border-radius:12px;
   padding:15px;
   background:var(--white);
-  box-shadow:var(--shadow);
+  box-shadow:0 6px 24px rgba(0,0,0,.06);
   overflow:auto;
   min-width:1000px;
 }
@@ -63,6 +63,16 @@ h1{color:var(--blue);margin-bottom:10px;}
   border-radius:6px;
   background:var(--walkway);
   color:#333;
+}
+.middle-walkway{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:32px;
+  background:var(--middle-walkway);
+  color:#fff;
+  font-weight:bold;
+  border-radius:4px;
 }
 
 /* ENTRANCE / EXIT */
@@ -79,11 +89,12 @@ h1{color:var(--blue);margin-bottom:10px;}
   margin-top:10px;
 }
 
-/* SECTION ROW */
+/* SECTION ROW WITH CORRIDOR */
 .section-row{
   display:flex;
-  gap:20px;
+  gap:10px;
   margin-bottom:15px;
+  align-items:flex-start;
 }
 
 /* SECTION */
@@ -200,7 +211,7 @@ h1{color:var(--blue);margin-bottom:10px;}
         <div class="market-map">
 
           <!-- ENTRANCE -->
-          <div class="entrance">⬇ Entrance (Main Street)</div>
+          <div class="entrance">🚪 Entrance (Main Street)</div>
 
           <!-- WET ZONE -->
           <div class="walkway">WET MARKET ZONE</div>
@@ -209,13 +220,14 @@ h1{color:var(--blue);margin-bottom:10px;}
               <div class="section-title">FISH SECTION</div>
               <div class="stall-grid" id="fishSection"></div>
             </div>
+            <div class="middle-walkway" style="height:128px;">WALKWAY</div>
             <div class="section">
               <div class="section-title">MEAT SECTION</div>
               <div class="stall-grid" id="meatSection"></div>
             </div>
           </div>
 
-          <div class="walkway">Main Walkway</div>
+          <div class="middle-walkway" style="margin:10px 0; padding:8px; border-radius:6px; text-align:center;">MAIN WALKWAY</div>
 
           <!-- DRY ZONE -->
           <div class="walkway">DRY MARKET ZONE</div>
@@ -224,19 +236,21 @@ h1{color:var(--blue);margin-bottom:10px;}
               <div class="section-title">DRY GOODS SECTION</div>
               <div class="stall-grid" id="drygoodsSection"></div>
             </div>
+            <div class="middle-walkway" style="height:128px;">WALKWAY</div>
             <div class="section">
               <div class="section-title">GROCERY SECTION</div>
               <div class="stall-grid" id="grocerySection"></div>
             </div>
           </div>
 
-          <div class="walkway">Inner Walkway</div>
+          <div class="middle-walkway" style="margin:10px 0; padding:8px; border-radius:6px; text-align:center;">INNER WALKWAY</div>
 
           <div class="section-row">
             <div class="section">
               <div class="section-title">TEXTILE SECTION</div>
               <div class="stall-grid" id="textileSection"></div>
             </div>
+            <div class="middle-walkway" style="height:128px;">WALKWAY</div>
             <div class="section">
               <div class="section-title">CARINDERIA SECTION</div>
               <div class="stall-grid" id="carinderiaSection"></div>
@@ -244,7 +258,7 @@ h1{color:var(--blue);margin-bottom:10px;}
           </div>
 
           <!-- EXIT -->
-          <div class="exit">⬆ Exit (Back Street)</div>
+          <div class="exit">🚪 Exit (Back Street)</div>
 
         </div>
 
