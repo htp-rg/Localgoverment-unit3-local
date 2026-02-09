@@ -12,7 +12,7 @@
   --border: #e6e8eb;
   --shadow: 0 6px 24px rgba(0,0,0,.06);
   --walkway: #f4f6f8;
-  --middle-walkway: #555555;
+  --vertical-walkway: #555555;
   --horizontal-walkway: #666666;
 }
 
@@ -53,18 +53,30 @@ h1{color:var(--blue);margin-bottom:10px;}
   min-width:1000px;
   display:flex;
   flex-direction:column;
-  gap:10px;
   align-items:center;
+  gap:10px;
+}
+
+/* ZONE LABELS */
+.zone-label{
+  font-weight:bold;
+  padding:4px 8px;
+  border-radius:4px;
+  color:#fff;
+  font-size:12px;
+  position:absolute;
 }
 
 /* WALKWAYS */
-.walkway{
-  text-align:center;
+.vertical-walkway{
+  width:40px;
+  background:var(--vertical-walkway);
+  border-radius:4px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
   font-weight:bold;
-  padding:8px;
-  border-radius:6px;
-  background:var(--walkway);
-  color:#333;
 }
 .horizontal-walkway{
   width:100%;
@@ -93,7 +105,7 @@ h1{color:var(--blue);margin-bottom:10px;}
   margin:10px 0;
 }
 
-/* SECTION ROW WITH CORRIDOR */
+/* SECTION ROW */
 .section-row{
   display:flex;
   align-items:center;
@@ -101,6 +113,7 @@ h1{color:var(--blue);margin-bottom:10px;}
   gap:10px;
   margin:0 auto;
   padding:0;
+  position:relative;
 }
 
 /* SECTION */
@@ -109,23 +122,12 @@ h1{color:var(--blue);margin-bottom:10px;}
   padding:8px;
   border-radius:8px;
   background:#fafafa;
+  position:relative;
 }
 .section-title{
   font-size:13px;
   font-weight:bold;
   margin-bottom:6px;
-}
-
-/* VERTICAL WALKWAY */
-.middle-walkway{
-  width:40px;
-  background:var(--middle-walkway);
-  border-radius:4px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#fff;
-  font-weight:bold;
 }
 
 /* STALL GRID */
@@ -231,51 +233,59 @@ h1{color:var(--blue);margin-bottom:10px;}
           <!-- ENTRANCE -->
           <div class="entrance">🚪 Entrance (Main Street)</div>
 
-          <!-- WET ZONE -->
-          <div class="walkway">WET MARKET ZONE</div>
+          <!-- Vertical walkway from entrance to middle of Fish & Meat -->
+          <div class="vertical-walkway" style="height:100px; margin-bottom:10px;">WALKWAY</div>
+
+          <!-- WET ZONE ROW -->
           <div class="section-row">
-            <div class="section">
+            <div class="section" style="position:relative;">
+              <div class="zone-label" style="left:-50px; top:10px; background:#0a53c1;">WET</div>
               <div class="section-title">FISH SECTION</div>
               <div class="stall-grid" id="fishSection"></div>
             </div>
-            <div class="middle-walkway"></div>
-            <div class="section">
+            <div class="vertical-walkway"></div>
+            <div class="section" style="position:relative;">
+              <div class="zone-label" style="left:-50px; top:10px; background:#0a53c1;">WET</div>
               <div class="section-title">MEAT SECTION</div>
               <div class="stall-grid" id="meatSection"></div>
             </div>
           </div>
 
+          <!-- Main Walkway -->
           <div class="horizontal-walkway">MAIN WALKWAY</div>
 
-          <!-- DRY ZONE -->
-          <div class="walkway">DRY MARKET ZONE</div>
+          <!-- DRY ZONE ROW -->
           <div class="section-row">
-            <div class="section">
+            <div class="section" style="position:relative;">
+              <div class="zone-label" style="left:-50px; top:10px; background:#28a745;">DRY</div>
               <div class="section-title">DRY GOODS SECTION</div>
               <div class="stall-grid" id="drygoodsSection"></div>
             </div>
-            <div class="middle-walkway"></div>
-            <div class="section">
+            <div class="vertical-walkway"></div>
+            <div class="section" style="position:relative;">
+              <div class="zone-label" style="left:-50px; top:10px; background:#28a745;">DRY</div>
               <div class="section-title">GROCERY SECTION</div>
               <div class="stall-grid" id="grocerySection"></div>
             </div>
           </div>
 
+          <!-- Inner Walkway -->
           <div class="horizontal-walkway">INNER WALKWAY</div>
 
+          <!-- Textile & Carinderia ROW -->
           <div class="section-row">
-            <div class="section">
+            <div class="section" style="position:relative;">
               <div class="section-title">TEXTILE SECTION</div>
               <div class="stall-grid" id="textileSection"></div>
             </div>
-            <div class="middle-walkway"></div>
-            <div class="section">
+            <div class="vertical-walkway"></div>
+            <div class="section" style="position:relative;">
               <div class="section-title">CARINDERIA SECTION</div>
               <div class="stall-grid" id="carinderiaSection"></div>
             </div>
           </div>
 
-          <!-- EXIT -->
+          <!-- Exit -->
           <div class="exit">🚪 Exit (Back Street)</div>
 
         </div>
