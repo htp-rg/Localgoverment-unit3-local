@@ -12,9 +12,8 @@
   --border: #e6e8eb;
   --shadow: 0 6px 24px rgba(0,0,0,.06);
   --walkway: #f4f6f8;
-  --vertical-walkway: #555555;
+  --middle-walkway: #555555;
   --horizontal-walkway: #666666;
-  --walkway-gap: 15px;
 }
 
 /* GLOBAL */
@@ -54,7 +53,8 @@ h1{color:var(--blue);margin-bottom:10px;}
   min-width:1000px;
   display:flex;
   flex-direction:column;
-  gap:var(--walkway-gap);
+  gap:10px;
+  align-items:center;
 }
 
 /* WALKWAYS */
@@ -68,6 +68,7 @@ h1{color:var(--blue);margin-bottom:10px;}
 }
 .horizontal-walkway{
   width:100%;
+  max-width:900px;
   height:40px;
   background:var(--horizontal-walkway);
   border-radius:6px;
@@ -79,19 +80,27 @@ h1{color:var(--blue);margin-bottom:10px;}
 }
 
 /* ENTRANCE / EXIT */
-.entrance, .exit{
+.entrance{
   text-align:center;
   font-weight:bold;
+  color:green;
   margin:10px 0;
 }
-.entrance{color:green;}
-.exit{color:red;}
+.exit{
+  text-align:center;
+  font-weight:bold;
+  color:red;
+  margin:10px 0;
+}
 
 /* SECTION ROW WITH CORRIDOR */
 .section-row{
   display:flex;
-  gap:0; /* vertical walkway in middle, no extra gap */
-  align-items:flex-start;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  margin:0 auto;
+  padding:0;
 }
 
 /* SECTION */
@@ -100,7 +109,6 @@ h1{color:var(--blue);margin-bottom:10px;}
   padding:8px;
   border-radius:8px;
   background:#fafafa;
-  margin:0 var(--walkway-gap);
 }
 .section-title{
   font-size:13px;
@@ -111,8 +119,13 @@ h1{color:var(--blue);margin-bottom:10px;}
 /* VERTICAL WALKWAY */
 .middle-walkway{
   width:40px;
-  background:var(--vertical-walkway);
+  background:var(--middle-walkway);
   border-radius:4px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  font-weight:bold;
 }
 
 /* STALL GRID */
