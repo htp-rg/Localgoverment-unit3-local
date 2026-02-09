@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Barangay Market Map - LGU System</title>
+
+<style>
+:root{
+  --blue:#0a53c1;
+  --border:#e6e8eb;
+  --bg:#f4f6f8;
+  --shadow:0 8px 20px rgba(0,0,0,.08);
+}
+
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#fff;
+  color:#111;
+}
+
+.container{
+  padding:20px;
+}
+
+h1{
+  color:var(--blue);
+  margin-bottom:10px;
+}
+
+/* Search */
+.search-box{
+  margin-bottom:15px;
+}
+.search-box input{
+  padding:8px 12px;
+  border:1px solid var(--border);
+  border-radius:6px;
+  width:240px;
+}
+
+/* Market Map Wrapper */
+.market-map{
+  border:2px solid var(--blue);
+  border-radius:12px;
+  padding:15px;
+  background:#fff;
+  box-shadow:var(--shadow);
+  overflow:auto;
+  min-width:900px;
+}
+
+/* Roads & Labels */
+.road{
+  text-align:center;
+  font-size:13px;
+  font-weight:bold;
+  color:#666;
+  margin:8px 0;
+}
+
+.entrance{
+  text-align:center;
+  font-weight:bold;
+  color:red;
+  margin-top:10px;
+}
+
+/* Sections Layout */
+.section-row{
+  display:flex;
+  gap:20px;
+  margin-bottom:15px;
+}
+
+.section{
+  border:1px dashed #ccc;
+  padding:8px;
+  border-radius:8px;
+  background:#fafafa;
+}
+
+.section-title{
+  font-size:13px;
+  font-weight:bold;
+  margin-bottom:6px;
+}
+
+/* Stall Grid */
+.stall-grid{
+  display:grid;
+  grid-template-columns:repeat(10, 32px);
+  gap:4px;
+}
+
+/* Stall Style */
+.stall{
+  width:32px;
+  height:32px;
+  border:1px solid #999;
+  border-radius:4px;
+  font-size:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  transition:.15s;
+}
+
+/* Section Colors */
+.fish{ background:#d0e7ff; }
+.meat{ background:#ffd6d6; }
+.grocery{ background:#d4edda; }
+.drygoods{ background:#fff3cd; }
+.textile{ background:#e2d9ff; }
+.carinderia{ background:#ffe0f0; }
+
+/* Occupancy */
+.occupied{
+  border:2px solid var(--blue);
+}
+.vacant{
+  opacity:.6;
+}
+
+/* Hover & Active */
+.stall:hover{
+  transform:scale(1.1);
+  border-color:var(--blue);
+}
+.stall.active{
+  background:var(--blue) !important;
+  color:#fff;
+}
+
+/* Info Panel */
+.info-panel{
+  margin-top:15px;
+  padding:12px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:var(--bg);
+  font-size:14px;
+}
+
+/* Legend */
+.legend{
+  margin-top:12px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  font-size:12px;
+}
+.legend span{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.legend-box{
+  width:14px;
+  height:14px;
+  border-radius:3px;
+  border:1px solid #999;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+<h1>Barangay Public Market Map</h1>
+
+<div class="search-box">
+🔍 Search Stall No: 
+<input type="text" id="searchStall" placeholder="e.g. 32">
+</div>
+
+<div class="market-map">
+
+<div class="road">SERVICE ROAD (North)</div>
+
+<!-- TOP ROW: FISH + MEAT -->
+<div class="section-row">
+  <div class="section">
+    <div class="section-title">FISH SECTION</div>
+    <div class="stall-grid" id="fishSection"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">MEAT SECTION</div>
+    <div class="stall-grid" id="meatSection"></div>
+  </div>
+</div>
+
+<div class="road">PASSAGEWAY</div>
+
+<!-- MIDDLE ROW: VEGETABLE + GROCERY -->
+<div class="section-row">
+  <div class="section">
+    <div class="section-title">DRY GOODS SECTION</div>
+    <div class="stall-grid" id="drygoodsSection"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">GROCERY SECTION</div>
+    <div class="stall-grid" id="grocerySection"></div>
+  </div>
+</div>
+
+<div class="road">PASSAGEWAY</div>
+
+<!-- BOTTOM ROW: TEXTILE + CARINDERIA -->
+<div class="section-row">
+  <div class="section">
+    <div class="section-title">TEXTILE SECTION</div>
+    <div class="stall-grid" id="textileSection"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">CARINDERIA</div>
+    <div class="stall-grid" id="carinderiaSection"></div>
+  </div>
+</div>
+
+<div class="entrance">⬇ CENTER ENTRANCE (K-5th STREET)</div>
+
+</div>
+
+<div class="info-panel" id="stallInfo">
+Click a stall to view vendor information.
+</div>
+
+<div class="legend">
+<span><div class="legend-box fish"></div> Fish</span>
+<span><div class="legend-box meat"></div> Meat</span>
+<span><div class="legend-box grocery"></div> Grocery</span>
+<span><div class="legend-box drygoods"></div> Dry Goods</span>
+<span><div class="legend-box textile"></div> Textile</span>
+<span><div class="legend-box carinderia"></div> Carinderia</span>
+<span><div class="legend-box" style="border:2px solid #0a53c1;"></div> Occupied</span>
+<span><div class="legend-box" style="opacity:.6;"></div> Vacant</span>
+</div>
+
+</div>
+
+<script>
+/* ===== LOCAL STORAGE DATA ===== */
+const KEY = "barangay_market_vendors";
+
+if(!localStorage.getItem(KEY)){
+  localStorage.setItem(KEY, JSON.stringify({
+    32:{name:"Lily's Textile Stall", section:"Textile", status:"Occupied"},
+    5:{name:"Pedro Fish Vendor", section:"Fish", status:"Occupied"},
+    18:{name:"Maria Meat Shop", section:"Meat", status:"Occupied"},
+    60:{name:"ABC Grocery", section:"Grocery", status:"Occupied"},
+    77:{name:"Dry Goods Store", section:"Dry Goods", status:"Occupied"}
+  }));
+}
+
+const vendors = JSON.parse(localStorage.getItem(KEY));
+
+/* ===== CREATE STALLS FUNCTION ===== */
+function createStalls(containerId, start, end, className){
+  const container = document.getElementById(containerId);
+  for(let i=start; i<=end; i++){
+    const div = document.createElement("div");
+    div.className = `stall ${className}`;
+    div.dataset.no = i;
+    div.innerText = i;
+
+    if(vendors[i]){
+      div.classList.add("occupied");
+    }else{
+      div.classList.add("vacant");
+    }
+
+    container.appendChild(div);
+  }
+}
+
+/* Generate Stalls (Realistic Numbers) */
+createStalls("fishSection", 1, 20, "fish");
+createStalls("meatSection", 21, 40, "meat");
+createStalls("drygoodsSection", 41, 60, "drygoods");
+createStalls("grocerySection", 61, 80, "grocery");
+createStalls("textileSection", 81, 110, "textile");
+createStalls("carinderiaSection", 111, 130, "carinderia");
+
+/* ===== CLICK STALL ===== */
+document.querySelectorAll(".stall").forEach(stall=>{
+  stall.addEventListener("click", ()=>{
+    document.querySelectorAll(".stall").forEach(s=>s.classList.remove("active"));
+    stall.classList.add("active");
+
+    const no = stall.dataset.no;
+    const vendor = vendors[no];
+
+    document.getElementById("stallInfo").innerHTML = vendor ? `
+      <strong>${vendor.name}</strong><br>
+      Stall No: ${no}<br>
+      Section: ${vendor.section}<br>
+      Status: ${vendor.status}
+    ` : `
+      <strong>Vacant Stall</strong><br>
+      Stall No: ${no}<br>
+      Status: Vacant
+    `;
+  });
+});
+
+/* ===== SEARCH STALL ===== */
+document.getElementById("searchStall").addEventListener("input", function(){
+  const value = this.value.trim();
+  document.querySelectorAll(".stall").forEach(s=>{
+    s.style.outline="none";
+    if(value && s.dataset.no === value){
+      s.scrollIntoView({behavior:"smooth", block:"center"});
+      s.style.outline="3px solid red";
+    }
+  });
+});
+</script>
+
+</body>
+</html>
