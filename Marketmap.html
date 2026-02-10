@@ -7,31 +7,54 @@
 
 <style>
 :root {
+  --text: #111111;
   --blue: #0a53c1;
+  --ink-20: #f4f6f8;
+  --white: #ffffff;
   --border: #e6e8eb;
-  --walkway-color: #d9d9d9; /* LIGHT GRAY WALKWAY */
-  --road-color: #bfbfbf;
+  --shadow: 0 6px 24px rgba(0, 0, 0, .06);
 }
+.status-approved { color: green; font-weight: 600; }
+.status-declined { color: red; font-weight: 600; }
 
-/* GLOBAL */
 * { box-sizing: border-box; }
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: #fff;
+  font-family: Inter, system-ui, sans-serif;
+  background: var(--white);
+  color: var(--text);
 }
-
-/* LAYOUT */
 .app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
-.sidebar { background: #4e73df; color:#fff; padding:1rem; }
-.nav-item { display:block; color:#fff; text-decoration:none; padding:.5rem; border-radius:6px; }
-.nav-item:hover,.nav-item.active{background:#fff;color:#0a53c1;}
 
-.main { display:grid; grid-template-rows:64px 1fr; }
-.topbar{display:flex;justify-content:space-between;align-items:center;padding:0 1rem;border-bottom:1px solid var(--border);}
+.sidebar {
+  border-right: 1px solid var(--border);
+  background: #4e73df;
+}
+.brand {
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+nav { padding: 1rem; }
+.nav-item {
+  display: block; padding: .6rem;
+  border-radius: 8px; text-decoration: none; color: var(--text);
+}
+.nav-item:hover, .nav-item.active { background: var(--ink-20); }
+
+.main { display: grid; grid-template-rows: 64px 1fr; min-width: 0; }
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 1rem; border-bottom: 1px solid var(--border);
+}
+.btn {
+  border: 1px solid var(--text);
+  background: transparent; padding: .4rem .8rem;
+  border-radius: 8px; cursor: pointer;
+}
 .content{padding:1rem;}
 
-/* MARKET MAP */
 .market-map{
   display:grid;
   grid-template-columns:1fr 60px 1fr;
@@ -41,7 +64,6 @@ body {
   position:relative;
 }
 
-/* WALKWAYS */
 .walkway{
   color:#333;
   display:flex;
@@ -57,8 +79,6 @@ body {
   height:40px;
 
 }
-
-/* ARROWS */
 .arrow{
   width:0;
   height:0;
@@ -66,7 +86,6 @@ body {
   border-bottom:8px solid transparent;
 }
 
-/* SECTIONS */
 .section{
   background:#fff;
   border:1px solid #ccc;
@@ -74,7 +93,6 @@ body {
 }
 .section-title{font-weight:bold;text-align:center;margin-bottom:6px;}
 
-/* STALLS */
 .stall-grid{
   display:grid;
   grid-template-columns:repeat(5,1fr);
@@ -105,7 +123,6 @@ body {
 .violation{background:red!important;color:#fff;}
 .reserved{background:gold!important;}
 
-/* ENTRANCE / EXIT */
 .entrance,.exit{
   position:absolute;
   left:50%;
@@ -140,8 +157,6 @@ body {
   border-top:10px solid red;
 }
 
-
-/* INFO PANEL */
 .info-panel{
   margin-top:15px;
   padding:12px;
@@ -154,7 +169,7 @@ body {
   color:#fff;
   font-weight:bold;
   font-size:11px;
-  grid-column:1/-1; /* full width */
+  grid-column:1/-1;
   height:30px;
 }
 
@@ -163,7 +178,7 @@ body {
   color:BLACK;
   font-weight:bold;
   font-size:11px;
-  height:60px;       /* portrait style */
+  height:60px;       
   display:flex;
   align-items:center;
   justify-content:center;
@@ -173,16 +188,25 @@ body {
 
 <body>
 <div class="app">
+  <aside class="sidebar">
+    <div class="brand">LGU 3 ADMIN SYSTEM</div>
+    <nav>
+      <a href="admindashboard.html" class="nav-item active">Dashboard</a>
+      <a href="adminvendor.html" class="nav-item">Vendor Management</a>
+      <a href="admincommodity.html" class="nav-item">Commodity and Price Monitoring</a>
+      <a href="admininspection.html" class="nav-item">Inspection and Compliance</a>
+      <a href="reports.html" class="nav-item">Reports and Dashboard with AI Analytic</a>
+      <a href="adminsettings.html" class="nav-item">Settings</a>
+      <a href="main.html" class="nav-item" style="margin-top:2rem;font-weight:bold;">Logout</a>
+    </nav>
+  </aside>
 
-<aside class="sidebar">
-  <h3>LGU 3 ADMIN</h3>
-  <a class="nav-item active" href="#">Dashboard</a>
-  <a class="nav-item" href="#">Vendor Management</a>
-  <a class="nav-item" href="#">Compliance</a>
-</aside>
-
-<section class="main">
-<header class="topbar">
+  <section class="main">
+    <header class="topbar">
+      <button class="btn" id="backBtn">← Back</button>
+      <button class="btn">Export</button>
+    </header>
+    
   <h2>Market Floor Plan</h2>
   <div>
     <button id="zoomIn">+</button>
@@ -197,8 +221,6 @@ body {
 <div class="market-map" id="marketMap">
 
 <div class="entrance">ENTRANCE</div>
-
-
 
 <div class="walkway vertical-spine"></div>
 
@@ -273,7 +295,6 @@ function createStalls(id,start,end,type,labelText=null){
   const container=document.getElementById(id);
   container.innerHTML="";
 
-  // SPECIAL: LOADING BAY (NO NUMBERS)
   if(type==="loading"){
     const d=document.createElement("div");
     d.className="stall loading-bay-stall";
@@ -282,7 +303,6 @@ function createStalls(id,start,end,type,labelText=null){
     return;
   }
 
-  // NORMAL STALLS
   for(let i=start;i<=end;i++){
     const d=document.createElement("div");
     d.className=`stall ${type}`;
@@ -292,7 +312,6 @@ function createStalls(id,start,end,type,labelText=null){
     if(vendors[i]) d.classList.add(vendors[i].status.toLowerCase());
     else d.classList.add("vacant");
 
-    // PARKING STYLE
     if(type==="parking"){
       d.classList.add("parking-stall");
       d.textContent="PARK";
@@ -325,7 +344,6 @@ createStalls("carinderiaSection",91,100,"carinderia");
 createStalls("loadingSection",0,0,"loading"); // LOADING BAY TEXT ONLY
 createStalls("parkingSection",101,111,"parking"); 
 
-// SEARCH
 document.getElementById("searchStall").oninput=function(){
   const val=this.value;
   document.querySelectorAll(".stall").forEach(s=>{
@@ -334,7 +352,6 @@ document.getElementById("searchStall").oninput=function(){
   });
 };
 
-// ZOOM
 let scale=1;
 const map=document.getElementById("marketMap");
 function applyZoom(){map.style.transform=`scale(${scale})`;}
