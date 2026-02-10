@@ -1,178 +1,248 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LGU 3 Admin - Market Floor Plan</title>
-    <style>
-        :root {
-            --sidebar-blue: #3a537d;
-            --blueprint-yellow: #fdf5cc;
-            --walkway-white: #ffffff;
-            --border-dark: #333333;
-            --wet-accent: #d1e9ff;
-            --dry-accent: #fef3c7;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Barangay Market Map</title>
 
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; display: flex; height: 100vh; background: #f0f2f5; overflow: hidden; }
+<style>
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#f4f6f9;
+}
+.app{
+  display:grid;
+  grid-template-columns:220px 1fr;
+  height:100vh;
+}
+.sidebar{
+  background:#4e73df;
+  color:#fff;
+  padding:15px;
+}
+.sidebar h2{
+  font-size:16px;
+  margin-bottom:20px;
+}
+.sidebar a{
+  display:block;
+  padding:8px;
+  color:#fff;
+  text-decoration:none;
+  border-radius:6px;
+  margin-bottom:5px;
+}
+.sidebar a:hover{background:#fff;color:#4e73df;}
 
-        /* SIDEBAR STYLING */
-        .sidebar { width: 240px; background: var(--sidebar-blue); color: white; display: flex; flex-direction: column; flex-shrink: 0; }
-        .sidebar-header { padding: 20px; font-weight: 800; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .nav-item { padding: 15px 20px; color: rgba(255,255,255,0.8); text-decoration: none; display: flex; align-items: center; font-size: 0.9rem; transition: 0.2s; }
-        .nav-item:hover, .nav-item.active { background: rgba(0,0,0,0.2); color: white; border-left: 4px solid #f6ad55; }
-        .badge { background: #f6ad55; padding: 2px 8px; border-radius: 10px; margin-left: auto; font-size: 0.7rem; }
+.main{
+  display:flex;
+  flex-direction:column;
+}
+.topbar{
+  background:#fff;
+  padding:10px 15px;
+  border-bottom:1px solid #ddd;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.content{
+  padding:15px;
+  overflow:hidden;
+}
 
-        /* MAIN CONTENT AREA */
-        .main { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
-        .topbar { height: 60px; background: white; border-bottom: 1px solid #ddd; display: flex; align-items: center; padding: 0 25px; justify-content: space-between; }
-        .search-box { width: 400px; padding: 8px 15px; border-radius: 6px; border: 1px solid #ccc; background: #f8f9fa; }
+/* MAP CONTAINER */
+.map-wrapper{
+  border:2px solid #333;
+  background:#ddd;
+  width:100%;
+  height:520px;
+  position:relative;
+  overflow:hidden;
+  border-radius:10px;
+}
 
-        /* ARCHITECTURAL FLOOR PLAN CANVAS */
-        .content { padding: 30px; overflow: auto; display: flex; justify-content: center; }
-        .map-container { 
-            background: white; padding: 60px; border-radius: 12px; border: 1px solid #ccc; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05); position: relative; width: 1100px;
-        }
+/* zoom + drag */
+#map{
+  transform-origin:0 0;
+  cursor:grab;
+}
 
-        .market-blueprint {
-            background: var(--blueprint-yellow); border: 4px solid var(--border-dark); border-radius: 30px;
-            display: grid; grid-template-columns: 1fr 60px 1fr; grid-template-rows: 1fr 60px 1fr;
-            position: relative; overflow: hidden;
-        }
+/* STALL STYLE */
+.stall{
+  fill:#fff;
+  stroke:#555;
+  stroke-width:1;
+  cursor:pointer;
+}
+.stall:hover{stroke:#000;stroke-width:2;}
+.occupied{fill:#9ec5ff;}
+.vacant{fill:#eaeaea;}
+.violation{fill:#ff4d4d;}
+.reserved{fill:#ffd700;}
 
-        /* CORRIDORS & WALKWAYS */
-        .walkway { background: var(--walkway-white); border: 1px dashed #999; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 11px; color: #777; letter-spacing: 2px; }
-        .v-main { grid-column: 2; grid-row: 1 / span 3; border-left: 2px solid var(--border-dark); border-right: 2px solid var(--border-dark); writing-mode: vertical-rl; }
-        .h-new { grid-column: 1 / span 3; grid-row: 2; border-top: 2px solid var(--border-dark); border-bottom: 2px solid var(--border-dark); }
+/* WALKWAYS */
+.walkway{
+  fill:#777;
+  opacity:.6;
+}
 
-        /* MARKET SECTIONS */
-        .section { padding: 20px; display: flex; flex-direction: column; }
-        .section-header { font-size: 13px; font-weight: 900; border-bottom: 2px solid var(--border-dark); margin-bottom: 10px; padding-bottom: 5px; }
-        .stall-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; }
-        
-        .stall { 
-            aspect-ratio: 1; background: white; border: 1px solid #888; display: flex; align-items: center; 
-            justify-content: center; font-size: 10px; cursor: pointer; transition: 0.1s;
-        }
-        .stall:hover { background: #fffde7; border-color: #000; z-index: 5; }
-        .stall.occupied { background: #e2e8f0; }
-        .stall.active-target { background: #fc8181 !important; color: white; border: 2px solid #c53030; font-weight: bold; }
-
-        /* ANGLED TEXTILE SECTION */
-        .angled-textile {
-            grid-column: 3; grid-row: 3; transform: rotate(-30deg) translate(30px, -20px);
-            background: #f1f5f9; border: 2px solid var(--border-dark); padding: 10px;
-        }
-
-        /* INFO OVERLAY */
-        .info-overlay {
-            position: absolute; bottom: 40px; right: 40px; width: 250px; background: white; 
-            border: 1px solid #ccc; border-radius: 8px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-    </style>
+/* INFO PANEL */
+.info-panel{
+  margin-top:10px;
+  background:#fff;
+  padding:10px;
+  border-radius:6px;
+  border:1px solid #ddd;
+  font-size:14px;
+}
+</style>
 </head>
 <body>
 
-<aside class="sidebar">
-    <div class="sidebar-header">LGU 3 ADMIN</div>
-    <nav>
-        <a href="#" class="nav-item active">Dashboard</a>
-        <a href="#" class="nav-item">Active Status <span class="badge">315</span></a>
-        <a href="#" class="nav-item">Vendor Management</a>
-        <a href="#" class="nav-item">Commodity Monitoring</a>
-        <a href="#" class="nav-item">Inspection</a>
-        <a href="#" class="nav-item">Settings</a>
-        <a href="#" class="nav-item" style="margin-top: auto;">Logout</a>
-    </nav>
-</aside>
+<div class="app">
+  <div class="sidebar">
+    <h2>LGU ADMIN</h2>
+    <a href="#">Dashboard</a>
+    <a href="#">Vendor Management</a>
+    <a href="#">Compliance</a>
+    <a href="#">Logout</a>
+  </div>
 
-<main class="main">
-    <header class="topbar">
-        <h2 style="font-weight: 500;">Market Floor Plan</h2>
-        <input type="text" id="stallSearch" class="search-box" placeholder="🔍 Search Stall No.">
-    </header>
+  <div class="main">
+    <div class="topbar">
+      <h3>Barangay Market Map</h3>
+      <input id="search" placeholder="Search stall no..." style="padding:5px;">
+    </div>
 
     <div class="content">
-        <div class="map-container">
-            <div class="market-blueprint">
-                
-                <div class="section" style="grid-column: 1; grid-row: 1;">
-                    <div class="section-header">FISH & MEAT (WET SECTION)</div>
-                    <div class="stall-grid" id="wet-grid"></div>
-                </div>
+      <div class="map-wrapper">
+        <!-- SVG MAP (REAL LAYOUT STYLE LIKE YOUR IMAGE) -->
+        <svg id="map" width="1200" height="700">
 
-                <div class="section" style="grid-column: 3; grid-row: 1;">
-                    <div class="section-header">FRUITS & VEGETABLES</div>
-                    <div class="stall-grid" id="fruit-grid"></div>
-                </div>
+          <!-- MARKET BORDER (IRREGULAR SHAPE) -->
+          <polygon points="50,50 1050,50 1150,200 1100,600 100,600 50,400"
+                   fill="#f7f0c8" stroke="#333" stroke-width="4"/>
 
-                <div class="walkway h-new">NEW WALKWAY</div>
-                <div class="walkway v-main">MAIN PASSAGEWAY</div>
+          <!-- WALKWAYS -->
+          <rect x="520" y="80" width="60" height="500" class="walkway"/>
+          <rect x="80" y="300" width="950" height="60" class="walkway"/>
+          <rect x="800" y="200" width="60" height="350" transform="rotate(25 800 200)" class="walkway"/>
 
-                <div class="section" style="grid-column: 1; grid-row: 3;">
-                    <div class="section-header">DRY GOODS & CARINDERIA</div>
-                    <div class="stall-grid" id="dry-grid"></div>
-                </div>
+          <!-- STALL BLOCK LEFT TOP -->
+          <g id="blockA"></g>
 
-                <div class="angled-textile">
-                    <div class="section-header" style="font-size: 10px;">TEXTILE SECTION</div>
-                    <div class="stall-grid" id="textile-grid"></div>
-                </div>
+          <!-- STALL BLOCK LEFT BOTTOM -->
+          <g id="blockB"></g>
 
-            </div>
+          <!-- STALL BLOCK CENTER -->
+          <g id="blockC"></g>
 
-            <div class="info-overlay">
-                <h4 style="margin: 0 0 10px 0; font-size: 14px; color: #2d3748;">Stall Detail</h4>
-                <div id="info-content" style="font-size: 12px; color: #718096;">
-                    Click a stall to view vendor information.
-                </div>
-            </div>
-        </div>
+          <!-- STALL BLOCK RIGHT (DIAGONAL LIKE IMAGE) -->
+          <g id="blockD" transform="rotate(25 820 350)"></g>
+
+        </svg>
+      </div>
+
+      <div class="info-panel" id="info">Click a stall to view details.</div>
     </div>
-</main>
+  </div>
+</div>
 
 <script>
-    const vendors = {
-        315: { name: "Lily's Textile", section: "Textile", status: "Active" }
-    };
+/* SAMPLE VENDOR DATA */
+const vendors = {
+  5:{name:"Pedro Fish Vendor",status:"occupied"},
+  12:{name:"Maria Meat Shop",status:"occupied"},
+  18:{name:"Violation Stall",status:"violation"},
+  25:{name:"Reserved Stall",status:"reserved"},
+};
 
-    function populate(id, start, count) {
-        const grid = document.getElementById(id);
-        for (let i = 0; i < count; i++) {
-            const num = start + i;
-            const s = document.createElement('div');
-            s.className = 'stall' + (vendors[num] ? ' occupied' : '');
-            if (num === 315) s.classList.add('active-target');
-            s.innerText = num;
-            s.onclick = () => showInfo(num);
-            grid.appendChild(s);
-        }
+/* CREATE STALLS FUNCTION */
+function createBlock(groupId,start,x,y,rows,cols,dx,dy){
+  const g=document.getElementById(groupId);
+  let num=start;
+  for(let r=0;r<rows;r++){
+    for(let c=0;c<cols;c++){
+      const rect=document.createElementNS("http://www.w3.org/2000/svg","rect");
+      rect.setAttribute("x",x+c*dx);
+      rect.setAttribute("y",y+r*dy);
+      rect.setAttribute("width",40);
+      rect.setAttribute("height",40);
+      rect.classList.add("stall");
+
+      let status="vacant";
+      if(vendors[num]) status=vendors[num].status;
+      rect.classList.add(status);
+
+      rect.dataset.no=num;
+
+      rect.onclick=()=>{
+        const v=vendors[num];
+        document.getElementById("info").innerHTML=v?
+          `<b>Stall ${num}</b><br>${v.name}<br>Status: ${v.status}`:
+          `<b>Stall ${num}</b><br>Status: Vacant`;
+      };
+
+      g.appendChild(rect);
+
+      // stall number text
+      const text=document.createElementNS("http://www.w3.org/2000/svg","text");
+      text.setAttribute("x",x+c*dx+12);
+      text.setAttribute("y",y+r*dy+25);
+      text.setAttribute("font-size","10");
+      text.textContent=num;
+      g.appendChild(text);
+
+      num++;
     }
+  }
+}
 
-    function showInfo(num) {
-        const info = vendors[num] || { name: "None", section: "Unknown", status: "Vacant" };
-        document.getElementById('info-content').innerHTML = `
-            <strong>Stall: #${num}</strong><br>
-            Vendor: ${info.name}<br>
-            Section: ${info.section}<br>
-            Status: <span style="color:${info.status==='Active'?'green':'gray'}">${info.status}</span>
-        `;
+/* BLOCKS LIKE YOUR IMAGE */
+createBlock("blockA",1,120,120,4,4,50,50);
+createBlock("blockB",17,120,380,4,4,50,50);
+createBlock("blockC",33,420,380,4,4,50,50);
+createBlock("blockD",49,820,260,4,4,50,50);
+
+/* SEARCH */
+document.getElementById("search").oninput=function(){
+  const val=this.value;
+  document.querySelectorAll(".stall").forEach(s=>{
+    s.style.stroke="#555";
+    if(s.dataset.no===val){
+      s.style.stroke="black";
+      s.style.strokeWidth=3;
     }
+  });
+};
 
-    // Initialize segments based on image data
-    populate('wet-grid', 1, 20);      // Fish/Meat Section
-    populate('fruit-grid', 50, 20);    // Fruits Section
-    populate('dry-grid', 100, 20);     // Dry Goods Section
-    populate('textile-grid', 310, 10); // Textile Section
+/* ZOOM + DRAG */
+let scale=1,drag=false,startX,startY,offsetX=0,offsetY=0;
+const map=document.getElementById("map");
 
-    // Search function
-    document.getElementById('stallSearch').addEventListener('input', (e) => {
-        const val = e.target.value;
-        document.querySelectorAll('.stall').forEach(s => {
-            s.style.background = (val && s.innerText === val) ? "#fbd38d" : "";
-        });
-    });
+map.addEventListener("wheel",e=>{
+  e.preventDefault();
+  scale+=e.deltaY*-0.001;
+  scale=Math.min(Math.max(0.5,scale),2);
+  map.style.transform=`translate(${offsetX}px,${offsetY}px) scale(${scale})`;
+});
+
+map.addEventListener("mousedown",e=>{
+  drag=true;
+  startX=e.clientX-offsetX;
+  startY=e.clientY-offsetY;
+  map.style.cursor="grabbing";
+});
+window.addEventListener("mouseup",()=>{drag=false;map.style.cursor="grab";});
+window.addEventListener("mousemove",e=>{
+  if(!drag)return;
+  offsetX=e.clientX-startX;
+  offsetY=e.clientY-startY;
+  map.style.transform=`translate(${offsetX}px,${offsetY}px) scale(${scale})`;
+});
 </script>
+
 </body>
 </html>
