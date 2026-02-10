@@ -149,30 +149,24 @@ body {
   border-radius:8px;
   background:#f8f9fc;
 }
- .loading-bay-stall{
+  .loading-bay-stall{
   background:#f2994a;
   color:#fff;
   font-weight:bold;
-  font-size:12px;
-  text-align:center;
-  height:40px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  border-radius:6px;
+  font-size:11px;
+  grid-column:1/-1; /* full width */
+  height:30px;
 }
 
 .parking-stall{
   background:#2f80ed;
   color:#fff;
   font-weight:bold;
-  font-size:14px;
+  font-size:11px;
   height:60px;       /* portrait style */
   display:flex;
   align-items:center;
   justify-content:center;
-  border-radius:6px;
-  margin-bottom:4px;  /* space between boxes */
 }
 </style>
 </head>
@@ -278,15 +272,14 @@ function createStalls(id,start,end,type,labelText=null){
   const container=document.getElementById(id);
   container.innerHTML="";
 
- function createLoadingBay(containerId){
-  const container = document.getElementById(containerId);
-  container.innerHTML="";
-  const d = document.createElement("div");
-  d.className = "stall loading-bay-stall";
-  d.textContent = "🚚 LOADING BAY";
-  container.appendChild(d);
-}
-createLoadingBay("loadingSection");
+  // SPECIAL: LOADING BAY (NO NUMBERS)
+  if(type==="loading"){
+    const d=document.createElement("div");
+    d.className="stall loading-bay-stall";
+    d.textContent="LOADING BAY";
+    container.appendChild(d);
+    return;
+  }
 
   // NORMAL STALLS
   for(let i=start;i<=end;i++){
@@ -298,18 +291,11 @@ createLoadingBay("loadingSection");
     if(vendors[i]) d.classList.add(vendors[i].status.toLowerCase());
     else d.classList.add("vacant");
 
-  function createParkingStalls(containerId, count){
-  const container = document.getElementById(containerId);
-  container.innerHTML = "";
-  for(let i=1; i<=count; i++){
-    const d = document.createElement("div");
-    d.className = "stall parking-stall";
-    d.textContent = "🚗";  // car icon
-    d.title = `Parking Slot ${i}`;
-    
-    container.appendChild(d);
-  }
-}
+    // PARKING STYLE
+    if(type==="parking"){
+      d.classList.add("parking-stall");
+      d.textContent="PARK";
+    }
 
     d.onclick=()=>{
       document.querySelectorAll(".stall").forEach(s=>s.classList.remove("active"));
