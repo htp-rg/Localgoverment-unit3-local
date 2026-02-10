@@ -130,7 +130,39 @@ body {
   border-right:8px solid transparent;
   border-top:10px solid red;
 }
+/* PARKING AREA */
+.parking {
+  position: absolute;
+  right: -140px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #2f80ed;
+  color: white;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: bold;
+  writing-mode: vertical-rl;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,.2);
+}
 
+/* LOADING BAY */
+.loading-bay {
+  position: absolute;
+  left: -140px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #f2994a;
+  color: white;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: bold;
+  writing-mode: vertical-rl;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,.2);
+}
 /* INFO PANEL */
 .info-panel{
   margin-top:15px;
@@ -168,7 +200,10 @@ body {
 <div class="market-map" id="marketMap">
 
 <div class="entrance">ENTRANCE</div>
-
+<!-- PARKING AREA --> 
+  <div class="parking">🅿 PARKING AREA</div>
+  <!-- LOADING BAY -->
+  <div class="loading-bay">🚚 LOADING BAY</div>
 <div class="walkway vertical-spine"></div>
 
 <div class="section" style="grid-column:1;">
@@ -219,7 +254,6 @@ Click a stall to view vendor info.
 </div>
 
 <script>
-// SAMPLE DATA
 const vendors = {
   5:{name:"Pedro Fish Vendor",section:"Fish",status:"Occupied"},
   18:{name:"Maria Meat Shop",section:"Meat",status:"Occupied"},
