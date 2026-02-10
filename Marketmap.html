@@ -163,6 +163,55 @@ nav { padding: 1rem; }
 .entrance {
   top: -20px;
 }
+  .parking {
+  position: absolute;
+  right: -140px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #2f80ed;
+  color: white;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: bold;
+  writing-mode: vertical-rl;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,.2);
+}
+
+/* LOADING BAY */
+.loading-bay {
+  position: absolute;
+  left: -140px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #f2994a;
+  color: white;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: bold;
+  writing-mode: vertical-rl;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,.2);
+}
+
+/* EMERGENCY EXIT */
+.emergency-exit {
+  position: absolute;
+  bottom: 50%;
+  left: 50%;
+  transform: translate(-50%, 100%);
+  background: linear-gradient(45deg, #333, #777);
+  color: white;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: bold;
+  border: 2px dashed #aaa;
+  box-shadow: 0 4px 10px rgba(0,0,0,.3);
+}
+
 </style>
 </head>
 <body>
@@ -193,6 +242,15 @@ nav { padding: 1rem; }
       <div id="mapWrapper">
   <div class="market-map" id="marketMap">
         <div class="entrance">⬆ ENTRANCE</div>
+    <!-- PARKING AREA -->
+<div class="parking">🅿 PARKING AREA</div>
+
+<!-- LOADING BAY -->
+<div class="loading-bay">🚚 LOADING BAY</div>
+
+<!-- EMERGENCY EXIT -->
+<div class="emergency-exit">⚠ EMERGENCY EXIT</div>
+
         <div class="walkway vertical-spine"></div>
 
         <div class="section" style="grid-column: 1;">
