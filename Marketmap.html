@@ -264,6 +264,21 @@ document.getElementById("searchStall").oninput = function() {
         if(val && s.dataset.no === val) s.style.background = "#ffff00";
     });
 };
+
+const wrapper=document.getElementById("wrapper"), mapGroup=document.getElementById("map-group");
+let scale=1, panX=20, panY=20, isPanning=false, startX, startY;
+function updateTransform(){ mapGroup.setAttribute("transform", `translate(${panX}, ${panY}) scale(${scale})`);}
+wrapper.addEventListener("wheel",e=>{
+  e.preventDefault();
+  const zoomFactor=.1, dir=e.deltaY>0?-1:1, newScale=Math.min(Math.max(.4,scale+dir*zoomFactor),2.5);
+  const rect=wrapper.getBoundingClientRect(), mouseX=e.clientX-rect.left, mouseY=e.clientY-rect.top;
+  const dx=(mouseX-panX)/scale, dy=(mouseY-panY)/scale;
+  panX=mouseX-dx*newScale; panY=mouseY-dy*newScale; scale=newScale; updateTransform();
+},{passive:false});
+wrapper.addEventListener("mousedown",e=>{if(e.target.classList.contains("stall"))return;isPanning=true;startX=e.clientX-panX;startY=e.clientY-panY; wrapper.style.cursor="grabbing";});
+window.addEventListener("mouseup",()=>{isPanning=false; wrapper.style.cursor="default";});
+window.addEventListener("mousemove",e=>{if(!isPanning)return; panX=e.clientX-startX; panY=e.clientY-startY; updateTransform();});
+updateTransform();
 </script>
 </body>
 </html>
