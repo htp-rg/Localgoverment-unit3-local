@@ -1,155 +1,190 @@
-<div class="content">
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-    <h2 style="margin: 0;">Market Layout Blueprint</h2>
-    <div>
-      🔍 <input type="text" id="stallSearch" placeholder="Search Stall No. (e.g., 32)" style="padding: 0.5rem; border-radius: 8px; border: 1px solid var(--border);">
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand" style="color:white;">LGU 3 ADMIN SYSTEM</div>
+    <nav>
+      <a href="admindashboard.html" class="nav-item active">Dashboard</a>
+      <a href="adminvendor.html" class="nav-item">Vendor Management</a>
+      <a href="admincommodity.html" class="nav-item">Commodity and Price Monitoring</a>
+      <a href="admininspection.html" class="nav-item">Inspection and Compliance</a>
+      <a href="reports.html" class="nav-item">Reports and AI Analytics</a>
+      <a href="adminsettings.html" class="nav-item">Settings</a>
+      <a href="main.html" class="nav-item" style="margin-top:2rem;font-weight:bold;">Logout</a>
+    </nav>
+  </aside>
+
+  <section class="main">
+    <header class="topbar">
+      <button class="btn">← Back</button>
+      <div style="flex-grow: 1; margin: 0 20px;">
+        <input type="text" id="stallSearch" placeholder="🔍 Search Stall No. (e.g., 32)" style="width: 100%; max-width: 400px; padding: 8px; border-radius: 20px; border: 1px solid var(--border);">
+      </div>
+      <button class="btn">Export</button>
+    </header>
+
+    <div class="content">
+      <div class="market-blueprint-container">
+        <div class="walkway horizontal-road">SERVICE ROAD (6.00 METERS WIDE)</div>
+
+        <div class="blueprint-grid">
+          <div class="section-block">
+            <div class="label">FISH SECTION</div>
+            <div class="stall-grid" id="grid-fish"></div>
+          </div>
+          
+          <div class="walkway vertical-spine"></div> <div class="section-block">
+            <div class="label">MEAT SECTION</div>
+            <div class="stall-grid" id="grid-meat"></div>
+          </div>
+
+          <div class="walkway cross-passage" style="grid-column: 1 / span 3;">PASSAGEWAY</div>
+
+          <div class="section-block">
+            <div class="label">DRYGOODS SECTION</div>
+            <div class="stall-grid" id="grid-drygoods"></div>
+          </div>
+
+          <div class="walkway vertical-spine"></div>
+
+          <div class="section-block">
+            <div class="label">GROCERY SECTION</div>
+            <div class="stall-grid" id="grid-grocery"></div>
+          </div>
+
+          <div class="walkway cross-passage" style="grid-column: 1 / span 3;">PASSAGEWAY</div>
+
+          <div class="section-block">
+            <div class="label">TEXTILE SECTION (INSIDE)</div>
+            <div class="stall-grid" id="grid-textile"></div>
+          </div>
+
+          <div class="walkway vertical-spine"></div>
+
+          <div class="section-block">
+            <div class="label">CARINDERIA</div>
+            <div class="stall-grid" id="grid-carinderia"></div>
+          </div>
+        </div>
+
+        <div class="entrance-area">
+          <div class="walkway horizontal-road">K-5TH STREET (11.50 METERS WIDE)</div>
+          <div class="center-entrance-marker">CENTER ENTRANCE</div>
+        </div>
+      </div>
+
+      <div id="infoPanel" class="card" style="margin-top: 20px; border-left: 5px solid var(--blue); display: none;">
+        <h3 id="panelStall">Stall #--</h3>
+        <p><strong>Vendor:</strong> <span id="panelVendor">--</span></p>
+        <p><strong>Category:</strong> <span id="panelCat">--</span></p>
+      </div>
     </div>
-  </div>
-
-  <div class="market-map-container" style="background: #fff; padding: 2rem; border-radius: 12px; border: 1px solid var(--border); box-shadow: var(--shadow); overflow: auto;">
-    <div class="blueprint-grid">
-      
-      <div class="walkway road-top">SERVICE ROAD (6.00 METERS WIDE)</div>
-
-      <div class="section-cluster fish-meat">
-        <div class="market-section fish-section">
-          <div class="section-label">FISH SECTION</div>
-          <div class="stall-grid" id="grid-fish"></div>
-        </div>
-        <div class="market-section meat-section">
-          <div class="section-label">MEAT SECTION</div>
-          <div class="stall-grid" id="grid-meat"></div>
-        </div>
-      </div>
-
-      <div class="section-cluster grocery-carinderia">
-        <div class="market-section carinderia-section">
-          <div class="section-label">CARINDERIA</div>
-          <div class="stall-grid" id="grid-carinderia"></div>
-        </div>
-        <div class="market-section grocery-section">
-          <div class="section-label">GROCERY SECTION</div>
-          <div class="stall-grid" id="grid-grocery"></div>
-        </div>
-      </div>
-
-      <div class="walkway horizontal-spine">PASSAGEWAY</div>
-
-      <div class="section-cluster bottom-row">
-        <div class="market-section drygoods-section">
-          <div class="section-label">DRYGOODS SECTION</div>
-          <div class="stall-grid" id="grid-drygoods"></div>
-        </div>
-        <div class="market-section textile-section">
-          <div class="section-label">TEXTILE SECTION (INSIDE)</div>
-          <div class="stall-grid" id="grid-textile"></div>
-        </div>
-      </div>
-
-      <div class="entrance-area">
-        <div class="walkway road-bottom">K-5TH STREET (11.50 METERS WIDE)</div>
-        <div class="center-gate">CENTER ENTRANCE</div>
-      </div>
-    </div>
-  </div>
-
-  <div id="stallInfoPanel" class="card" style="margin-top: 1rem; display: none; border-left: 5px solid var(--blue);">
-    <h3 id="infoStallNum" style="margin-top: 0;">Stall #--</h3>
-    <div class="grid">
-      <p><strong>Vendor:</strong> <span id="infoVendor">--</span></p>
-      <p><strong>Status:</strong> <span id="infoStatus">--</span></p>
-      <p><strong>Section:</strong> <span id="infoSection">--</span></p>
-    </div>
-  </div>
+  </section>
 </div>
 
 <style>
-/* Blueprint Styling */
+/* CSS GRID FOR THE BLUEPRINT */
+.market-blueprint-container {
+  background: #fff;
+  padding: 15px;
+  border: 1px solid #333;
+  min-width: 800px;
+}
+
 .blueprint-grid {
+  display: grid;
+  grid-template-columns: 1fr 60px 1fr; /* Two section columns, one central corridor */
+  gap: 0; /* Walkways act as the gap */
+  border: 2px solid #555;
+}
+
+/* WALKWAY STYLING */
+.walkway {
+  background: #f0f0f0;
+  color: #888;
+  font-size: 10px;
+  font-weight: bold;
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-  min-width: 900px;
-  background: #fdfdfd;
-  padding: 10px;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
 }
 
-.section-cluster { display: flex; gap: 20px; }
-.market-section { border: 2px solid #555; padding: 10px; flex: 1; background: #f8f9fa; }
-.section-label { font-weight: bold; font-size: 0.8rem; text-align: center; border-bottom: 1px solid #555; margin-bottom: 8px; padding-bottom: 4px; }
+.horizontal-road { height: 40px; border: 1px solid #ccc; }
+.cross-passage { height: 35px; border-top: 1px dashed #999; border-bottom: 1px dashed #999; }
+.vertical-spine { border-left: 1px dashed #999; border-right: 1px dashed #999; }
 
+/* SECTION & STALLS */
+.section-block { padding: 10px; background: #fff; }
+.label { font-size: 11px; font-weight: bold; text-align: center; margin-bottom: 5px; background: #eee; }
 .stall-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px; }
-.stall {
-  aspect-ratio: 1; border: 1px solid #999; display: flex; align-items: center; 
-  justify-content: center; font-size: 0.6rem; cursor: pointer; transition: 0.2s;
-}
-.stall:hover { background: #ffeeba; transform: scale(1.1); z-index: 5; }
-.stall.occupied { background: #d1d3e2; }
-.stall.selected { background: #ffc107 !important; border-color: #000; font-weight: bold; }
-.stall.highlight { background: #28a745; color: white; border-color: #1e7e34; }
 
-.walkway { background: #eee; border: 1px dashed #999; text-align: center; font-size: 0.7rem; color: #666; padding: 5px; }
-.center-gate { 
-  border: 2px solid red; color: red; width: 150px; margin: 0 auto; 
-  text-align: center; font-weight: bold; padding: 5px; margin-top: -10px; background: white;
+.stall {
+  aspect-ratio: 1;
+  border: 1px solid #aaa;
+  font-size: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.stall:hover { background: #e3f2fd; }
+.stall.occupied { background: #d1d3e2; border-color: #4e73df; }
+.stall.active { background: #ffc107 !important; transform: scale(1.1); z-index: 2; }
+
+.center-entrance-marker {
+  width: 140px;
+  margin: -10px auto 0;
+  background: #fff;
+  border: 2px solid red;
+  color: red;
+  text-align: center;
+  font-weight: bold;
+  padding: 5px;
+  z-index: 5;
+  position: relative;
 }
 </style>
 
 <script>
-// Mock Stall Data based on image legend
-const stallData = {
-  32: { vendor: "Lily's Textile Stall", status: "Occupied", section: "Textile" },
-  15: { vendor: "Unassigned", status: "Available", section: "Dry Goods" }
+// Logic to populate stalls and interactivity
+const mockVendors = {
+  32: { name: "Lily's Textile Stall", cat: "Textile" },
+  5: { name: "Juan's Fresh Catch", cat: "Fish" },
+  18: { name: "Baguio Meat Shop", cat: "Meat" }
 };
 
-function initMap() {
-  const sections = [
-    { id: 'grid-fish', count: 41, start: 1, section: 'Fish' },
-    { id: 'grid-meat', count: 90, start: 42, section: 'Meat' },
-    { id: 'grid-grocery', count: 88, start: 133, section: 'Grocery' },
-    { id: 'grid-drygoods', count: 92, start: 221, section: 'Dry Goods' },
-    { id: 'grid-textile', count: 63, start: 313, section: 'Textile' }
-  ];
-
-  sections.forEach(sec => {
-    const grid = document.getElementById(sec.id);
-    for (let i = 0; i < sec.count; i++) {
-      const stallNum = sec.start + i;
-      const div = document.createElement('div');
-      div.className = 'stall' + (stallData[stallNum] ? ' occupied' : '');
-      div.innerText = stallNum;
-      div.onclick = () => showStallInfo(stallNum, sec.section);
-      grid.appendChild(div);
-    }
-  });
+function buildStalls(id, start, count, cat) {
+  const container = document.getElementById(id);
+  for (let i = 0; i < count; i++) {
+    const num = start + i;
+    const div = document.createElement('div');
+    div.className = 'stall' + (mockVendors[num] ? ' occupied' : '');
+    div.innerText = num;
+    div.onclick = () => {
+      document.querySelectorAll('.stall').forEach(s => s.classList.remove('active'));
+      div.classList.add('active');
+      const info = mockVendors[num] || { name: "Vacant", cat: cat };
+      document.getElementById('infoPanel').style.display = 'block';
+      document.getElementById('panelStall').innerText = "Stall #" + num;
+      document.getElementById('panelVendor').innerText = info.name;
+      document.getElementById('panelCat').innerText = info.cat || cat;
+    };
+    container.appendChild(div);
+  }
 }
 
-function showStallInfo(num, section) {
-  const panel = document.getElementById('stallInfoPanel');
-  const data = stallData[num] || { vendor: 'None', status: 'Vacant' };
-  
-  document.querySelectorAll('.stall').forEach(s => s.classList.remove('selected'));
-  const target = Array.from(document.querySelectorAll('.stall')).find(s => s.innerText == num);
-  if(target) target.classList.add('selected');
+// Initializing the map segments
+buildStalls('grid-fish', 1, 20, 'Fish');
+buildStalls('grid-meat', 21, 40, 'Meat');
+buildStalls('grid-drygoods', 41, 60, 'Dry Goods');
+buildStalls('grid-grocery', 61, 80, 'Grocery');
+buildStalls('grid-textile', 81, 110, 'Textile');
+buildStalls('grid-carinderia', 111, 130, 'Carinderia');
 
-  panel.style.display = 'block';
-  document.getElementById('infoStallNum').innerText = 'Stall #' + num;
-  document.getElementById('infoVendor').innerText = data.vendor;
-  document.getElementById('infoStatus').innerText = data.status;
-  document.getElementById('infoSection').innerText = section;
-}
-
-// Search Functionality
-document.getElementById('stallSearch').addEventListener('input', function(e) {
-  const num = e.target.value;
+// Search functionality
+document.getElementById('stallSearch').addEventListener('input', (e) => {
+  const val = e.target.value;
   document.querySelectorAll('.stall').forEach(s => {
-    s.classList.remove('highlight');
-    if(num && s.innerText == num) {
-      s.classList.add('highlight');
-      s.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
+    s.style.background = (val && s.innerText === val) ? "yellow" : "";
   });
 });
-
-initMap();
 </script>
