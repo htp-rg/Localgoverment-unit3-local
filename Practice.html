@@ -106,10 +106,10 @@ svg { user-select:none; }
 const vendors = {
   2:{name:"Pedro Fish Vendor",category:"fish",status:"occupied"},
   3:{name:"Luis Fish Vendor",category:"fish",status:"occupied"},
-  10:{name:"Maria Meat Shop",category:"meat",status:"occupied"},
-  15:{name:"Carlo Grocery",category:"grocery",status:"occupied"},
-  20:{name:"Juan Cold Storage",category:"drygoods",status:"violation"},
-  105:{name:"Elena Boutique",category:"textile",status:"reserved"}
+  20:{name:"Maria Meat Shop",category:"meat",status:"occupied"},
+  45:{name:"Carlo Grocery",category:"grocery",status:"occupied"},
+  68:{name:"Juan Cold Storage",category:"drygoods",status:"violation"},
+  83:{name:"Elena Boutique",category:"textile",status:"reserved"}
 };
 
 const STALL_SIZE = 40, GAP = 8;
@@ -178,17 +178,32 @@ function drawSection(sectionData, startX, startY){
   // Return new Y for next section
   return startY + Math.ceil(sectionData.numbers.length / cols) * (STALL_SIZE + GAP) + 20;
 }
+// Function to calculate number of rows for a section
+function getRows(sectionData, cols = 6){
+  return Math.ceil(sectionData.numbers.length / cols);
+}
+
+// Draw all sections with equal spacing
+function drawAllSections(sections, startX, startY){
+  const cols = 6;
+  let wetSections = sections.filter(s=>s.section==="wet");
+  let drySections = sections.filter(s=>s.section==="dry");
+
+  let wetY = startY;
+  let dryY = startY;
+
+  wetSections.forEach(s=>{
+    wetY = drawSection(s, 250, wetY); // left wet section
+  });
+
+  drySections.forEach(s=>{
+    dryY = drawSection(s, 720, dryY); // right dry section
+  });
+}
 
 // Draw all sections
-let wetStartY = 90;
-let dryStartY = 90;
-sections.forEach(s => {
-  if(s.section === "wet"){
-    wetStartY = drawSection(s, 250, wetStartY); // aligned under wet section walkway
-  } else {
-    dryStartY = drawSection(s, 720, dryStartY); // aligned under dry section walkway
-  }
-});
+drawAllSections(sections, 250, 90);
+
 
 // Pan & Zoom
 const wrapper=document.getElementById("wrapper"), mapGroup=document.getElementById("map-group");
