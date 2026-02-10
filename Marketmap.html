@@ -204,6 +204,17 @@ nav { padding: 1rem; }
 }
 .cr-male { background:#0a53c1; color:#fff; font-weight:bold; }
 .cr-female { background:#d63384; color:#fff; font-weight:bold; }
+  
+  #CrSection {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 2 equal columns: Male | Female */
+  gap: 4px;
+}
+
+#CrSection .stall {
+  height: 80px; /* taller so it fills the section nicely */
+  font-size: 14px; /* bigger text for readability */
+}
 .admin-stall {
   background:#6c757d; /* gray for Admin */
   color:#fff;
