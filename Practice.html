@@ -1,93 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Admin Dashboard - Market Blueprint</title>
-<style>
-:root {
-  --sidebar-bg: #3a537d;
-  --map-bg: #f9f9f9;
-  --floor-yellow: #fdf5cc;
-  --walkway-gray: #ffffff;
-  --text-main: #333;
-  --blue-accent: #3182ce;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LGU 3 Admin - Market Floor Plan</title>
+    <style>
+        :root {
+            --sidebar-blue: #3a537d;
+            --blueprint-yellow: #fdf5cc;
+            --walkway-white: #ffffff;
+            --border-dark: #333333;
+            --wet-accent: #d1e9ff;
+            --dry-accent: #fef3c7;
+        }
 
-* { box-sizing: border-box; }
-body { margin: 0; font-family: 'Inter', sans-serif; display: flex; background: #eaecf4; height: 100vh; overflow: hidden; }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; display: flex; height: 100vh; background: #f0f2f5; overflow: hidden; }
 
-/* SIDEBAR */
-.sidebar { width: 220px; background: var(--sidebar-bg); color: white; flex-shrink: 0; display: flex; flex-direction: column; }
-.brand { padding: 25px 20px; font-weight: 800; font-size: 1.1rem; border-bottom: 1px solid rgba(255,255,255,0.1); letter-spacing: 1px; }
-nav { padding: 10px 0; flex-grow: 1; }
-.nav-item { display: flex; align-items: center; padding: 12px 20px; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.85rem; transition: 0.3s; }
-.nav-item:hover, .nav-item.active { background: rgba(0,0,0,0.2); color: white; border-left: 4px solid #fff; }
-.badge { background: #f6ad55; color: #fff; border-radius: 10px; padding: 2px 8px; font-size: 10px; margin-left: auto; }
+        /* SIDEBAR STYLING */
+        .sidebar { width: 240px; background: var(--sidebar-blue); color: white; display: flex; flex-direction: column; flex-shrink: 0; }
+        .sidebar-header { padding: 20px; font-weight: 800; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .nav-item { padding: 15px 20px; color: rgba(255,255,255,0.8); text-decoration: none; display: flex; align-items: center; font-size: 0.9rem; transition: 0.2s; }
+        .nav-item:hover, .nav-item.active { background: rgba(0,0,0,0.2); color: white; border-left: 4px solid #f6ad55; }
+        .badge { background: #f6ad55; padding: 2px 8px; border-radius: 10px; margin-left: auto; font-size: 0.7rem; }
 
-/* MAIN CONTENT */
-.main { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
-.topbar { background: white; height: 60px; display: flex; align-items: center; padding: 0 25px; border-bottom: 1px solid #ddd; justify-content: space-between; }
-.search-bar { width: 350px; background: #f1f3f4; border: 1px solid #ccc; border-radius: 6px; padding: 8px 12px; font-size: 0.9rem; }
+        /* MAIN CONTENT AREA */
+        .main { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .topbar { height: 60px; background: white; border-bottom: 1px solid #ddd; display: flex; align-items: center; padding: 0 25px; justify-content: space-between; }
+        .search-box { width: 400px; padding: 8px 15px; border-radius: 6px; border: 1px solid #ccc; background: #f8f9fa; }
 
-/* FLOOR PLAN CANVAS */
-.content { padding: 30px; overflow: auto; display: flex; justify-content: center; }
-.map-container { 
-    background: white; border-radius: 15px; border: 1px solid #ccc; padding: 50px; 
-    box-shadow: 0 10px 25px rgba(0,0,0,0.05); position: relative; width: 1100px;
-}
+        /* ARCHITECTURAL FLOOR PLAN CANVAS */
+        .content { padding: 30px; overflow: auto; display: flex; justify-content: center; }
+        .map-container { 
+            background: white; padding: 60px; border-radius: 12px; border: 1px solid #ccc; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); position: relative; width: 1100px;
+        }
 
-.market-frame {
-    background: var(--floor-yellow); border: 3px solid #444; border-radius: 40px;
-    display: grid; grid-template-columns: 1fr 60px 1fr; grid-template-rows: 1fr 60px 1fr;
-    position: relative; overflow: hidden;
-}
+        .market-blueprint {
+            background: var(--blueprint-yellow); border: 4px solid var(--border-dark); border-radius: 30px;
+            display: grid; grid-template-columns: 1fr 60px 1fr; grid-template-rows: 1fr 60px 1fr;
+            position: relative; overflow: hidden;
+        }
 
-/* WALKWAYS */
-.walkway { 
-    background: var(--walkway-gray); border: 1px dashed #bbb; 
-    display: flex; align-items: center; justify-content: center; 
-    font-size: 11px; font-weight: bold; color: #777; letter-spacing: 2px;
-}
-.vertical-main { grid-column: 2; grid-row: 1 / span 3; border-left: 2px solid #555; border-right: 2px solid #555; }
-.horizontal-new { grid-column: 1 / span 3; grid-row: 2; border-top: 1px dashed #999; border-bottom: 1px dashed #999; }
+        /* CORRIDORS & WALKWAYS */
+        .walkway { background: var(--walkway-white); border: 1px dashed #999; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 11px; color: #777; letter-spacing: 2px; }
+        .v-main { grid-column: 2; grid-row: 1 / span 3; border-left: 2px solid var(--border-dark); border-right: 2px solid var(--border-dark); writing-mode: vertical-rl; }
+        .h-new { grid-column: 1 / span 3; grid-row: 2; border-top: 2px solid var(--border-dark); border-bottom: 2px solid var(--border-dark); }
 
-/* SECTIONS */
-.section-block { padding: 15px; display: flex; flex-direction: column; gap: 10px; }
-.section-label { font-size: 12px; font-weight: 800; border-bottom: 2px solid #444; padding-bottom: 4px; color: #222; }
-.stall-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
+        /* MARKET SECTIONS */
+        .section { padding: 20px; display: flex; flex-direction: column; }
+        .section-header { font-size: 13px; font-weight: 900; border-bottom: 2px solid var(--border-dark); margin-bottom: 10px; padding-bottom: 5px; }
+        .stall-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; }
+        
+        .stall { 
+            aspect-ratio: 1; background: white; border: 1px solid #888; display: flex; align-items: center; 
+            justify-content: center; font-size: 10px; cursor: pointer; transition: 0.1s;
+        }
+        .stall:hover { background: #fffde7; border-color: #000; z-index: 5; }
+        .stall.occupied { background: #e2e8f0; }
+        .stall.active-target { background: #fc8181 !important; color: white; border: 2px solid #c53030; font-weight: bold; }
 
-.stall { 
-    aspect-ratio: 1; background: white; border: 1px solid #999; 
-    display: flex; align-items: center; justify-content: center; 
-    font-size: 10px; cursor: pointer; color: #444;
-}
-.stall:hover { background: #edf2f7; border-color: var(--blue-accent); }
-.stall.active-target { background: #fc8181 !important; color: white; font-weight: bold; border: 2px solid #c53030; }
+        /* ANGLED TEXTILE SECTION */
+        .angled-textile {
+            grid-column: 3; grid-row: 3; transform: rotate(-30deg) translate(30px, -20px);
+            background: #f1f5f9; border: 2px solid var(--border-dark); padding: 10px;
+        }
 
-/* ANGLED DRY SECTION */
-.angled-cluster { 
-    grid-column: 3; grid-row: 3; transform: rotate(-35deg) translate(20px, -30px);
-    background: #e2e8f0; padding: 10px; border: 2px solid #444;
-}
-
-/* OVERLAY */
-.info-box {
-    position: absolute; bottom: 30px; right: 30px; width: 220px; 
-    background: white; border: 1px solid #ccc; border-radius: 8px; padding: 15px; 
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-</style>
+        /* INFO OVERLAY */
+        .info-overlay {
+            position: absolute; bottom: 40px; right: 40px; width: 250px; background: white; 
+            border: 1px solid #ccc; border-radius: 8px; padding: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+    </style>
 </head>
 <body>
 
 <aside class="sidebar">
-    <div class="brand">LGU 3 ADMIN</div>
+    <div class="sidebar-header">LGU 3 ADMIN</div>
     <nav>
         <a href="#" class="nav-item active">Dashboard</a>
-        <a href="#" class="nav-item">Active <span class="badge">315</span></a>
+        <a href="#" class="nav-item">Active Status <span class="badge">315</span></a>
         <a href="#" class="nav-item">Vendor Management</a>
-        <a href="#" class="nav-item">Vendor Commodity</a>
+        <a href="#" class="nav-item">Commodity Monitoring</a>
         <a href="#" class="nav-item">Inspection</a>
         <a href="#" class="nav-item">Settings</a>
         <a href="#" class="nav-item" style="margin-top: auto;">Logout</a>
@@ -96,44 +89,43 @@ nav { padding: 10px 0; flex-grow: 1; }
 
 <main class="main">
     <header class="topbar">
-        <h2 style="margin:0; font-weight: 600;">Market Floor Plan</h2>
-        <input type="text" class="search-bar" id="search" placeholder="Search Stall No.">
+        <h2 style="font-weight: 500;">Market Floor Plan</h2>
+        <input type="text" id="stallSearch" class="search-box" placeholder="🔍 Search Stall No.">
     </header>
 
     <div class="content">
         <div class="map-container">
-            <div class="market-frame">
+            <div class="market-blueprint">
                 
-                <div class="section-block" style="grid-column:1; grid-row:1;">
-                    <div class="section-label">WET SECTION: FISH & MEAT</div>
-                    <div class="stall-grid" id="wet-stalls"></div>
+                <div class="section" style="grid-column: 1; grid-row: 1;">
+                    <div class="section-header">FISH & MEAT (WET SECTION)</div>
+                    <div class="stall-grid" id="wet-grid"></div>
                 </div>
 
-                <div class="section-block" style="grid-column:3; grid-row:1;">
-                    <div class="section-label">VEGETABLE & FRUITS</div>
-                    <div class="stall-grid" id="veg-stalls"></div>
+                <div class="section" style="grid-column: 3; grid-row: 1;">
+                    <div class="section-header">FRUITS & VEGETABLES</div>
+                    <div class="stall-grid" id="fruit-grid"></div>
                 </div>
 
-                <div class="walkway horizontal-new">NEW WALKWAY</div>
-                
-                <div class="walkway vertical-main" style="writing-mode: vertical-rl;">MAIN PASSAGEWAY</div>
+                <div class="walkway h-new">NEW WALKWAY</div>
+                <div class="walkway v-main">MAIN PASSAGEWAY</div>
 
-                <div class="section-block" style="grid-column:1; grid-row:3;">
-                    <div class="section-label">DRY GOODS & CARINDERIA</div>
-                    <div class="stall-grid" id="dry-stalls"></div>
+                <div class="section" style="grid-column: 1; grid-row: 3;">
+                    <div class="section-header">DRY GOODS & CARINDERIA</div>
+                    <div class="stall-grid" id="dry-grid"></div>
                 </div>
 
-                <div class="angled-cluster">
-                    <div class="section-label" style="font-size: 10px;">TEXTILE SECTION</div>
-                    <div class="stall-grid" id="textile-stalls"></div>
+                <div class="angled-textile">
+                    <div class="section-header" style="font-size: 10px;">TEXTILE SECTION</div>
+                    <div class="stall-grid" id="textile-grid"></div>
                 </div>
 
             </div>
 
-            <div class="info-box">
-                <h4 style="margin: 0 0 10px 0; font-size: 13px; color: #2d3748;">Stall Information</h4>
+            <div class="info-overlay">
+                <h4 style="margin: 0 0 10px 0; font-size: 14px; color: #2d3748;">Stall Detail</h4>
                 <div id="info-content" style="font-size: 12px; color: #718096;">
-                    Select a stall on the map to view vendor data.
+                    Click a stall to view vendor information.
                 </div>
             </div>
         </div>
@@ -141,45 +133,46 @@ nav { padding: 10px 0; flex-grow: 1; }
 </main>
 
 <script>
-const vendorInfo = {
-    315: { name: "Lily's Textile", status: "Active", type: "Textile" }
-};
+    const vendors = {
+        315: { name: "Lily's Textile", section: "Textile", status: "Active" }
+    };
 
-function createStalls(id, start, count) {
-    const container = document.getElementById(id);
-    for (let i = 0; i < count; i++) {
-        const num = start + i;
-        const div = document.createElement('div');
-        div.className = 'stall';
-        if (num === 315) div.classList.add('active-target');
-        div.innerText = num;
-        
-        div.onclick = () => {
-            const info = vendorInfo[num] || { name: "N/A", status: "Vacant", type: "Unassigned" };
-            document.getElementById('info-content').innerHTML = `
-                <strong>Stall #${num}</strong><br>
-                Vendor: ${info.name}<br>
-                Type: ${info.type}<br>
-                Status: <span style="color:green">${info.status}</span>
-            `;
-        };
-        container.appendChild(div);
+    function populate(id, start, count) {
+        const grid = document.getElementById(id);
+        for (let i = 0; i < count; i++) {
+            const num = start + i;
+            const s = document.createElement('div');
+            s.className = 'stall' + (vendors[num] ? ' occupied' : '');
+            if (num === 315) s.classList.add('active-target');
+            s.innerText = num;
+            s.onclick = () => showInfo(num);
+            grid.appendChild(s);
+        }
     }
-}
 
-// Populate sections
-createStalls('wet-stalls', 1, 15);      // Fish/Meat
-createStalls('veg-stalls', 50, 15);     // Fruit/Veg
-createStalls('dry-stalls', 100, 15);    // Dry/Grocery
-createStalls('textile-stalls', 310, 10); // Textile (includes 315)
+    function showInfo(num) {
+        const info = vendors[num] || { name: "None", section: "Unknown", status: "Vacant" };
+        document.getElementById('info-content').innerHTML = `
+            <strong>Stall: #${num}</strong><br>
+            Vendor: ${info.name}<br>
+            Section: ${info.section}<br>
+            Status: <span style="color:${info.status==='Active'?'green':'gray'}">${info.status}</span>
+        `;
+    }
 
-// Search
-document.getElementById('search').addEventListener('input', (e) => {
-    const val = e.target.value;
-    document.querySelectorAll('.stall').forEach(s => {
-        s.style.background = (val && s.innerText === val) ? "#fbd38d" : "";
+    // Initialize segments based on image data
+    populate('wet-grid', 1, 20);      // Fish/Meat Section
+    populate('fruit-grid', 50, 20);    // Fruits Section
+    populate('dry-grid', 100, 20);     // Dry Goods Section
+    populate('textile-grid', 310, 10); // Textile Section
+
+    // Search function
+    document.getElementById('stallSearch').addEventListener('input', (e) => {
+        const val = e.target.value;
+        document.querySelectorAll('.stall').forEach(s => {
+            s.style.background = (val && s.innerText === val) ? "#fbd38d" : "";
+        });
     });
-});
 </script>
 </body>
 </html>
