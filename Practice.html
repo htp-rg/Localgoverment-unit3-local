@@ -3,223 +3,186 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Admin Dashboard - Market Layout</title>
+<title>LGU 3 Admin - Market Floor Plan</title>
 <style>
 :root {
-  --sidebar-blue: #2c599d;
-  --bg-light: #f4f7f6;
-  --market-yellow: #fff9c4; /* The yellow floor look from your reference */
-  --walkway-gray: #e0e0e0;
-  --border-dark: #333;
-  --stall-occupied: #a8b8d0;
-  --stall-highlight: #ff5252;
+  --sidebar-bg: #2c599d;
+  --sidebar-hover: #1e3d6d;
+  --map-yellow: #fff9c4;
+  --text-gray: #5f6368;
+  --border-light: #dadce0;
 }
 
-/* GLOBAL RESET */
 * { box-sizing: border-box; }
-body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg-light); display: flex; height: 100vh; overflow: hidden; }
+body { margin: 0; font-family: 'Segoe UI', Roboto, Arial, sans-serif; display: flex; height: 100vh; overflow: hidden; }
 
-/* SIDEBAR STYLING */
-.sidebar { width: 240px; background: var(--sidebar-blue); color: white; display: flex; flex-direction: column; flex-shrink: 0; }
-.brand { padding: 20px; font-weight: 800; font-size: 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: center; }
-nav { padding: 10px; flex-grow: 1; }
-.nav-item { display: block; padding: 12px 15px; color: rgba(255,255,255,0.8); text-decoration: none; border-radius: 4px; font-size: 0.9rem; margin-bottom: 2px; transition: 0.3s; }
-.nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.15); color: white; }
-.logout { border-top: 1px solid rgba(255,255,255,0.1); padding: 20px; font-weight: bold; }
+/* SIDEBAR STYLES */
+.sidebar { width: 240px; background: var(--sidebar-bg); color: white; display: flex; flex-direction: column; flex-shrink: 0; }
+.brand { padding: 20px; font-weight: bold; font-size: 1.1rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
+nav { flex-grow: 1; padding: 10px 0; }
+.nav-item { 
+    display: flex; align-items: center; padding: 12px 20px; 
+    text-decoration: none; color: rgba(255,255,255,0.8); font-size: 0.9rem; transition: 0.2s;
+}
+.nav-item:hover, .nav-item.active { background: var(--sidebar-hover); color: white; }
+.nav-item i { margin-right: 15px; width: 20px; text-align: center; }
 
 /* MAIN CONTENT */
-.main-wrapper { flex-grow: 1; display: flex; flex-direction: column; min-width: 0; }
-header { height: 64px; background: white; display: flex; align-items: center; justify-content: space-between; padding: 0 25px; border-bottom: 1px solid #ddd; }
-.content { padding: 25px; overflow: auto; flex-grow: 1; }
+.main { flex-grow: 1; display: flex; flex-direction: column; background: #f1f3f4; }
+.topbar { 
+    height: 64px; background: white; display: flex; align-items: center; 
+    padding: 0 24px; border-bottom: 1px solid var(--border-light); justify-content: space-between;
+}
+.search-container { position: relative; width: 400px; }
+#stallSearch { 
+    width: 100%; padding: 10px 15px 10px 40px; border-radius: 8px; 
+    border: 1px solid var(--border-light); background: #f1f3f4; outline: none;
+}
+.search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-gray); }
 
-/* SEARCH BAR */
-.search-container { position: relative; }
-#searchStall { padding: 8px 15px 8px 35px; border-radius: 20px; border: 1px solid #ccc; width: 300px; outline: none; }
-.search-icon { position: absolute; left: 12px; top: 8px; color: #888; }
-
-/* MARKET FLOOR PLAN */
-.market-floor-plan {
-  background: white;
-  border: 1px solid #aaa;
-  padding: 40px;
-  min-width: 1100px;
-  position: relative;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+/* ARCHITECTURAL MAP */
+.content { flex-grow: 1; padding: 24px; overflow: auto; display: flex; justify-content: center; }
+.map-canvas {
+    background: white; border-radius: 12px; border: 1px solid var(--border-light);
+    padding: 40px; position: relative; min-width: 1000px; height: fit-content; box-shadow: 0 4px 6px rgba(0,0,0,0.05);
 }
 
-.market-map-grid {
-  display: grid;
-  /* Defining the multi-aisle layout */
-  grid-template-columns: repeat(3, 1fr 40px) 1fr; 
-  background: var(--market-yellow); /* Matching the yellow walkable area */
-  border: 2px solid var(--border-dark);
-  padding: 10px;
-  gap: 0;
+.market-floor {
+    background: var(--map-yellow); border: 2px solid #333; border-radius: 15px;
+    display: grid; grid-template-columns: repeat(20, 1fr); grid-template-rows: repeat(12, 40px);
+    position: relative; padding: 10px;
 }
 
-/* AISLES / WALKWAYS */
-.aisle-v { background: var(--walkway-gray); grid-row: 1 / span 10; border-left: 1px dashed #999; border-right: 1px dashed #999; }
-.aisle-h { grid-column: 1 / span 10; height: 40px; background: var(--walkway-gray); border-top: 1px dashed #999; border-bottom: 1px dashed #999; margin: 10px 0; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #777; font-weight: bold; letter-spacing: 2px; }
+/* DOT MARKERS FOR ARCHITECTURAL LOOK */
+.floor-dot {
+    width: 4px; height: 4px; background: black; border-radius: 50%;
+    position: absolute; z-index: 1;
+}
 
-/* SECTION STYLES */
-.section-block { background: transparent; padding: 10px; }
-.section-header { font-size: 11px; font-weight: bold; color: #444; text-transform: uppercase; margin-bottom: 8px; border-bottom: 1px solid #ccc; padding-bottom: 3px; }
+/* WALKWAYS / CORRIDORS */
+.corridor-v { grid-column: 7 / span 1; grid-row: 1 / span 12; border-left: 1px dashed #999; border-right: 1px dashed #999; }
+.corridor-h { grid-column: 1 / span 20; grid-row: 6 / span 1; border-top: 1px dashed #999; border-bottom: 1px dashed #999; }
 
-/* STALL GRID SYSTEM */
-.stall-container { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
+/* STALL BLOCKS */
+.stall-block {
+    background: #e0e0e0; border: 1px solid #777; padding: 5px;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; z-index: 2;
+}
 .stall {
-  aspect-ratio: 1;
-  background: white;
-  border: 1px solid #888;
-  font-size: 9px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: 0.15s;
+    width: 100%; aspect-ratio: 1; background: white; border: 0.5px solid #aaa;
+    font-size: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer;
 }
-.stall:hover { transform: scale(1.2); z-index: 10; border-color: #000; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-.stall.occupied { background: var(--stall-occupied); }
-.stall.highlight { background: var(--stall-highlight) !important; color: white; border-color: red; font-weight: bold; }
+.stall:hover { background: #bbdefb; }
+.stall.occupied { background: #90caf9; }
+.stall.active { border: 2px solid #2c599d; z-index: 10; transform: scale(1.2); background: white !important; }
 
-/* INFO PANEL */
-.info-box { margin-top: 20px; padding: 15px; background: #fff; border-left: 5px solid var(--sidebar-blue); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-
+/* LEGEND/INFO OVERLAY */
+.info-overlay {
+    position: absolute; bottom: 20px; right: 20px; background: white;
+    padding: 15px; border-radius: 8px; border: 1px solid var(--border-light); box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
 </style>
 </head>
 <body>
 
-  <aside class="sidebar">
+<aside class="sidebar">
     <div class="brand">LGU 3 ADMIN</div>
     <nav>
-      <a href="#" class="nav-item active">Dashboard</a>
-      <a href="#" class="nav-item">Active</a>
-      <a href="#" class="nav-item">Vendor Management</a>
-      <a href="#" class="nav-item">Vendor Commodity</a>
-      <a href="#" class="nav-item">Inspection</a>
-      <a href="#" class="nav-item">Admin Settings</a>
+        <a href="#" class="nav-item active"><i>📊</i> Dashboard</a>
+        <a href="#" class="nav-item"><i>👤</i> Vendor Management</a>
+        <a href="#" class="nav-item"><i>📦</i> Vendor Commodity</a>
+        <a href="#" class="nav-item"><i>🔍</i> Inspection</a>
+        <a href="#" class="nav-item"><i>⚙️</i> Settings</a>
+        <a href="#" class="nav-item" style="margin-top:auto"><i>🚪</i> Logout</a>
     </nav>
-    <div class="logout">LOGOUT</div>
-  </aside>
+</aside>
 
-  <div class="main-wrapper">
-    <header>
-      <h2 style="color: #333;">Market Floor Plan</h2>
-      <div class="search-container">
-        <span class="search-icon">🔍</span>
-        <input type="text" id="searchStall" placeholder="Search Stall No. (e.g. 32)">
-      </div>
+<main class="main">
+    <header class="topbar">
+        <h2 style="font-weight: 500;">Market Floor Plan</h2>
+        <div class="search-container">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="stallSearch" placeholder="Search Stall No.">
+        </div>
     </header>
 
     <div class="content">
-      <div class="market-floor-plan">
-        <div class="market-map-grid">
-          
-          <div class="section-block">
-            <div class="section-header">Fish Section</div>
-            <div class="stall-container" id="fish-stalls"></div>
-          </div>
+        <div class="map-canvas">
+            <div class="market-floor" id="marketFloor">
+                <div class="corridor-v"></div>
+                <div class="corridor-h"></div>
 
-          <div class="aisle-v"></div>
+                <div class="stall-block" style="grid-column: 2 / span 4; grid-row: 2 / span 3;" id="fishSec"></div>
+                
+                <div class="stall-block" style="grid-column: 9 / span 4; grid-row: 2 / span 3;" id="meatSec"></div>
 
-          <div class="section-block">
-            <div class="section-header">Meat Section</div>
-            <div class="stall-container" id="meat-stalls"></div>
-          </div>
+                <div class="stall-block" style="grid-column: 2 / span 4; grid-row: 8 / span 3;" id="drySec"></div>
 
-          <div class="aisle-v"></div>
+                <div class="stall-block" style="grid-column: 9 / span 4; grid-row: 8 / span 3;" id="grocSec"></div>
 
-          <div class="section-block">
-            <div class="section-header">Vegetables</div>
-            <div class="stall-container" id="veg-stalls"></div>
-          </div>
+                <div class="stall-block" style="grid-column: 15 / span 4; grid-row: 4 / span 6; transform: rotate(5deg);">
+                    <div class="stall">313</div><div class="stall">314</div>
+                    <div class="stall">315</div><div class="stall">316</div>
+                    <div class="stall">317</div><div class="stall">318</div>
+                </div>
+            </div>
 
-          <div class="aisle-v"></div>
-
-          <div class="section-block">
-            <div class="section-header">Grocery</div>
-            <div class="stall-container" id="grocery-stalls"></div>
-          </div>
-
-          <div class="aisle-h">MAIN CROSSROAD WALKWAY</div>
-
-          <div class="section-block">
-            <div class="section-header">Dry Goods</div>
-            <div class="stall-container" id="dry-stalls"></div>
-          </div>
-          <div class="aisle-v"></div>
-          <div class="section-block">
-            <div class="section-header">Textiles</div>
-            <div class="stall-container" id="textile-stalls"></div>
-          </div>
-          <div class="aisle-v"></div>
-          <div class="section-block">
-            <div class="section-header">Carinderia</div>
-            <div class="stall-container" id="car-stalls"></div>
-          </div>
-          <div class="aisle-v"></div>
-          <div class="section-block" style="background: rgba(0,0,0,0.03);">
-            <div class="section-header">Service Area</div>
-          </div>
-
+            <div class="info-overlay" id="infoPanel">
+                <h4 style="margin:0 0 5px 0">Stall Information</h4>
+                <p id="details" style="margin:0; font-size: 0.85rem; color: var(--text-gray);">Select a stall to see details.</p>
+            </div>
         </div>
-
-        <div class="info-box" id="stallDetail">
-          Click a stall to view vendor and compliance information.
-        </div>
-      </div>
     </div>
-  </div>
+</main>
 
 <script>
-// Mock Database based on your previous input
+// Mock data
 const vendors = {
-  32: { name: "Lily's Textile Stall", status: "Active", compliance: "Pass" },
-  18: { name: "Maria Meat Shop", status: "Active", compliance: "Warning" },
-  5: { name: "Juan Fish Vendor", status: "Inactive", compliance: "N/A" }
+    32: { name: "Lily's Textile", status: "Occupied" },
+    18: { name: "Maria Meat Shop", status: "Occupied" }
 };
 
-function generateStalls(id, start, count) {
-  const container = document.getElementById(id);
-  for (let i = 0; i < count; i++) {
-    const num = start + i;
-    const stall = document.createElement('div');
-    stall.className = 'stall' + (vendors[num] ? ' occupied' : '');
-    stall.innerText = num;
-    stall.dataset.no = num;
-
-    stall.onclick = () => {
-      document.querySelectorAll('.stall').forEach(s => s.classList.remove('highlight'));
-      stall.classList.add('highlight');
-      const v = vendors[num];
-      document.getElementById('stallDetail').innerHTML = v ? 
-        `<strong>Stall #${num}:</strong> ${v.name} | Status: ${v.status} | Compliance: ${v.compliance}` : 
-        `<strong>Stall #${num}:</strong> Vacant Stall`;
-    };
-    container.appendChild(stall);
-  }
+// Generate dots for architectural feel
+const floor = document.getElementById('marketFloor');
+for(let i=0; i<100; i++) {
+    let dot = document.createElement('div');
+    dot.className = 'floor-dot';
+    dot.style.left = Math.random() * 100 + '%';
+    dot.style.top = Math.random() * 100 + '%';
+    floor.appendChild(dot);
 }
 
-// Populate sections
-generateStalls('fish-stalls', 1, 20);
-generateStalls('meat-stalls', 21, 40);
-generateStalls('veg-stalls', 41, 60);
-generateStalls('grocery-stalls', 61, 80);
-generateStalls('dry-stalls', 81, 100);
-generateStalls('textile-stalls', 30, 15); // Lily is at #32
-generateStalls('car-stalls', 116, 20);
-
-// Search Feature
-document.getElementById('searchStall').addEventListener('input', function(e) {
-  const query = e.target.value;
-  document.querySelectorAll('.stall').forEach(s => {
-    s.classList.remove('highlight');
-    if (query && s.dataset.no === query) {
-      s.classList.add('highlight');
-      s.scrollIntoView({ behavior: 'smooth', block: 'center' });
+function fillBlock(id, start, count) {
+    const block = document.getElementById(id);
+    for(let i=0; i<count; i++) {
+        let num = start + i;
+        let s = document.createElement('div');
+        s.className = 'stall' + (vendors[num] ? ' occupied' : '');
+        s.innerText = num;
+        s.onclick = () => {
+            document.querySelectorAll('.stall').forEach(el => el.classList.remove('active'));
+            s.classList.add('active');
+            const v = vendors[num];
+            document.getElementById('details').innerHTML = v ? 
+                `<strong>Stall ${num}</strong>: ${v.name} (${v.status})` : 
+                `<strong>Stall ${num}</strong>: Vacant`;
+        };
+        block.appendChild(s);
     }
-  });
-});
+}
+
+fillBlock('fishSec', 1, 12);
+fillBlock('meatSec', 13, 12);
+fillBlock('drySec', 25, 12);
+fillBlock('grocSec', 37, 12);
+
+// Search
+document.getElementById('stallSearch').oninput = function(e) {
+    const val = e.target.value;
+    document.querySelectorAll('.stall').forEach(s => {
+        s.style.background = (val && s.innerText === val) ? "#fff176" : "";
+    });
+};
 </script>
 </body>
 </html>
