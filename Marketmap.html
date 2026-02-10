@@ -382,11 +382,6 @@ else d.textContent = i;
       d.classList.add("parking-stall");
       d.textContent="PARK";
     }
-if(type==="comfortroom"){
-      d.classList.add("cr-stall");
-      d.textContent="MALE";
-   d.textContent="FEMALE":
-    }
     d.onclick=()=>{
       document.querySelectorAll(".stall").forEach(s=>s.classList.remove("active"));
       d.classList.add("active");
@@ -423,6 +418,32 @@ document.getElementById("searchStall").oninput=function(){
     if(val && s.dataset.no===val) s.style.background="yellow";
   });
 };
+// First, clear CR section
+document.getElementById("CrSection").innerHTML = "";
+
+// Create Male stall
+const maleStall = document.createElement("div");
+maleStall.className = "stall cr-male";
+maleStall.textContent = "MALE";
+maleStall.dataset.no = "CR1";
+maleStall.onclick = () => {
+    document.querySelectorAll(".stall").forEach(s=>s.classList.remove("active"));
+    maleStall.classList.add("active");
+    document.getElementById("stallInfo").innerHTML = `<b>STALL:</b> CR1<br><b>SECTION:</b> Comfort Room<br><b>TYPE:</b> MALE`;
+};
+document.getElementById("CrSection").appendChild(maleStall);
+
+// Create Female stall
+const femaleStall = document.createElement("div");
+femaleStall.className = "stall cr-female";
+femaleStall.textContent = "FEMALE";
+femaleStall.dataset.no = "CR2";
+femaleStall.onclick = () => {
+    document.querySelectorAll(".stall").forEach(s=>s.classList.remove("active"));
+    femaleStall.classList.add("active");
+    document.getElementById("stallInfo").innerHTML = `<b>STALL:</b> CR2<br><b>SECTION:</b> Comfort Room<br><b>TYPE:</b> FEMALE`;
+};
+document.getElementById("CrSection").appendChild(femaleStall);
 
 let scale=1;
 const map=document.getElementById("marketMap");
