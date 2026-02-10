@@ -111,25 +111,24 @@ nav{padding:1rem;}
 .legend-item{display:flex;align-items:center;gap:5px;}
 </style>
 </head>
-<body>
-
 <div class="app">
   <aside class="sidebar">
     <div class="brand">LGU 3 ADMIN SYSTEM</div>
     <nav>
-      <a href="#" class="nav-item">Market Map</a>
-      <a href="#" class="nav-item">Dashboard</a>
-      <a href="#" class="nav-item">Vendor Management</a>
-      <a href="#" class="nav-item">Inspection</a>
-      <a href="#" class="nav-item">Reports</a>
+      <a href="admindashboard.html" class="nav-item active">Dashboard</a>
+      <a href="adminvendor.html" class="nav-item">Vendor Management</a>
+      <a href="admincommodity.html" class="nav-item">Commodity and Price Monitoring</a>
+      <a href="admininspection.html" class="nav-item">Inspection and Compliance</a>
+      <a href="adminsettings.html" class="nav-item">Settings</a>
+      <a href="main.html" class="nav-item" style="margin-top:2rem;font-weight:bold;">Logout</a>
     </nav>
   </aside>
 
   <section class="main">
-    <div class="topbar">
-      <h3>Barangay Market Layout Manager</h3>
-      <input id="search" placeholder="Search stall no..." style="padding:6px;border-radius:6px;border:1px solid #ccc;">
-    </div>
+    <header class="topbar">
+      <button class="btn" id="backBtn">← Back</button>
+      <button class="btn">Export</button>
+    </header>>
 
     <div class="content">
       <div class="map-wrapper" id="wrapper">
