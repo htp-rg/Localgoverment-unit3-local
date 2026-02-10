@@ -141,6 +141,28 @@ nav { padding: 1rem; }
 .legend{ margin-top:12px; display:flex; flex-wrap:wrap; gap:12px; font-size:12px;}
 .legend span{ display:flex; align-items:center; gap:6px;}
 .legend-box{ width:14px; height:14px; border-radius:3px; border:1px solid #999;}
+  entrance, .exit {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #28a745;
+  color: white;
+  font-weight: bold;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  z-index: 5;
+  box-shadow: 0 4px 10px rgba(0,0,0,.2);
+}
+
+.exit {
+  bottom: -20px;
+  background: #dc3545;
+}
+
+.entrance {
+  top: -20px;
+}
 </style>
 </head>
 <body>
@@ -157,14 +179,20 @@ nav { padding: 1rem; }
   </aside>
 
   <section class="main">
-    <header class="topbar">
-      <h1>Market Floor Plan</h1>
-      <input type="text" id="searchStall" placeholder="Search Stall No (e.g. 32)" style="padding: 5px; border-radius: 4px; border: 1px solid #ccc;">
-    </header>
+   <header class="topbar">
+  <h1>Market Floor Plan</h1>
+  <div>
+    <button id="zoomIn" style="padding:6px 10px;">+</button>
+    <button id="zoomOut" style="padding:6px 10px;">−</button>
+    <button id="resetZoom" style="padding:6px 10px;">Reset</button>
+    <input type="text" id="searchStall" placeholder="Search Stall No (e.g. 32)" style="padding: 5px; border-radius: 4px; border: 1px solid #ccc;">
+  </div>
+</header>
 
     <div class="content">
-      <div class="market-map">
-        
+      <div id="mapWrapper">
+  <div class="market-map" id="marketMap">
+        <div class="entrance">⬆ ENTRANCE</div>
         <div class="walkway vertical-spine"></div>
 
         <div class="section" style="grid-column: 1;">
@@ -209,6 +237,8 @@ nav { padding: 1rem; }
 <div class="section" style="grid-column: 3;">
   <div class="section-title">ADMIN OFFICE</div>
   <div class="facility-box">🏢 ADMIN OFFICE</div>
+  <div class="exit">⬇ EXIT</div>
+  </div>
 </div>
       </div>
 
@@ -278,21 +308,39 @@ document.getElementById("searchStall").oninput = function() {
         if(val && s.dataset.no === val) s.style.background = "#ffff00";
     });
 };
+let scale = 1;
+const map = document.getElementById("marketMap");
+const wrapper = document.getElementById("mapWrapper");
 
-const wrapper=document.getElementById("wrapper"), mapGroup=document.getElementById("map-group");
-let scale=1, panX=20, panY=20, isPanning=false, startX, startY;
-function updateTransform(){ mapGroup.setAttribute("transform", `translate(${panX}, ${panY}) scale(${scale})`);}
-wrapper.addEventListener("wheel",e=>{
+function applyZoom() {
+  map.style.transform = `scale(${scale})`;
+  map.style.transformOrigin = "center center";
+}
+
+// Zoom Buttons
+document.getElementById("zoomIn").onclick = () => {
+  scale += 0.1;
+  applyZoom();
+};
+
+document.getElementById("zoomOut").onclick = () => {
+  scale = Math.max(0.5, scale - 0.1);
+  applyZoom();
+};
+
+document.getElementById("resetZoom").onclick = () => {
+  scale = 1;
+  applyZoom();
+};
+
+// Mouse Wheel Zoom
+wrapper.addEventListener("wheel", (e) => {
   e.preventDefault();
-  const zoomFactor=.1, dir=e.deltaY>0?-1:1, newScale=Math.min(Math.max(.4,scale+dir*zoomFactor),2.5);
-  const rect=wrapper.getBoundingClientRect(), mouseX=e.clientX-rect.left, mouseY=e.clientY-rect.top;
-  const dx=(mouseX-panX)/scale, dy=(mouseY-panY)/scale;
-  panX=mouseX-dx*newScale; panY=mouseY-dy*newScale; scale=newScale; updateTransform();
-},{passive:false});
-wrapper.addEventListener("mousedown",e=>{if(e.target.classList.contains("stall"))return;isPanning=true;startX=e.clientX-panX;startY=e.clientY-panY; wrapper.style.cursor="grabbing";});
-window.addEventListener("mouseup",()=>{isPanning=false; wrapper.style.cursor="default";});
-window.addEventListener("mousemove",e=>{if(!isPanning)return; panX=e.clientX-startX; panY=e.clientY-startY; updateTransform();});
-updateTransform();
+  scale += e.deltaY < 0 ? 0.05 : -0.05;
+  scale = Math.min(Math.max(0.5, scale), 2.5);
+  applyZoom();
+});
+;
 </script>
 </body>
 </html>
