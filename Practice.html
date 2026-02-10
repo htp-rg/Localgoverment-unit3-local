@@ -78,6 +78,7 @@ svg { user-select:none; }
       <button class="btn">Export</button>
     </header>
 
+ 
     <div class="content">
       <div class="map-wrapper" id="wrapper">
         <svg width="1300" height="900" viewBox="0 0 1300 900">
@@ -144,7 +145,6 @@ const vendors = {
 };
 
 const STALL_SIZE=40, GAP=8;
-
 const categoryColor={
   fish:"var(--fish)",
   meat:"var(--meat)",
@@ -154,9 +154,18 @@ const categoryColor={
   carinderia:"var(--carinderia)"
 };
 
-// Draw stall with exact numbers
-function drawBlock(numbers, x, y, section){
+// Draw block with label
+function drawBlock(numbers, x, y, section, category, label){
   const g=document.getElementById(section==="wet"?"wetStalls":"dryStalls");
+
+  // Add section label
+  const textLabel=document.createElementNS("http://www.w3.org/2000/svg","text");
+  textLabel.setAttribute("x",x);
+  textLabel.setAttribute("y",y-10);
+  textLabel.classList.add("section-label");
+  textLabel.textContent=label;
+  g.appendChild(textLabel);
+
   numbers.forEach((num, idx)=>{
     const col=Math.floor(idx%6);
     const row=Math.floor(idx/6);
@@ -172,7 +181,7 @@ function drawBlock(numbers, x, y, section){
     rect.classList.add("stall");
 
     const v=vendors[num];
-    let fillColor=v?categoryColor[v.category]:categoryColor["fish"];
+    let fillColor=v?categoryColor[v.category]:categoryColor[category];
     rect.setAttribute("fill",fillColor);
     rect.classList.add(v?v.status:"vacant");
 
@@ -180,7 +189,7 @@ function drawBlock(numbers, x, y, section){
     rect.onclick=e=>{
       document.getElementById("info").innerHTML=v?
         `<b>Stall ${num}</b> | Vendor: ${v.name} | Category: ${v.category.toUpperCase()} | Status: <b>${v.status.toUpperCase()}</b>`:
-        `<b>Stall ${num}</b> | Category: ${"fish".toUpperCase()} | Status: <b>VACANT</b>`;
+        `<b>Stall ${num}</b> | Category: ${category.toUpperCase()} | Status: <b>VACANT</b>`;
     };
     g.appendChild(rect);
 
@@ -196,14 +205,16 @@ function drawBlock(numbers, x, y, section){
 }
 
 // WET SECTION
-drawBlock([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],250,90,"wet"); // Fish + Meat
-drawBlock([19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36],250,330,"wet"); // Grocery
-// DRY SECTION
-drawBlock([100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116],720,90,"dry");
-drawBlock([130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145],720,330,"dry");
-drawBlock([170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185],720,630,"dry");
+drawBlock([1,2,3,4,5,6],250,90,"wet","fish","Fish");
+drawBlock([7,8,9,10,11,12],250,160,"wet","meat","Meat");
+drawBlock([13,14,15,16,17,18],250,230,"wet","grocery","Grocery");
 
-// Pan & Zoom (same as before)
+// DRY SECTION
+drawBlock([100,101,102,103,104,105],720,90,"dry","drygoods","Dry Goods");
+drawBlock([106,107,108,109,110,111],720,160,"dry","textile","Textile");
+drawBlock([112,113,114,115,116,120],720,230,"dry","carinderia","Carinderia");
+
+// Pan & Zoom
 const wrapper=document.getElementById("wrapper"), mapGroup=document.getElementById("map-group");
 let scale=1, panX=20, panY=20, isPanning=false, startX, startY;
 function updateTransform(){ mapGroup.setAttribute("transform", `translate(${panX}, ${panY}) scale(${scale})`);}
