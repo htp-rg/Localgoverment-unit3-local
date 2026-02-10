@@ -140,29 +140,6 @@ body {
   border-top:10px solid red;
 }
 
-/* PARKING & LOADING BOXES */
-.parking,
-.loading-bay{
-  position:absolute;
-  top:50%;
-  transform:translateY(-50%);
-  color:white;
-  padding:10px 14px;
-  border-radius:8px;
-  font-size:12px;
-  font-weight:bold;
-  text-align:center;
-  box-shadow:0 4px 10px rgba(0,0,0,.2);
-}
-
-.parking{
-  right:-200px;
-  background:#2f80ed;
-}
-.loading-bay{
-  left:-200px;
-  background:#f2994a;
-}
 
 /* INFO PANEL */
 .info-panel{
@@ -202,18 +179,7 @@ body {
 
 <div class="entrance">ENTRANCE</div>
 
-<!-- SIDE ROADS -->
-<div class="side-road-left">
-  <div class="arrow arrow-left"></div>
-</div>
 
-<div class="side-road-right">
-  <div class="arrow arrow-right"></div>
-</div>
-
-<!-- PARKING & LOADING -->
-<div class="loading-bay">🚚 LOADING BAY</div>
-<div class="parking">🅿 PARKING AREA</div>
 
 <div class="walkway vertical-spine"></div>
 
@@ -249,6 +215,17 @@ body {
 <div class="section" style="grid-column:3;">
   <div class="section-title">CARINDERIA</div>
   <div class="stall-grid" id="carinderiaSection"></div>
+</div>
+<div class="walkway horizontal-walkway">WALKWAY</div>
+
+<div class="section" style="grid-column:1;">
+  <div class="section-title">lOADING BAY</div>
+  <div class="stall-grid" id="loadingSection"></div>
+</div>
+
+<div class="section" style="grid-column:3;">
+  <div class="section-title">PARKING AREA</div>
+  <div class="stall-grid" id="parkingSection"></div>
 </div>
 
 <div class="exit">EXIT</div>
@@ -307,6 +284,8 @@ createStalls("drygoodsSection",21,35,"drygoods");
 createStalls("grocerySection",36,50,"grocery");
 createStalls("textileSection",51,70,"textile");
 createStalls("carinderiaSection",71,85,"carinderia");
+createStalls("loadingSection",86,"loading");
+createStalls("parkingSection",87,100,"parking");
 
 // SEARCH
 document.getElementById("searchStall").oninput=function(){
