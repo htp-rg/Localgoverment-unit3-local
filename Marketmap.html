@@ -4,426 +4,283 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Admin Dashboard - Barangay Market Map</title>
+
 <style>
 :root {
-  --text: #111;
   --blue: #0a53c1;
-  --white: #fff;
   --border: #e6e8eb;
-  --shadow: 0 6px 24px rgba(0,0,0,.06);
-  --walkway-color: #555555;
-  --wet-color: #0a3d91;
-  --dry-color: #ff8c00;
+  --walkway-color: #555;
 }
 
 /* GLOBAL */
 * { box-sizing: border-box; }
 body {
   margin: 0;
-  font-family: Inter, system-ui, sans-serif;
-  background: var(--white);
-  color: var(--text);
+  font-family: Arial, sans-serif;
+  background: #fff;
 }
 
-/* APP LAYOUT */
+/* LAYOUT */
 .app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
-.sidebar { border-right: 1px solid var(--border); background: #4e73df; }
-.brand { font-weight: 800; text-transform: uppercase; padding: 1rem; border-bottom: 1px solid var(--border); color: #fff; }
-nav { padding: 1rem; }
-.nav-item { display: block; padding: .6rem; border-radius: 8px; text-decoration: none; color: #fff; margin-bottom: 5px; }
-.nav-item:hover, .nav-item.active { background: var(--white); color: var(--blue); }
+.sidebar { background: #4e73df; color:#fff; padding:1rem; }
+.nav-item { display:block; color:#fff; text-decoration:none; padding:.5rem; border-radius:6px; }
+.nav-item:hover,.nav-item.active{background:#fff;color:#0a53c1;}
 
-.main { display: grid; grid-template-rows: 64px 1fr; }
-.topbar { display: flex; align-items: center; justify-content: space-between; padding: 0 1rem; border-bottom: 1px solid var(--border); }
-.content { padding: 2rem; overflow-y: auto; }
+.main { display:grid; grid-template-rows:64px 1fr; }
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:0 1rem;border-bottom:1px solid var(--border);}
+.content{padding:1rem;}
 
-/* MARKET MAP GRID SYSTEM */
-.market-map {
-  display: grid;
-  grid-template-columns: 1fr 60px 1fr;
-  gap: 0;
-  border: 4px solid #333;
-  border-radius: 8px;
-
-  /* MAKE WHOLE FLOOR A WALKWAY */
-  background: var(--walkway-color);
-  
-  max-width: 1000px;
-  margin: 0 auto;
-  position: relative;
+/* MARKET MAP */
+.market-map{
+  display:grid;
+  grid-template-columns:1fr 60px 1fr;
+  border:4px solid #333;
+  border-radius:8px;
+  background:var(--walkway-color);
+  max-width:1000px;
+  margin:auto;
+  position:relative;
 }
 
-/* WALKWAYS */
-.walkway {
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+.section{
+  background:#fff;
+  border:1px solid #ccc;
+  padding:10px;
 }
+.section-title{font-weight:bold;text-align:center;margin-bottom:6px;}
 
-.vertical-spine {
-  grid-column: 2;
-  grid-row: 1 / span 10;
-  z-index: 1;
+.stall-grid{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:4px;
 }
-
-.horizontal-walkway {
-  grid-column: 1 / span 3;
-  height: 50px;
-  border-top: 2px solid #444;
-  border-bottom: 2px solid #444;
-  z-index: 2;
+.stall{
+  border:1px solid #999;
+  border-radius:4px;
+  font-size:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  background:#fff;
 }
-
-
-/* SECTIONS */
-.section {
-  padding: 15px;
-  background: #fff;
-  border: 1px solid #ccc;
-}
-.section-title {
-  font-size: 14px;
-  font-weight: bold;
-  margin-bottom: 10px;
-  text-align: center;
-}
-
-/* STALL GRID */
-.stall-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr); /* Responsive stall sizing */
-  gap: 4px;
-}
-
-.stall {
-  aspect-ratio: 1/1;
-  border: 1px solid #999;
-  border-radius: 4px;
-  font-size: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  background: #fff;
-}
-.stall.active { outline: 3px solid var(--blue); z-index: 10; background: #fff !important; color: #000 !important; }
+.stall.active{outline:3px solid var(--blue);}
 
 /* COLORS */
-.fish { background: #d0e7ff; }
-.meat { background: #ffd6d6; }
-.grocery { background: #d4edda; }
-.drygoods { background: #fff3cd; }
-.textile { background: #e2d9ff; }
-.carinderia { background: #ffe0f0; }
+.fish{background:#d0e7ff;}
+.meat{background:#ffd6d6;}
+.grocery{background:#d4edda;}
+.drygoods{background:#fff3cd;}
+.textile{background:#e2d9ff;}
+.carinderia{background:#ffe0f0;}
 
-.occupied { border: 2px solid var(--blue); font-weight: bold; }
-.vacant { opacity: 0.5; }
-.violation { background: #ff4d4d !important; color: white; }
-.reserved { background: #ffd700 !important; }
+.occupied{border:2px solid var(--blue);font-weight:bold;}
+.vacant{opacity:.5;}
+.violation{background:red!important;color:#fff;}
+.reserved{background:gold!important;}
 
-.info-panel { margin-top: 20px; padding: 15px; background: #f8f9fc; border-radius: 8px; border: 1px solid var(--border); }
-  .facility-box {
-  height: 120px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  font-weight: bold;
-  font-size: 14px;
-  border: 2px dashed #999;
-  background: #f1f3f5;
+/* WALKWAYS */
+.walkway{
+  color:#fff;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:12px;
+  font-weight:bold;
 }
-.legend{ margin-top:12px; display:flex; flex-wrap:wrap; gap:12px; font-size:12px;}
-.legend span{ display:flex; align-items:center; gap:6px;}
-.legend-box{ width:14px; height:14px; border-radius:3px; border:1px solid #999;}
-  entrance, .exit {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #28a745;
-  color: white;
-  font-weight: bold;
-  padding: 6px 16px;
-  border-radius: 20px;
-  font-size: 12px;
-  z-index: 5;
-  box-shadow: 0 4px 10px rgba(0,0,0,.2);
+.vertical-spine{grid-column:2;grid-row:1/span 10;}
+.horizontal-walkway{
+  grid-column:1/span 3;
+  height:40px;
+  border-top:2px solid #444;
+  border-bottom:2px solid #444;
 }
 
-.exit {
-  bottom: -20px;
-  background: #dc3545;
+/* ENTRANCE / EXIT */
+.entrance,.exit{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  padding:6px 14px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:bold;
+  color:#fff;
+}
+.entrance{top:-20px;background:green;}
+.exit{bottom:-20px;background:red;}
+
+.entrance::before{
+  content:"";
+  position:absolute;
+  top:-10px;
+  left:50%;
+  transform:translateX(-50%);
+  border-left:8px solid transparent;
+  border-right:8px solid transparent;
+  border-bottom:10px solid green;
+}
+.exit::before{
+  content:"";
+  position:absolute;
+  bottom:-10px;
+  left:50%;
+  transform:translateX(-50%);
+  border-left:8px solid transparent;
+  border-right:8px solid transparent;
+  border-top:10px solid red;
 }
 
-.entrance {
-  top: -20px;
-    background: green;
+/* INFO PANEL */
+.info-panel{
+  margin-top:15px;
+  padding:12px;
+  border:1px solid var(--border);
+  border-radius:8px;
+  background:#f8f9fc;
 }
-  .entrance::before,
-.exit::before {
-  content: "";
-  position: absolute;
-  width: 0;
-  height: 0;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.entrance::before {
-  top: -10px;
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent;
-  border-bottom: 10px solid green;
-}
-
-.exit::before {
-  bottom: -10px;
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent;
-  border-top: 10px solid red;
-}
-  .parking {
-  position: absolute;
-  right: -140px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: #2f80ed;
-  color: white;
-  padding: 10px 14px;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: bold;
-  writing-mode: vertical-rl;
-  text-align: center;
-  box-shadow: 0 4px 10px rgba(0,0,0,.2);
-}
-
-/* LOADING BAY */
-.loading-bay {
-  position: absolute;
-  left: -140px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: #f2994a;
-  color: white;
-  padding: 10px 14px;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: bold;
-  writing-mode: vertical-rl;
-  text-align: center;
-  box-shadow: 0 4px 10px rgba(0,0,0,.2);
-}
-
-/* EMERGENCY EXIT */
-.emergency-exit {
-  position: absolute;
-  bottom: 50%;
-  left: 50%;
-  transform: translate(-50%, 100%);
-  background: linear-gradient(45deg, #333, #777);
-  color: white;
-  padding: 6px 14px;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: bold;
-  border: 2px dashed #aaa;
-  box-shadow: 0 4px 10px rgba(0,0,0,.3);
-}
-
 </style>
 </head>
+
 <body>
-
 <div class="app">
-  <aside class="sidebar">
-    <div class="brand">LGU 3 ADMIN SYSTEM</div>
-    <nav>
-      <a href="#" class="nav-item active">Dashboard</a>
-      <a href="#" class="nav-item">Vendor Management</a>
-      <a href="#" class="nav-item">Compliance</a>
-      <a href="#" class="nav-item">Logout</a>
-    </nav>
-  </aside>
 
-  <section class="main">
-   <header class="topbar">
-  <h1>Market Floor Plan</h1>
+<aside class="sidebar">
+  <h3>LGU 3 ADMIN</h3>
+  <a class="nav-item active" href="#">Dashboard</a>
+  <a class="nav-item" href="#">Vendor Management</a>
+  <a class="nav-item" href="#">Compliance</a>
+</aside>
+
+<section class="main">
+<header class="topbar">
+  <h2>Market Floor Plan</h2>
   <div>
-    <button id="zoomIn" style="padding:6px 10px;">+</button>
-    <button id="zoomOut" style="padding:6px 10px;">−</button>
-    <button id="resetZoom" style="padding:6px 10px;">Reset</button>
-    <input type="text" id="searchStall" placeholder="Search Stall No (e.g. 32)" style="padding: 5px; border-radius: 4px; border: 1px solid #ccc;">
+    <button id="zoomIn">+</button>
+    <button id="zoomOut">−</button>
+    <button id="resetZoom">Reset</button>
+    <input id="searchStall" placeholder="Search stall no">
   </div>
 </header>
 
-    <div class="content">
-      <div id="mapWrapper">
-  <div class="market-map" id="marketMap">
-        <div class="entrance">⬆ ENTRANCE</div>
-    <!-- PARKING AREA -->
-<div class="parking">🅿 PARKING AREA</div>
+<div class="content">
+<div id="mapWrapper">
+<div class="market-map" id="marketMap">
 
-<!-- LOADING BAY -->
-<div class="loading-bay">🚚 LOADING BAY</div>
+<div class="entrance">ENTRANCE</div>
 
-
-        <div class="walkway vertical-spine"></div>
-
-        <div class="section" style="grid-column: 1;">
-          <div class="section-title">FISH SECTION</div>
-          <div class="stall-grid" id="fishSection"></div>
-        </div>
-        <div class="section" style="grid-column: 3;">
-          <div class="section-title">MEAT SECTION</div>
-          <div class="stall-grid" id="meatSection"></div>
-        </div>
-
-        <div class="walkway horizontal-walkway">MAIN WALKWAY</div>
-  <div class="walkway vertical-spine"></div>
-        <div class="section" style="grid-column: 1;">
-          <div class="section-title">DRY GOODS</div>
-          <div class="stall-grid" id="drygoodsSection"></div>
-        </div>
-        <div class="section" style="grid-column: 3;">
-          <div class="section-title">GROCERY</div>
-          <div class="stall-grid" id="grocerySection"></div>
-        </div>
-
-        <div class="walkway horizontal-walkway">INNER WALKWAY</div>
-  <div class="walkway vertical-spine"></div>
-        <div class="section" style="grid-column: 1;">
-          <div class="section-title">TEXTILE</div>
-          <div class="stall-grid" id="textileSection"></div>
-        </div>
-        <div class="section" style="grid-column: 3;">
-          <div class="section-title">CARINDERIA</div>
-          <div class="stall-grid" id="carinderiaSection"></div>
-        </div>
-        
-<div class="walkway horizontal-walkway">SERVICE WALKWAY</div>
 <div class="walkway vertical-spine"></div>
 
-<div class="section" style="grid-column: 1;">
-  <div class="section-title">CR (Comfort Room)</div>
-  <div class="facility-box">🚻 PUBLIC CR</div>
+<div class="section" style="grid-column:1;">
+  <div class="section-title">FISH</div>
+  <div class="stall-grid" id="fishSection"></div>
 </div>
 
-<div class="section" style="grid-column: 3;">
-  <div class="section-title">ADMIN OFFICE</div>
-  <div class="facility-box">🏢 ADMIN OFFICE</div>
-  <div class="exit">⬇ EXIT</div>
-  </div>
+<div class="section" style="grid-column:3;">
+  <div class="section-title">MEAT</div>
+  <div class="stall-grid" id="meatSection"></div>
 </div>
-      </div>
 
-          <div class="info-panel" id="stallInfo">Click a stall to view vendor info.</div>
-   <div class="legend">
-          <span><div class="legend-box fish"></div> Fish</span>
-          <span><div class="legend-box meat"></div> Meat</span>
-          <span><div class="legend-box grocery"></div> Grocery</span>
-          <span><div class="legend-box drygoods"></div> Dry Goods</span>
-          <span><div class="legend-box textile"></div> Textile</span>
-          <span><div class="legend-box carinderia"></div> Carinderia</span>
-          <span><div class="legend-box" style="border:2px solid #0a53c1;"></div> Occupied</span>
-          <span><div class="legend-box" style="opacity:.6;"></div> Vacant</span>
-          <span><div class="legend-box" style="background:red;color:white;"></div> Violation</span>
-          <span><div class="legend-box" style="background:yellow;color:#111;"></div> Reserved</span>
-        </div>
-    </div>
-  </section>
+<div class="walkway horizontal-walkway">MAIN WALKWAY</div>
+
+<div class="section" style="grid-column:1;">
+  <div class="section-title">DRY GOODS</div>
+  <div class="stall-grid" id="drygoodsSection"></div>
+</div>
+
+<div class="section" style="grid-column:3;">
+  <div class="section-title">GROCERY</div>
+  <div class="stall-grid" id="grocerySection"></div>
+</div>
+
+<div class="walkway horizontal-walkway">INNER WALKWAY</div>
+
+<div class="section" style="grid-column:1;">
+  <div class="section-title">TEXTILE</div>
+  <div class="stall-grid" id="textileSection"></div>
+</div>
+
+<div class="section" style="grid-column:3;">
+  <div class="section-title">CARINDERIA</div>
+  <div class="stall-grid" id="carinderiaSection"></div>
+</div>
+
+<div class="exit">EXIT</div>
+
+</div>
+</div>
+
+<div class="info-panel" id="stallInfo">
+Click a stall to view vendor info.
+</div>
+
+</div>
+</section>
 </div>
 
 <script>
+// SAMPLE DATA
 const vendors = {
-    32:{name:"Lily's Textile Stall", section:"Textile", status:"Occupied"},
-    5:{name:"Pedro Fish Vendor", section:"Fish", status:"Occupied"},
-    18:{name:"Maria Meat Shop", section:"Meat", status:"Occupied"},
-    60:{name:"ABC Grocery", section:"Grocery", status:"Occupied"},
-    15:{name:"Violation Stall", section:"Fish", status:"Violation"}
+  5:{name:"Pedro Fish Vendor",section:"Fish",status:"Occupied"},
+  18:{name:"Maria Meat Shop",section:"Meat",status:"Occupied"},
+  32:{name:"Lily Textile",section:"Textile",status:"Occupied"},
+  15:{name:"Violation Stall",section:"Fish",status:"Violation"}
 };
 
-function createStalls(containerId, start, end, type) {
-    const container = document.getElementById(containerId);
-    for (let i = start; i <= end; i++) {
-        const div = document.createElement("div");
-        div.className = `stall ${type}`;
-        div.innerText = i;
-        div.dataset.no = i;
+// CREATE STALLS
+function createStalls(id,start,end,type){
+  const container=document.getElementById(id);
+  for(let i=start;i<=end;i++){
+    const d=document.createElement("div");
+    d.className=`stall ${type}`;
+    d.textContent=i;
+    d.dataset.no=i;
 
-        if (vendors[i]) {
-            div.classList.add(vendors[i].status.toLowerCase());
-        } else {
-            div.classList.add("vacant");
-        }
+    if(vendors[i]) d.classList.add(vendors[i].status.toLowerCase());
+    else d.classList.add("vacant");
 
-      div.onclick = () => {
-  document.querySelectorAll('.stall').forEach(s => s.classList.remove('active'));
-  div.classList.add('active');
+    d.onclick=()=>{
+      document.querySelectorAll(".stall").forEach(s=>s.classList.remove("active"));
+      d.classList.add("active");
 
-  const v = vendors[i];
-  document.getElementById("info").innerHTML = v ? 
-    `<b>STALL NO:</b> ${i}<br>
-     <b>VENDOR:</b> ${v.name}<br>
-     <b>SECTION:</b> ${v.section}<br>
-     <b>STATUS:</b> <span style="color:${v.status==='Violation'?'red':'green'}">${v.status}</span>` 
-    : 
-    `<b>STALL NO:</b> ${i}<br>
-     <b>STATUS:</b> VACANT`;
-};
+      const v=vendors[i];
+      document.getElementById("stallInfo").innerHTML=v?
+        `<b>STALL:</b> ${i}<br>
+         <b>VENDOR:</b> ${v.name}<br>
+         <b>SECTION:</b> ${v.section}<br>
+         <b>STATUS:</b> ${v.status}`
+        :
+        `<b>STALL:</b> ${i}<br><b>STATUS:</b> VACANT`;
+    };
 
-createStalls("fishSection", 1, 10, "fish");
-createStalls("meatSection", 11, 20, "meat");
-createStalls("drygoodsSection", 21, 35, "drygoods");
-createStalls("grocerySection", 36, 50, "grocery");
-createStalls("textileSection", 51, 70, "textile");
-createStalls("carinderiaSection", 71, 85, "carinderia");
-
-document.getElementById("searchStall").oninput = function() {
-    const val = this.value;
-    document.querySelectorAll('.stall').forEach(s => {
-        s.style.background = "";
-        if(val && s.dataset.no === val) s.style.background = "#ffff00";
-    });
-};
-let scale = 1;
-const map = document.getElementById("marketMap");
-const wrapper = document.getElementById("mapWrapper");
-
-function applyZoom() {
-  map.style.transform = `scale(${scale})`;
-  map.style.transformOrigin = "center center";
+    container.appendChild(d);
+  }
 }
 
-// Zoom Buttons
-document.getElementById("zoomIn").onclick = () => {
-  scale += 0.1;
-  applyZoom();
+createStalls("fishSection",1,10,"fish");
+createStalls("meatSection",11,20,"meat");
+createStalls("drygoodsSection",21,35,"drygoods");
+createStalls("grocerySection",36,50,"grocery");
+createStalls("textileSection",51,70,"textile");
+createStalls("carinderiaSection",71,85,"carinderia");
+
+// SEARCH
+document.getElementById("searchStall").oninput=function(){
+  const val=this.value;
+  document.querySelectorAll(".stall").forEach(s=>{
+    s.style.background="";
+    if(val && s.dataset.no===val) s.style.background="yellow";
+  });
 };
 
-document.getElementById("zoomOut").onclick = () => {
-  scale = Math.max(0.5, scale - 0.1);
-  applyZoom();
-};
-
-document.getElementById("resetZoom").onclick = () => {
-  scale = 1;
-  applyZoom();
-};
-
-// Mouse Wheel Zoom
-wrapper.addEventListener("wheel", (e) => {
-  e.preventDefault();
-  scale += e.deltaY < 0 ? 0.05 : -0.05;
-  scale = Math.min(Math.max(0.5, scale), 2.5);
-  applyZoom();
-});
-;
+// ZOOM
+let scale=1;
+const map=document.getElementById("marketMap");
+function applyZoom(){map.style.transform=`scale(${scale})`;}
+document.getElementById("zoomIn").onclick=()=>{scale+=0.1;applyZoom();}
+document.getElementById("zoomOut").onclick=()=>{scale=Math.max(0.5,scale-0.1);applyZoom();}
+document.getElementById("resetZoom").onclick=()=>{scale=1;applyZoom();}
 </script>
+
 </body>
 </html>
