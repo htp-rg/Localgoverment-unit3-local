@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Barangay Market Map - LGU Admin</title>
-
 <style>
 :root {
   --text: #111111;
@@ -13,6 +12,12 @@
   --white: #ffffff;
   --border: #e6e8eb;
   --shadow: 0 6px 24px rgba(0, 0, 0, .06);
+  --fish: #9ec5ff;
+  --meat: #ff9e9e;
+  --grocery: #ffe699;
+  --drygoods: #c2f0c2;
+  --textile: #d1c2f0;
+  --carinderia: #f0b7c2;
 }
 * { box-sizing: border-box; }
 body {
@@ -69,10 +74,10 @@ svg { user-select:none; }
 /* STALL */
 .stall{stroke:#444;stroke-width:.5;cursor:pointer;}
 .stall:hover{stroke-width:2;stroke:#000;}
-.occupied{fill:#9ec5ff;}
-.vacant{fill:#fff;}
-.violation{fill:#ff4d4d;}
-.reserved{fill:#ffd700;}
+.occupied{opacity:1;}
+.vacant{fill:#fff;opacity:.6;}
+.violation{fill:red;}
+.reserved{fill:yellow;}
 .walkway{fill:#d1d3e2; opacity:.6;}
 .label{font-size:18px; font-weight:bold; fill:var(--blue);}
 .facility-text{font-size:11px; font-weight:bold; fill:#333; pointer-events: none;}
@@ -106,10 +111,8 @@ svg { user-select:none; }
   border-radius:3px;
   border:1px solid #999;
 }
-
 .box{width:12px;height:12px;border:1px solid #333;}
 .legend-item{display:flex;align-items:center;gap:5px;}
-  
 </style>
 </head>
 <body>
@@ -150,7 +153,7 @@ svg { user-select:none; }
             <text x="200" y="60" class="label">WET SECTION</text>
             <text x="880" y="60" class="label">DRY SECTION</text>
 
-            <!-- FACILITIES (NO OVERLAP) -->
+            <!-- FACILITIES -->
             <rect x="40" y="80" width="130" height="60" fill="#e3f2fd" stroke="#4e73df" rx="6"/>
             <text x="55" y="115" class="facility-text">ADMIN OFFICE</text>
 
@@ -177,34 +180,47 @@ svg { user-select:none; }
         Click a stall to view vendor info.
       </div>
 
-     <div class="legend">
-          <span><div class="legend-box fish"></div> Fish</span>
-          <span><div class="legend-box meat"></div> Meat</span>
-          <span><div class="legend-box grocery"></div> Grocery</span>
-          <span><div class="legend-box drygoods"></div> Dry Goods</span>
-          <span><div class="legend-box textile"></div> Textile</span>
-          <span><div class="legend-box carinderia"></div> Carinderia</span>
+      <div class="legend">
+          <span><div class="legend-box" style="background:var(--fish);"></div> Fish</span>
+          <span><div class="legend-box" style="background:var(--meat);"></div> Meat</span>
+          <span><div class="legend-box" style="background:var(--grocery);"></div> Grocery</span>
+          <span><div class="legend-box" style="background:var(--drygoods);"></div> Dry Goods</span>
+          <span><div class="legend-box" style="background:var(--textile);"></div> Textile</span>
+          <span><div class="legend-box" style="background:var(--carinderia);"></div> Carinderia</span>
           <span><div class="legend-box" style="border:2px solid #0a53c1;"></div> Occupied</span>
           <span><div class="legend-box" style="opacity:.6;"></div> Vacant</span>
-          <span><div class="legend-box" style="background:red;color:white;"></div> Violation</span>
-          <span><div class="legend-box" style="background:yellow;color:#111;"></div> Reserved</span>
-        </div>
+          <span><div class="legend-box" style="background:red;"></div> Violation</span>
+          <span><div class="legend-box" style="background:yellow;"></div> Reserved</span>
       </div>
+    </div>
   </section>
 </div>
 
 <script>
 const vendors = {
-  2:{name:"Pedro Fish Vendor",status:"occupied"},
-  10:{name:"Maria Meat Shop",status:"occupied"},
-  20:{name:"Juan Cold Storage",status:"violation"},
-  105:{name:"Elena Boutique",status:"reserved"},
+  2:{name:"Pedro Fish Vendor",category:"fish",status:"occupied"},
+  3:{name:"Luis Fish Vendor",category:"fish",status:"occupied"},
+  10:{name:"Maria Meat Shop",category:"meat",status:"occupied"},
+  15:{name:"Carlo Grocery",category:"grocery",status:"occupied"},
+  20:{name:"Juan Cold Storage",category:"drygoods",status:"violation"},
+  105:{name:"Elena Boutique",category:"textile",status:"reserved"},
+  120:{name:"Ana Carinderia",category:"carinderia",status:"occupied"},
 };
 
 const STALL_SIZE = 40;
 const GAP = 8;
 
-function drawBlock(start, x, y, rows, cols, section){
+// Map categories to colors
+const categoryColor = {
+  fish: "var(--fish)",
+  meat: "var(--meat)",
+  grocery: "var(--grocery)",
+  drygoods: "var(--drygoods)",
+  textile: "var(--textile)",
+  carinderia: "var(--carinderia)"
+};
+
+function drawBlock(start, x, y, rows, cols, section, category){
   const g = document.getElementById(section === "wet" ? "wetStalls" : "dryStalls");
   let num = start;
 
@@ -221,16 +237,20 @@ function drawBlock(start, x, y, rows, cols, section){
       rect.setAttribute("rx", "4");
       rect.classList.add("stall");
 
-      let status = vendors[num] ? vendors[num].status : "vacant";
-      rect.classList.add(status);
-      rect.dataset.no = num;
+      // Determine category and status
+      const v = vendors[num];
+      let fillColor = v ? categoryColor[v.category] || "#fff" : categoryColor[category] || "#fff";
+      rect.setAttribute("fill", fillColor);
 
+      if(v) rect.classList.add(v.status);
+      else rect.classList.add("vacant");
+
+      rect.dataset.no = num;
       rect.onclick = (e) => {
         e.stopPropagation();
-        const v = vendors[num];
         document.getElementById("info").innerHTML = v ?
-          `<b>Stall ${num}</b> | Vendor: ${v.name} | Status: <b>${v.status.toUpperCase()}</b>` :
-          `<b>Stall ${num}</b> | Status: <b>VACANT</b>`;
+          `<b>Stall ${num}</b> | Vendor: ${v.name} | Category: ${v.category.toUpperCase()} | Status: <b>${v.status.toUpperCase()}</b>` :
+          `<b>Stall ${num}</b> | Category: ${category.toUpperCase()} | Status: <b>VACANT</b>`;
       };
 
       g.appendChild(rect);
@@ -249,16 +269,17 @@ function drawBlock(start, x, y, rows, cols, section){
   }
 }
 
-// NON-OVERLAPPING STALL ZONES
-drawBlock(1,   250, 90,  3, 6, "wet");
-drawBlock(20,  250, 330, 4, 6, "wet");
-drawBlock(45,  250, 630, 4, 6, "wet");
+// WET SECTION
+drawBlock(1,   250, 90,  3, 6, "wet", "fish");
+drawBlock(19,  250, 330, 4, 6, "wet", "meat");
+drawBlock(43,  250, 630, 4, 6, "wet", "grocery");
 
-drawBlock(100, 720, 90,  3, 8, "dry");
-drawBlock(130, 720, 330, 4, 8, "dry");
-drawBlock(170, 720, 630, 4, 8, "dry");
+// DRY SECTION
+drawBlock(100, 720, 90,  3, 8, "dry", "drygoods");
+drawBlock(130, 720, 330, 4, 8, "dry", "textile");
+drawBlock(170, 720, 630, 4, 8, "dry", "carinderia");
 
-// ===== SMOOTH PAN & ZOOM (FIXED) =====
+// ===== SMOOTH PAN & ZOOM =====
 const wrapper = document.getElementById("wrapper");
 const mapGroup = document.getElementById("map-group");
 
@@ -274,7 +295,6 @@ function updateTransform() {
 
 wrapper.addEventListener("wheel", (e) => {
   e.preventDefault();
-
   const zoomFactor = 0.1;
   const direction = e.deltaY > 0 ? -1 : 1;
   const newScale = Math.min(Math.max(0.4, scale + direction * zoomFactor), 2.5);
