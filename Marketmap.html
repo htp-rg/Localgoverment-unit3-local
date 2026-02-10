@@ -240,7 +240,19 @@ nav { padding: 1rem; }
 <div class="entrance">ENTRANCE</div>
 
 <div class="walkway vertical-spine"></div>
+  
+<div class="section" style="grid-column:1;">
+  <div class="section-title">Comfort room</div>
+  <div class="stall-grid" id="CrSection"></div>
+</div>
 
+<div class="section" style="grid-column:3;">
+  <div class="section-title">Admin Office</div>
+  <div class="stall-grid" id="adminSection"></div>
+</div>
+
+<div class="walkway horizontal-walkway"> ENTRANCE WALKWAY</div>
+  
 <div class="section" style="grid-column:1;">
   <div class="section-title">FISH</div>
   <div class="stall-grid" id="fishSection"></div>
@@ -370,14 +382,16 @@ function createStalls(id,start,end,type,labelText=null){
     container.appendChild(d);
   }
 }
-
+createStalls("CrSection", 0, 0, "CR-Male"); 
+createStalls("CrSection", 0, 1, "CR-Female");
+createStalls("adminSection", 0, 0, "Admin"); 
 createStalls("fishSection",1,20,"fish");
 createStalls("meatSection",21,40,"meat");
 createStalls("drygoodsSection",41,65,"drygoods");
 createStalls("grocerySection",66,75,"grocery");
 createStalls("textileSection",76,90,"textile");
 createStalls("carinderiaSection",91,100,"carinderia");
-createStalls("loadingSection",0,0,"loading"); // LOADING BAY TEXT ONLY
+createStalls("loadingSection",0,0,"loading");
 createStalls("parkingSection",101,111,"parking"); 
 
 document.getElementById("searchStall").oninput=function(){
