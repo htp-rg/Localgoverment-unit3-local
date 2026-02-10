@@ -149,6 +149,25 @@ body {
   border-radius:8px;
   background:#f8f9fc;
 }
+  .loading-bay-stall{
+  background:#f2994a;
+  color:#fff;
+  font-weight:bold;
+  font-size:11px;
+  grid-column:1/-1; /* full width */
+  height:30px;
+}
+
+.parking-stall{
+  background:#2f80ed;
+  color:#fff;
+  font-weight:bold;
+  font-size:11px;
+  height:60px;       /* portrait style */
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
 </style>
 </head>
 
@@ -249,8 +268,20 @@ const vendors = {
   15:{name:"Violation Stall",section:"Fish",status:"Violation"}
 };
 
-function createStalls(id,start,end,type){
+function createStalls(id,start,end,type,labelText=null){
   const container=document.getElementById(id);
+  container.innerHTML="";
+
+  // SPECIAL: LOADING BAY (NO NUMBERS)
+  if(type==="loading"){
+    const d=document.createElement("div");
+    d.className="stall loading-bay-stall";
+    d.textContent="LOADING BAY";
+    container.appendChild(d);
+    return;
+  }
+
+  // NORMAL STALLS
   for(let i=start;i<=end;i++){
     const d=document.createElement("div");
     d.className=`stall ${type}`;
@@ -259,6 +290,12 @@ function createStalls(id,start,end,type){
 
     if(vendors[i]) d.classList.add(vendors[i].status.toLowerCase());
     else d.classList.add("vacant");
+
+    // PARKING STYLE
+    if(type==="parking"){
+      d.classList.add("parking-stall");
+      d.textContent="PARK";
+    }
 
     d.onclick=()=>{
       document.querySelectorAll(".stall").forEach(s=>s.classList.remove("active"));
@@ -271,7 +308,7 @@ function createStalls(id,start,end,type){
          <b>SECTION:</b> ${v.section}<br>
          <b>STATUS:</b> ${v.status}`
         :
-        `<b>STALL:</b> ${i}<br><b>STATUS:</b> VACANT`;
+        `<b>STALL:</b> ${type==="parking"?"PARKING":i}<br><b>STATUS:</b> VACANT`;
     };
 
     container.appendChild(d);
@@ -284,8 +321,8 @@ createStalls("drygoodsSection",21,35,"drygoods");
 createStalls("grocerySection",36,50,"grocery");
 createStalls("textileSection",51,70,"textile");
 createStalls("carinderiaSection",71,85,"carinderia");
-createStalls("loadingSection",86,"loading");
-createStalls("parkingSection",87,100,"parking");
+createStalls("loadingSection",0,0,"loading"); // LOADING BAY TEXT ONLY
+createStalls("parkingSection",86,95,"parking"); 
 
 // SEARCH
 document.getElementById("searchStall").oninput=function(){
