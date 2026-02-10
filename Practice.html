@@ -76,8 +76,9 @@ nav{padding:1rem;}
   height:70vh;
   border-radius:12px;
   overflow:hidden;
+  position: relative;
 }
-#map{transform-origin:0 0;cursor:grab;}
+#map{transform-origin:0 0; cursor:grab; transition: transform 0.1s ease-out;}
 
 /* STALL */
 .stall{stroke:#444;stroke-width:.5;cursor:pointer;}
@@ -86,15 +87,15 @@ nav{padding:1rem;}
 .vacant{fill:#fff;}
 .violation{fill:#ff4d4d;}
 .reserved{fill:#ffd700;}
-.walkway{fill:#d1d3e2;opacity:.9;}
-.label{font-size:16px;font-weight:bold;fill:var(--blue);}
-.facility{font-size:11px;font-weight:bold;fill:#333;}
+.walkway{fill:#d1d3e2; opacity:.6;}
+.label{font-size:18px; font-weight:bold; fill:var(--blue); text-transform: uppercase;}
+.facility-text{font-size:11px; font-weight:bold; fill:#333; pointer-events: none;}
 
 /* INFO */
 .info-panel{
   margin-top:10px;
   background:#fff;
-  padding:10px;
+  padding:15px;
   border-radius:8px;
   border-left:5px solid var(--blue);
   box-shadow:var(--shadow);
@@ -113,97 +114,66 @@ nav{padding:1rem;}
 <body>
 
 <div class="app">
+  <aside class="sidebar">
+    <div class="brand">LGU 3 ADMIN SYSTEM</div>
+    <nav>
+      <a href="#" class="nav-item">Market Map</a>
+      <a href="#" class="nav-item">Dashboard</a>
+      <a href="#" class="nav-item">Vendor Management</a>
+      <a href="#" class="nav-item">Inspection</a>
+      <a href="#" class="nav-item">Reports</a>
+    </nav>
+  </aside>
 
-<!-- SIDEBAR -->
-<aside class="sidebar">
-  <div class="brand">LGU 3 ADMIN SYSTEM</div>
-  <nav>
-    <a href="#" class="nav-item">Market Map</a>
-    <a href="#" class="nav-item">Dashboard</a>
-    <a href="#" class="nav-item">Vendor Management</a>
-    <a href="#" class="nav-item">Inspection</a>
-    <a href="#" class="nav-item">Reports</a>
-    <a href="#" class="nav-item">Settings</a>
-  </nav>
-</aside>
-
-<!-- MAIN -->
-<section class="main">
-  <div class="topbar">
-    <h3>Barangay Market Layout Manager</h3>
-    <input id="search" placeholder="Search stall no..." style="padding:6px;border-radius:6px;border:1px solid #ccc;">
-  </div>
-
-  <div class="content">
-
-    <div class="map-wrapper">
-      <svg id="map" width="1400" height="900">
-
-        <!-- MARKET BORDER -->
-        <polygon points="50,50 1200,50 1300,200 1250,850 100,850 50,450"
-          fill="#fff" stroke="#b7b9cc" stroke-width="2"/>
-
-        <!-- SECTION LABELS -->
-        <text x="220" y="90" class="label">WET SECTION</text>
-        <text x="760" y="90" class="label">DRY SECTION</text>
-
-        <!-- WALKWAYS (FIXED, NO OVERLAP) -->
-        <!-- MAIN CENTER AISLE -->
-        <rect x="520" y="120" width="80" height="650" class="walkway"/>
-
-        <!-- WET SECTION AISLES -->
-        <rect x="120" y="310" width="360" height="50" class="walkway"/>
-        <rect x="120" y="520" width="360" height="50" class="walkway"/>
-
-        <!-- DRY SECTION AISLES -->
-        <rect x="620" y="310" width="520" height="50" class="walkway"/>
-        <rect x="620" y="520" width="520" height="50" class="walkway"/>
-
-        <!-- FACILITIES (NO OVERLAP) -->
-        <!-- ADMIN OFFICE -->
-        <rect x="80" y="120" width="140" height="60" fill="#e3f2fd" stroke="#4e73df"/>
-        <text x="95" y="155" class="facility">ADMIN OFFICE</text>
-
-        <!-- CR MALE -->
-        <rect x="80" y="700" width="100" height="50" fill="#e8f5e9" stroke="#2e7d32"/>
-        <text x="95" y="730" class="facility">CR MALE</text>
-
-        <!-- CR FEMALE -->
-        <rect x="190" y="700" width="110" height="50" fill="#fce4ec" stroke="#c2185b"/>
-        <text x="200" y="730" class="facility">CR FEMALE</text>
-
-        <!-- ENTRANCE -->
-        <rect x="560" y="70" width="140" height="35" fill="#fff3cd" stroke="#f0ad4e"/>
-        <text x="590" y="92" class="facility">ENTRANCE</text>
-
-        <!-- EXIT -->
-        <rect x="980" y="800" width="140" height="35" fill="#fff3cd" stroke="#f0ad4e"/>
-        <text x="1020" y="822" class="facility">EXIT</text>
-
-        <!-- EMERGENCY EXIT -->
-        <rect x="1180" y="420" width="140" height="35" fill="#ffebee" stroke="#c62828"/>
-        <text x="1190" y="442" class="facility">EMERGENCY EXIT</text>
-
-        <!-- STALL GROUPS -->
-        <g id="wetStalls"></g>
-        <g id="dryStalls"></g>
-
-      </svg>
+  <section class="main">
+    <div class="topbar">
+      <h3>Barangay Market Layout Manager</h3>
+      <input id="search" placeholder="Search stall no..." style="padding:6px;border-radius:6px;border:1px solid #ccc;">
     </div>
 
-    <div class="info-panel" id="info">
-      Click a stall to view vendor info.
-    </div>
+    <div class="content">
+      <div class="map-wrapper" id="wrapper">
+        <svg id="map" width="1300" height="900" viewBox="0 0 1300 900">
+          
+          <rect x="20" y="20" width="1260" height="860" fill="none" stroke="#b7b9cc" stroke-width="2" rx="10"/>
 
-    <div class="legend">
-      <div class="legend-item"><div class="box vacant"></div>Vacant</div>
-      <div class="legend-item"><div class="box occupied"></div>Occupied</div>
-      <div class="legend-item"><div class="box reserved"></div>Reserved</div>
-      <div class="legend-item"><div class="box violation"></div>Violation</div>
-    </div>
+          <rect x="580" y="20" width="100" height="860" class="walkway"/>
+          
+          <rect x="20" y="250" width="560" height="60" class="walkway"/> <rect x="680" y="250" width="600" height="60" class="walkway"/> <rect x="20" y="550" width="560" height="60" class="walkway"/> <rect x="680" y="550" width="600" height="60" class="walkway"/> <text x="250" y="60" class="label">WET SECTION</text>
+          <text x="880" y="60" class="label">DRY SECTION</text>
 
-  </div>
-</section>
+          <rect x="40" y="80" width="120" height="60" fill="#e3f2fd" stroke="#4e73df" rx="5"/>
+          <text x="55" y="115" class="facility-text">ADMIN OFFICE</text>
+
+          <rect x="40" y="780" width="90" height="60" fill="#e8f5e9" stroke="#2e7d32" rx="5"/>
+          <text x="55" y="815" class="facility-text">CR MALE</text>
+          
+          <rect x="140" y="780" width="90" height="60" fill="#fce4ec" stroke="#c2185b" rx="5"/>
+          <text x="150" y="815" class="facility-text">CR FEMALE</text>
+
+          <rect x="580" y="20" width="100" height="40" fill="#fff3cd" stroke="#f0ad4e"/>
+          <text x="595" y="45" class="facility-text" style="font-size:10px">MAIN ENTRANCE</text>
+
+          <rect x="1160" y="780" width="100" height="60" fill="#ffebee" stroke="#c62828" rx="5"/>
+          <text x="1175" y="815" class="facility-text">EMERGENCY</text>
+
+          <g id="wetStalls"></g>
+          <g id="dryStalls"></g>
+        </svg>
+      </div>
+
+      <div class="info-panel" id="info">
+        Click a stall to view vendor info.
+      </div>
+
+      <div class="legend">
+        <div class="legend-item"><div class="box vacant"></div>Vacant</div>
+        <div class="legend-item"><div class="box occupied"></div>Occupied</div>
+        <div class="legend-item"><div class="box reserved"></div>Reserved</div>
+        <div class="legend-item"><div class="box violation"></div>Violation</div>
+      </div>
+    </div>
+  </section>
 </div>
 
 <script>
@@ -214,44 +184,47 @@ const vendors = {
   105:{name:"Elena Boutique",status:"reserved"},
 };
 
-const STALL_SIZE = 38;
-const GAP = 6;
+const STALL_SIZE = 40;
+const GAP = 8;
 
-function drawBlock(start,x,y,rows,cols,section){
-  const g=document.getElementById(section==="wet"?"wetStalls":"dryStalls");
-  let num=start;
+function drawBlock(start, x, y, rows, cols, section){
+  const g = document.getElementById(section === "wet" ? "wetStalls" : "dryStalls");
+  let num = start;
 
-  for(let r=0;r<rows;r++){
-    for(let c=0;c<cols;c++){
-      let sx=x+c*(STALL_SIZE+GAP);
-      let sy=y+r*(STALL_SIZE+GAP);
+  for(let r=0; r<rows; r++){
+    for(let c=0; c<cols; c++){
+      let sx = x + c * (STALL_SIZE + GAP);
+      let sy = y + r * (STALL_SIZE + GAP);
 
-      const rect=document.createElementNS("http://www.w3.org/2000/svg","rect");
-      rect.setAttribute("x",sx);
-      rect.setAttribute("y",sy);
-      rect.setAttribute("width",STALL_SIZE);
-      rect.setAttribute("height",STALL_SIZE);
+      const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+      rect.setAttribute("x", sx);
+      rect.setAttribute("y", sy);
+      rect.setAttribute("width", STALL_SIZE);
+      rect.setAttribute("height", STALL_SIZE);
+      rect.setAttribute("rx", "4");
       rect.classList.add("stall");
 
-      let status=vendors[num]?vendors[num].status:"vacant";
+      let status = vendors[num] ? vendors[num].status : "vacant";
       rect.classList.add(status);
-      rect.dataset.no=num;
+      rect.dataset.no = num;
 
-      rect.onclick=()=>{
-        const v=vendors[num];
-        document.getElementById("info").innerHTML=v?
-          `<b>Stall ${num}</b> | ${v.name} | <b>${v.status.toUpperCase()}</b>`:
-          `<b>Stall ${num}</b> | VACANT`;
+      rect.onclick = (e) => {
+        e.stopPropagation();
+        const v = vendors[num];
+        document.getElementById("info").innerHTML = v ?
+          `<b>Stall ${num}</b> | Vendor: ${v.name} | Status: <span style="color:red">${v.status.toUpperCase()}</span>` :
+          `<b>Stall ${num}</b> | Status: <span style="color:green">VACANT</span>`;
       };
 
       g.appendChild(rect);
 
-      const text=document.createElementNS("http://www.w3.org/2000/svg","text");
-      text.setAttribute("x",sx+6);
-      text.setAttribute("y",sy+24);
-      text.setAttribute("font-size","10");
-      text.textContent=num;
-      text.style.pointerEvents="none";
+      const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      text.setAttribute("x", sx + 8);
+      text.setAttribute("y", sy + 25);
+      text.setAttribute("font-size", "11");
+      text.setAttribute("font-weight", "bold");
+      text.textContent = num;
+      text.style.pointerEvents = "none";
       g.appendChild(text);
 
       num++;
@@ -259,55 +232,60 @@ function drawBlock(start,x,y,rows,cols,section){
   }
 }
 
-/* WET SECTION STALLS */
-drawBlock(1,140,170,4,5,"wet"); 
-drawBlock(21,140,390,4,5,"wet");
-drawBlock(41,140,610,4,5,"wet");
+// DRAWING STALLS IN NON-OVERLAPPING ZONES
+// Wet Section (Left of center aisle)
+drawBlock(1, 250, 80, 3, 6, "wet");      // Top block
+drawBlock(20, 250, 330, 4, 6, "wet");    // Middle block
+drawBlock(45, 250, 630, 4, 6, "wet");    // Bottom block
 
-/* DRY SECTION STALLS */
-drawBlock(100,650,170,4,7,"dry");
-drawBlock(130,650,390,4,7,"dry");
-drawBlock(160,650,610,4,7,"dry");
+// Dry Section (Right of center aisle)
+drawBlock(100, 710, 80, 3, 8, "dry");    // Top block
+drawBlock(130, 710, 330, 4, 8, "dry");   // Middle block
+drawBlock(170, 710, 630, 4, 8, "dry");   // Bottom block
 
-/* SEARCH */
-document.getElementById("search").oninput=function(){
-  const val=this.value;
-  document.querySelectorAll(".stall").forEach(s=>{
-    if(s.dataset.no===val && val!==""){
-      s.style.stroke="#000";
-      s.style.strokeWidth="3";
-    }else{
-      s.style.stroke="#444";
-      s.style.strokeWidth=".5";
+/* SEARCH LOGIC */
+document.getElementById("search").oninput = function(){
+  const val = this.value;
+  document.querySelectorAll(".stall").forEach(s => {
+    if(s.dataset.no === val && val !== ""){
+      s.style.stroke = "#ff0000";
+      s.style.strokeWidth = "4";
+    } else {
+      s.style.stroke = "";
+      s.style.strokeWidth = "";
     }
   });
 };
 
 /* PAN & ZOOM */
-let scale=1,drag=false,startX,startY,offsetX=0,offsetY=0;
-const map=document.getElementById("map");
+let scale = 0.8, drag = false, startX, startY, offsetX = 50, offsetY = 20;
+const map = document.getElementById("map");
+const wrapper = document.getElementById("wrapper");
 
-map.addEventListener("wheel",e=>{
+// Set initial view
+map.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+
+wrapper.addEventListener("wheel", e => {
   e.preventDefault();
-  scale+=e.deltaY*-0.001;
-  scale=Math.min(Math.max(0.4,scale),3);
-  map.style.transform=`translate(${offsetX}px,${offsetY}px) scale(${scale})`;
+  const delta = e.deltaY > 0 ? -0.1 : 0.1;
+  scale = Math.min(Math.max(0.3, scale + delta), 2);
+  map.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+}, {passive: false});
+
+wrapper.addEventListener("mousedown", e => {
+  if(e.target.classList.contains("stall")) return;
+  drag = true;
+  startX = e.clientX - offsetX;
+  startY = e.clientY - offsetY;
+  map.style.cursor = "grabbing";
 });
 
-map.addEventListener("mousedown",e=>{
-  if(e.target.classList.contains("stall"))return;
-  drag=true;
-  startX=e.clientX-offsetX;
-  startY=e.clientY-offsetY;
-  map.style.cursor="grabbing";
-});
-
-window.addEventListener("mouseup",()=>{drag=false;map.style.cursor="grab";});
-window.addEventListener("mousemove",e=>{
-  if(!drag)return;
-  offsetX=e.clientX-startX;
-  offsetY=e.clientY-startY;
-  map.style.transform=`translate(${offsetX}px,${offsetY}px) scale(${scale})`;
+window.addEventListener("mouseup", () => { drag = false; map.style.cursor = "grab"; });
+window.addEventListener("mousemove", e => {
+  if (!drag) return;
+  offsetX = e.clientX - startX;
+  offsetY = e.clientY - startY;
+  map.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
 });
 </script>
 
