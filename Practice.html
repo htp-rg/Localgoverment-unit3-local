@@ -6,193 +6,136 @@
 <title>Barangay Market Map</title>
 
 <style>
-body{
-  margin:0;
-  font-family:Arial, sans-serif;
-  background:#f4f6f9;
-}
-.app{
-  display:grid;
-  grid-template-columns:220px 1fr;
-  height:100vh;
-}
-.sidebar{
-  background:#4e73df;
-  color:#fff;
-  padding:15px;
-}
-.sidebar h2{
-  font-size:16px;
-  margin-bottom:20px;
-}
-.sidebar a{
-  display:block;
-  padding:8px;
-  color:#fff;
-  text-decoration:none;
-  border-radius:6px;
-  margin-bottom:5px;
-}
+body{margin:0;font-family:Arial;background:#f4f6f9;}
+.app{display:grid;grid-template-columns:220px 1fr;height:100vh;}
+.sidebar{background:#4e73df;color:#fff;padding:15px;}
+.sidebar a{display:block;padding:8px;color:#fff;text-decoration:none;border-radius:6px;margin-bottom:5px;}
 .sidebar a:hover{background:#fff;color:#4e73df;}
+.main{display:flex;flex-direction:column;}
+.topbar{background:#fff;padding:10px 15px;border-bottom:1px solid #ddd;display:flex;justify-content:space-between;}
+.content{padding:15px;}
 
-.main{
-  display:flex;
-  flex-direction:column;
-}
-.topbar{
-  background:#fff;
-  padding:10px 15px;
-  border-bottom:1px solid #ddd;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-.content{
-  padding:15px;
-  overflow:hidden;
-}
+.map-wrapper{border:2px solid #333;background:#ddd;width:100%;height:620px;position:relative;overflow:hidden;border-radius:10px;}
+#map{transform-origin:0 0;cursor:grab;}
 
-/* MAP CONTAINER */
-.map-wrapper{
-  border:2px solid #333;
-  background:#ddd;
-  width:100%;
-  height:620px;
-  position:relative;
-  overflow:hidden;
-  border-radius:10px;
-}
-
-/* zoom + drag */
-#map{
-  transform-origin:0 0;
-  cursor:grab;
-}
-
-/* STALL STYLE */
-.stall{
-  fill:#fff;
-  stroke:#444;
-  stroke-width:1;
-  cursor:pointer;
-}
-.stall:hover{stroke:#000;stroke-width:2;}
+.stall{stroke:#444;stroke-width:1;cursor:pointer;}
 .occupied{fill:#9ec5ff;}
 .vacant{fill:#f2f2f2;}
 .violation{fill:#ff4d4d;}
 .reserved{fill:#ffd700;}
 
-/* SECTION COLORS */
-.wet { fill:#cfe8ff; }
-.dry { fill:#fff2cc; }
+.wet{fill:#cfe8ff;}
+.dry{fill:#fff2cc;}
 
-/* WALKWAYS */
-.walkway{
-  fill:#888;
-  opacity:0.7;
-}
+.walkway{fill:#888;opacity:.6;}
 
-/* LABELS */
-.label{
-  font-size:14px;
-  font-weight:bold;
-  fill:#000;
-}
+.label{font-size:14px;font-weight:bold;fill:#000;}
 
-/* INFO PANEL */
-.info-panel{
-  margin-top:10px;
-  background:#fff;
-  padding:10px;
-  border-radius:6px;
-  border:1px solid #ddd;
-  font-size:14px;
-}
+.info-panel{margin-top:10px;background:#fff;padding:10px;border-radius:6px;border:1px solid #ddd;font-size:14px;}
 </style>
 </head>
 <body>
 
 <div class="app">
-  <div class="sidebar">
-    <h2>LGU ADMIN</h2>
-    <a href="#">Dashboard</a>
-    <a href="#">Vendor Management</a>
-    <a href="#">Compliance</a>
-    <a href="#">Logout</a>
-  </div>
+<div class="sidebar">
+<h2>LGU ADMIN</h2>
+<a href="#">Dashboard</a>
+<a href="#">Vendor Management</a>
+<a href="#">Compliance</a>
+<a href="#">Logout</a>
+</div>
 
-  <div class="main">
-    <div class="topbar">
-      <h3>Barangay Market Map (Wet vs Dry)</h3>
-      <input id="search" placeholder="Search stall no..." style="padding:5px;">
-    </div>
+<div class="main">
+<div class="topbar">
+<h3>Barangay Market Map</h3>
+<input id="search" placeholder="Search stall no..." style="padding:5px;">
+</div>
 
-    <div class="content">
-      <div class="map-wrapper">
-        <svg id="map" width="1400" height="800">
+<div class="content">
+<div class="map-wrapper">
+<svg id="map" width="1400" height="800">
 
-          <!-- MARKET BORDER -->
-          <polygon points="50,50 1200,50 1350,250 1250,720 100,720 50,450"
-                   fill="#f7f0c8" stroke="#333" stroke-width="4"/>
+<!-- MARKET BORDER -->
+<polygon points="50,50 1200,50 1350,250 1250,720 100,720 50,450"
+fill="#f7f0c8" stroke="#333" stroke-width="4"/>
 
-          <!-- MAIN WALKWAYS (GRAY) -->
-          <rect x="650" y="80" width="80" height="620" class="walkway"/> <!-- separator -->
-          <rect x="80" y="360" width="1100" height="80" class="walkway"/> <!-- horizontal -->
-          <rect x="300" y="120" width="60" height="500" class="walkway"/> <!-- wet inner -->
-          <rect x="950" y="120" width="60" height="500" class="walkway"/> <!-- dry inner -->
+<!-- LABELS -->
+<text x="120" y="110" class="label">WET SECTION</text>
+<text x="820" y="110" class="label">DRY SECTION</text>
 
-          <!-- LABELS -->
-          <text x="120" y="110" class="label">WET SECTION</text>
-          <text x="820" y="110" class="label">DRY SECTION</text>
+<!-- WALKWAYS (AUTO ALIGNED) -->
+<g id="walkways"></g>
 
-          <text x="120" y="140" class="label">Fish</text>
-          <text x="120" y="300" class="label">Meat</text>
-          <text x="120" y="500" class="label">Fruits & Vegetables</text>
-          <text x="350" y="500" class="label">Carinderia</text>
+<!-- STALL GROUPS -->
+<g id="wetStalls"></g>
+<g id="dryStalls"></g>
 
-          <text x="820" y="140" class="label">Grocery</text>
-          <text x="820" y="300" class="label">Dry Goods</text>
-          <text x="820" y="500" class="label">Textile</text>
+</svg>
+</div>
 
-          <!-- WET STALLS -->
-          <g id="fish"></g>
-          <g id="meat"></g>
-          <g id="veg"></g>
-          <g id="carinderia"></g>
-
-          <!-- DRY STALLS -->
-          <g id="grocery"></g>
-          <g id="drygoods"></g>
-          <g id="textile"></g>
-
-        </svg>
-      </div>
-
-      <div class="info-panel" id="info">Click a stall to view details.</div>
-    </div>
-  </div>
+<div class="info-panel" id="info">Click a stall to view details.</div>
+</div>
+</div>
 </div>
 
 <script>
-const vendors = {
-  2:{name:"Pedro Fish Vendor",status:"occupied"},
-  10:{name:"Maria Meat Shop",status:"occupied"},
-  20:{name:"Violation Stall",status:"violation"},
-  80:{name:"Reserved Stall",status:"reserved"},
+const vendors={
+2:{name:"Pedro Fish Vendor",status:"occupied"},
+10:{name:"Maria Meat Shop",status:"occupied"},
+20:{name:"Violation Stall",status:"violation"},
+80:{name:"Reserved Stall",status:"reserved"},
 };
 
-/* CREATE STALL BLOCK */
-function createBlock(groupId,start,x,y,rows,cols,dx,dy,sectionClass){
-  const g=document.getElementById(groupId);
+// CONFIG
+const STALL_SIZE=40;
+const GAP=8;       // spacing between stalls
+const AISLE=30;    // walkway width
+
+function drawBlock(start,x,y,rows,cols,section){
+  const g=document.getElementById(section==="wet"?"wetStalls":"dryStalls");
+  const walk=document.getElementById("walkways");
   let num=start;
+
+  // vertical walkways between columns
+  for(let c=1;c<cols;c++){
+    let wx=x+(STALL_SIZE+GAP)*c - GAP/2 - AISLE/2;
+    let wy=y-10;
+    let wh=(STALL_SIZE+GAP)*rows+20;
+    const r=document.createElementNS("http://www.w3.org/2000/svg","rect");
+    r.setAttribute("x",wx);
+    r.setAttribute("y",wy);
+    r.setAttribute("width",AISLE);
+    r.setAttribute("height",wh);
+    r.setAttribute("class","walkway");
+    walk.appendChild(r);
+  }
+
+  // horizontal walkways between rows
+  for(let r=1;r<rows;r++){
+    let wx=x-10;
+    let wy=y+(STALL_SIZE+GAP)*r - GAP/2 - AISLE/2;
+    let ww=(STALL_SIZE+GAP)*cols+20;
+    const rr=document.createElementNS("http://www.w3.org/2000/svg","rect");
+    rr.setAttribute("x",wx);
+    rr.setAttribute("y",wy);
+    rr.setAttribute("width",ww);
+    rr.setAttribute("height",AISLE);
+    rr.setAttribute("class","walkway");
+    walk.appendChild(rr);
+  }
+
+  // stalls
   for(let r=0;r<rows;r++){
     for(let c=0;c<cols;c++){
+      let sx=x+c*(STALL_SIZE+GAP);
+      let sy=y+r*(STALL_SIZE+GAP);
+
       const rect=document.createElementNS("http://www.w3.org/2000/svg","rect");
-      rect.setAttribute("x",x+c*dx);
-      rect.setAttribute("y",y+r*dy);
-      rect.setAttribute("width",38);
-      rect.setAttribute("height",38);
-      rect.classList.add("stall",sectionClass);
+      rect.setAttribute("x",sx);
+      rect.setAttribute("y",sy);
+      rect.setAttribute("width",STALL_SIZE);
+      rect.setAttribute("height",STALL_SIZE);
+      rect.classList.add("stall",section);
 
       let status="vacant";
       if(vendors[num]) status=vendors[num].status;
@@ -202,15 +145,15 @@ function createBlock(groupId,start,x,y,rows,cols,dx,dy,sectionClass){
       rect.onclick=()=>{
         const v=vendors[num];
         document.getElementById("info").innerHTML=v?
-          `<b>Stall ${num}</b><br>${v.name}<br>Status: ${v.status}`:
-          `<b>Stall ${num}</b><br>Status: Vacant`;
+        `<b>Stall ${num}</b><br>${v.name}<br>Status: ${v.status}`:
+        `<b>Stall ${num}</b><br>Status: Vacant`;
       };
 
       g.appendChild(rect);
 
       const text=document.createElementNS("http://www.w3.org/2000/svg","text");
-      text.setAttribute("x",x+c*dx+10);
-      text.setAttribute("y",y+r*dy+24);
+      text.setAttribute("x",sx+10);
+      text.setAttribute("y",sy+24);
       text.setAttribute("font-size","9");
       text.textContent=num;
       g.appendChild(text);
@@ -220,18 +163,17 @@ function createBlock(groupId,start,x,y,rows,cols,dx,dy,sectionClass){
   }
 }
 
-/* WET SIDE (LEFT) */
-createBlock("fish",1,120,160,4,5,45,45,"wet");
-createBlock("meat",21,120,320,4,5,45,45,"wet");
-createBlock("veg",41,120,520,4,5,45,45,"wet");
-createBlock("carinderia",61,360,520,3,4,45,45,"wet");
+// WET SECTION (LEFT)
+drawBlock(1,120,160,4,5,"wet");
+drawBlock(21,120,360,4,5,"wet");
+drawBlock(41,120,560,4,5,"wet");
 
-/* DRY SIDE (RIGHT) */
-createBlock("grocery",100,760,160,4,5,45,45,"dry");
-createBlock("drygoods",120,760,320,4,5,45,45,"dry");
-createBlock("textile",140,760,520,4,5,45,45,"dry");
+// DRY SECTION (RIGHT)
+drawBlock(100,760,160,4,5,"dry");
+drawBlock(120,760,360,4,5,"dry");
+drawBlock(140,760,560,4,5,"dry");
 
-/* SEARCH */
+// SEARCH
 document.getElementById("search").oninput=function(){
   const val=this.value;
   document.querySelectorAll(".stall").forEach(s=>{
@@ -243,7 +185,7 @@ document.getElementById("search").oninput=function(){
   });
 };
 
-/* ZOOM + DRAG */
+// ZOOM + DRAG
 let scale=1,drag=false,startX,startY,offsetX=0,offsetY=0;
 const map=document.getElementById("map");
 
@@ -268,6 +210,5 @@ window.addEventListener("mousemove",e=>{
   map.style.transform=`translate(${offsetX}px,${offsetY}px) scale(${scale})`;
 });
 </script>
-
 </body>
 </html>
