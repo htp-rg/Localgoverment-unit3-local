@@ -31,19 +31,15 @@ body {
 .topbar{display:flex;justify-content:space-between;align-items:center;padding:0 1rem;border-bottom:1px solid var(--border);}
 .content{padding:1rem;}
 
-#mapWrapper{
-  width:100%;
-  overflow:hidden; /* PREVENT MAP FROM GOING OUTSIDE */
-  display:flex;
-  justify-content:center;
-}
-
+/* MARKET MAP */
 .market-map{
-  transform-origin:center center; /* ZOOM FROM CENTER */
-  transition:transform 0.2s ease;
-  max-width:900px; /* LIMIT MAP SIZE */
+  display:grid;
+  grid-template-columns:1fr 60px 1fr;
+  background:var(--walkway-color);
+  max-width:1000px;
+  margin:auto;
+  position:relative;
 }
-
 
 /* WALKWAYS */
 .walkway{
@@ -321,27 +317,13 @@ document.getElementById("searchStall").oninput=function(){
   });
 };
 
-let scale = 1;
-const map = document.getElementById("marketMap");
-
-function applyZoom(){
-  map.style.transform = `scale(${scale})`;
-}
-
-document.getElementById("zoomIn").onclick = () => {
-  scale = Math.min(2, scale + 0.1);
-  applyZoom();
-};
-
-document.getElementById("zoomOut").onclick = () => {
-  scale = Math.max(0.5, scale - 0.1);
-  applyZoom();
-};
-
-document.getElementById("resetZoom").onclick = () => {
-  scale = 1;
-  applyZoom();
-};
+// ZOOM
+let scale=1;
+const map=document.getElementById("marketMap");
+function applyZoom(){map.style.transform=`scale(${scale})`;}
+document.getElementById("zoomIn").onclick=()=>{scale+=0.1;applyZoom();}
+document.getElementById("zoomOut").onclick=()=>{scale=Math.max(0.5,scale-0.1);applyZoom();}
+document.getElementById("resetZoom").onclick=()=>{scale=1;applyZoom();}
 </script>
 
 </body>
