@@ -153,6 +153,79 @@ const categoryColor={
   textile:"var(--textile)",
   carinderia:"var(--carinderia)"
 };
+// Category stall lists
+const sections = [
+  {section:"wet", category:"fish", label:"Fish", numbers:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]},
+  {section:"wet", category:"meat", label:"Meat", numbers:[21,22,23,24,25,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40]},
+  {section:"wet", category:"grocery", label:"Grocery", numbers:[41,42,43,44,45,46,47,48,49,50,51,52,53,54,55]},
+  {section:"dry", category:"drygoods", label:"Dry Goods", numbers:[56,57,58,59,60,61,62,63,64,65,66,67,68,69,70]},
+  {section:"dry", category:"textile", label:"Textile", numbers:[71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100]},
+  {section:"dry", category:"carinderia", label:"Carinderia", numbers:[101,102,103,104,105,106,107,108,109,110]}
+];
+
+// Draw stalls dynamically
+function drawSection(sectionData, startX, startY){
+  const g=document.getElementById(sectionData.section==="wet"?"wetStalls":"dryStalls");
+
+  // Add section label
+  const textLabel=document.createElementNS("http://www.w3.org/2000/svg","text");
+  textLabel.setAttribute("x",startX);
+  textLabel.setAttribute("y",startY-10);
+  textLabel.classList.add("section-label");
+  textLabel.textContent=sectionData.label;
+  g.appendChild(textLabel);
+
+  sectionData.numbers.forEach((num, idx)=>{
+    const col=Math.floor(idx%6);
+    const row=Math.floor(idx/6);
+    const sx=startX+col*(STALL_SIZE+GAP);
+    const sy=startY+row*(STALL_SIZE+GAP);
+
+    const rect=document.createElementNS("http://www.w3.org/2000/svg","rect");
+    rect.setAttribute("x",sx);
+    rect.setAttribute("y",sy);
+    rect.setAttribute("width",STALL_SIZE);
+    rect.setAttribute("height",STALL_SIZE);
+    rect.setAttribute("rx","4");
+    rect.classList.add("stall");
+
+    const v=vendors[num];
+    const fillColor=v?categoryColor[v.category]:categoryColor[sectionData.category];
+    rect.setAttribute("fill",fillColor);
+    rect.classList.add(v?v.status:"vacant");
+
+    rect.dataset.no=num;
+    rect.onclick=e=>{
+      document.getElementById("info").innerHTML=v?
+        `<b>Stall ${num}</b> | Vendor: ${v.name} | Category: ${v.category.toUpperCase()} | Status: <b>${v.status.toUpperCase()}</b>`:
+        `<b>Stall ${num}</b> | Category: ${sectionData.category.toUpperCase()} | Status: <b>VACANT</b>`;
+    };
+    g.appendChild(rect);
+
+    const text=document.createElementNS("http://www.w3.org/2000/svg","text");
+    text.setAttribute("x",sx+8);
+    text.setAttribute("y",sy+25);
+    text.setAttribute("font-size","11");
+    text.setAttribute("font-weight","bold");
+    text.style.pointerEvents="none";
+    text.textContent=num;
+    g.appendChild(text);
+  });
+}
+
+// Draw all sections
+let wetStartY=90;
+let dryStartY=90;
+sections.forEach(s=>{
+  if(s.section==="wet"){
+    drawSection(s, 250, wetStartY);
+    // calculate next block Y
+    wetStartY += Math.ceil(s.numbers.length/6)*(STALL_SIZE+GAP)+20;
+  } else {
+    drawSection(s, 720, dryStartY);
+    dryStartY += Math.ceil(s.numbers.length/6)*(STALL_SIZE+GAP)+20;
+  }
+});
 
 // Draw block with label
 function drawBlock(numbers, x, y, section, category, label){
