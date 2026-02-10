@@ -6,208 +6,209 @@
 <title>Barangay Market Map</title>
 
 <style>
-body{margin:0;font-family:Arial;background:#f4f6f9;}
+body{margin:0;font-family:Arial;background:#f4f6f9;overflow: hidden;}
 .app{display:grid;grid-template-columns:220px 1fr;height:100vh;}
-.sidebar{background:#4e73df;color:#fff;padding:15px;}
-.sidebar a{display:block;padding:8px;color:#fff;text-decoration:none;border-radius:6px;margin-bottom:5px;}
-.sidebar a:hover{background:#fff;color:#4e73df;}
-.main{display:flex;flex-direction:column;}
-.topbar{background:#fff;padding:10px 15px;border-bottom:1px solid #ddd;display:flex;justify-content:space-between;}
-.content{padding:15px;}
+.sidebar{background:#4e73df;color:#fff;padding:15px;z-index: 10;}
+.sidebar h2{font-size: 1.2rem; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px;}
+.sidebar a{display:block;padding:12px;color:#fff;text-decoration:none;border-radius:6px;margin-bottom:5px;transition: 0.3s;}
+.sidebar a:hover{background:rgba(255,255,255,0.1);}
+.main{display:flex;flex-direction:column; background: #eaecf4;}
+.topbar{background:#fff;padding:15px 20px;border-bottom:1px solid #ddd;display:flex;justify-content:space-between;align-items: center;}
+.content{padding:20px; flex-grow: 1; display: flex; flex-direction: column;}
 
-.map-wrapper{border:2px solid #333;background:#ddd;width:100%;height:620px;position:relative;overflow:hidden;border-radius:10px;}
+.map-wrapper{border:1px solid #ccc;background:#f8f9fc;width:100%;height:70vh;position:relative;overflow:hidden;border-radius:10px; box-shadow: inset 0 0 10px rgba(0,0,0,0.05);}
 #map{transform-origin:0 0;cursor:grab;}
 
-.stall{stroke:#444;stroke-width:1;cursor:pointer;}
+.stall{stroke:#444;stroke-width:0.5;cursor:pointer;transition: fill 0.2s;}
+.stall:hover{stroke-width: 2; stroke: #000;}
+
+/* Status Colors */
 .occupied{fill:#9ec5ff;}
-.vacant{fill:#f2f2f2;}
+.vacant{fill:#ffffff;}
 .violation{fill:#ff4d4d;}
 .reserved{fill:#ffd700;}
 
-.wet{fill:#cfe8ff;}
-.dry{fill:#fff2cc;}
+.walkway{fill:#d1d3e2; opacity:.8;}
+.label{font-size:16px;font-weight:bold;fill:#4e73df; text-transform: uppercase; letter-spacing: 1px;}
 
-.walkway{fill:#888;opacity:.6;}
-
-.label{font-size:14px;font-weight:bold;fill:#000;}
-
-.info-panel{margin-top:10px;background:#fff;padding:10px;border-radius:6px;border:1px solid #ddd;font-size:14px;}
+.info-panel{margin-top:15px;background:#fff;padding:15px;border-radius:6px;border-left: 5px solid #4e73df;font-size:14px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);}
+.legend {display: flex; gap: 15px; margin-top: 10px; font-size: 12px;}
+.legend-item {display: flex; align-items: center; gap: 5px;}
+.box {width: 12px; height: 12px; border: 1px solid #333;}
 </style>
 </head>
 <body>
 
 <div class="app">
-<div class="sidebar">
-<h2>LGU ADMIN</h2>
-<a href="#">Dashboard</a>
-<a href="#">Vendor Management</a>
-<a href="#">Compliance</a>
-<a href="#">Logout</a>
-</div>
+    <div class="sidebar">
+        <h2>LGU ADMIN</h2>
+        <a href="#">Dashboard</a>
+        <a href="#">Vendor Management</a>
+        <a href="#">Compliance</a>
+        <a href="#">Logout</a>
+    </div>
 
-<div class="main">
-<div class="topbar">
-<h3>Barangay Market Map</h3>
-<input id="search" placeholder="Search stall no..." style="padding:5px;">
-</div>
+    <div class="main">
+        <div class="topbar">
+            <h3>Market Layout Manager</h3>
+            <input id="search" placeholder="Search stall no..." style="padding:8px; border: 1px solid #ddd; border-radius: 4px; width: 200px;">
+        </div>
 
-<div class="content">
-<div class="map-wrapper">
-<svg id="map" width="1400" height="800">
+        <div class="content">
+            <div class="map-wrapper">
+                <svg id="map" width="1400" height="900">
+                    <polygon points="50,50 1200,50 1350,250 1250,850 100,850 50,450" fill="#fff" stroke="#b7b9cc" stroke-width="2"/>
 
-<!-- MARKET BORDER -->
-<polygon points="50,50 1200,50 1350,250 1250,720 100,720 50,450"
-fill="#f7f0c8" stroke="#333" stroke-width="4"/>
+                    <text x="150" y="110" class="label">Wet Section</text>
+                    <text x="650" y="110" class="label">Dry Section</text>
 
-<!-- LABELS -->
-<text x="120" y="110" class="label">WET SECTION</text>
-<text x="820" y="110" class="label">DRY SECTION</text>
+                    <g id="walkways"></g>
+                    <g id="wetStalls"></g>
+                    <g id="dryStalls"></g>
+                </svg>
+            </div>
 
-<!-- WALKWAYS (AUTO ALIGNED) -->
-<g id="walkways"></g>
-
-<!-- STALL GROUPS -->
-<g id="wetStalls"></g>
-<g id="dryStalls"></g>
-
-</svg>
-</div>
-
-<div class="info-panel" id="info">Click a stall to view details.</div>
-</div>
-</div>
+            <div class="info-panel" id="info">
+                <strong>Unit Details:</strong> Click a stall on the map to view data.
+            </div>
+            
+            <div class="legend">
+                <div class="legend-item"><div class="box vacant"></div> Vacant</div>
+                <div class="legend-item"><div class="box occupied"></div> Occupied</div>
+                <div class="legend-item"><div class="box reserved"></div> Reserved</div>
+                <div class="legend-item"><div class="box violation"></div> Violation</div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
-const vendors={
-2:{name:"Pedro Fish Vendor",status:"occupied"},
-10:{name:"Maria Meat Shop",status:"occupied"},
-20:{name:"Violation Stall",status:"violation"},
-80:{name:"Reserved Stall",status:"reserved"},
+const vendors = {
+    2: {name: "Pedro Fish Vendor", status: "occupied"},
+    10: {name: "Maria Meat Shop", status: "occupied"},
+    20: {name: "Juan Cold Storage", status: "violation"},
+    105: {name: "Elena Boutique", status: "reserved"},
 };
 
-// CONFIG
-const STALL_SIZE=40;
-const GAP=8;       // spacing between stalls
-const AISLE=30;    // walkway width
+const STALL_SIZE = 40;
+const GAP = 4; // Tight gap between stalls in a block
 
-function drawBlock(start,x,y,rows,cols,section){
-  const g=document.getElementById(section==="wet"?"wetStalls":"dryStalls");
-  const walk=document.getElementById("walkways");
-  let num=start;
-
-  // vertical walkways between columns
-  for(let c=1;c<cols;c++){
-    let wx=x+(STALL_SIZE+GAP)*c - GAP/2 - AISLE/2;
-    let wy=y-10;
-    let wh=(STALL_SIZE+GAP)*rows+20;
-    const r=document.createElementNS("http://www.w3.org/2000/svg","rect");
-    r.setAttribute("x",wx);
-    r.setAttribute("y",wy);
-    r.setAttribute("width",AISLE);
-    r.setAttribute("height",wh);
-    r.setAttribute("class","walkway");
+function drawWalkway(x, y, w, h) {
+    const walk = document.getElementById("walkways");
+    const r = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    r.setAttribute("x", x);
+    r.setAttribute("y", y);
+    r.setAttribute("width", w);
+    r.setAttribute("height", h);
+    r.setAttribute("class", "walkway");
     walk.appendChild(r);
-  }
-
-  // horizontal walkways between rows
-  for(let r=1;r<rows;r++){
-    let wx=x-10;
-    let wy=y+(STALL_SIZE+GAP)*r - GAP/2 - AISLE/2;
-    let ww=(STALL_SIZE+GAP)*cols+20;
-    const rr=document.createElementNS("http://www.w3.org/2000/svg","rect");
-    rr.setAttribute("x",wx);
-    rr.setAttribute("y",wy);
-    rr.setAttribute("width",ww);
-    rr.setAttribute("height",AISLE);
-    rr.setAttribute("class","walkway");
-    walk.appendChild(rr);
-  }
-
-  // stalls
-  for(let r=0;r<rows;r++){
-    for(let c=0;c<cols;c++){
-      let sx=x+c*(STALL_SIZE+GAP);
-      let sy=y+r*(STALL_SIZE+GAP);
-
-      const rect=document.createElementNS("http://www.w3.org/2000/svg","rect");
-      rect.setAttribute("x",sx);
-      rect.setAttribute("y",sy);
-      rect.setAttribute("width",STALL_SIZE);
-      rect.setAttribute("height",STALL_SIZE);
-      rect.classList.add("stall",section);
-
-      let status="vacant";
-      if(vendors[num]) status=vendors[num].status;
-      rect.classList.add(status);
-      rect.dataset.no=num;
-
-      rect.onclick=()=>{
-        const v=vendors[num];
-        document.getElementById("info").innerHTML=v?
-        `<b>Stall ${num}</b><br>${v.name}<br>Status: ${v.status}`:
-        `<b>Stall ${num}</b><br>Status: Vacant`;
-      };
-
-      g.appendChild(rect);
-
-      const text=document.createElementNS("http://www.w3.org/2000/svg","text");
-      text.setAttribute("x",sx+10);
-      text.setAttribute("y",sy+24);
-      text.setAttribute("font-size","9");
-      text.textContent=num;
-      g.appendChild(text);
-
-      num++;
-    }
-  }
 }
 
-// WET SECTION (LEFT)
-drawBlock(1,120,160,4,5,"wet");
-drawBlock(21,120,360,4,5,"wet");
-drawBlock(41,120,560,4,5,"wet");
+function drawBlock(start, x, y, rows, cols, section) {
+    const g = document.getElementById(section === "wet" ? "wetStalls" : "dryStalls");
+    let num = start;
 
-// DRY SECTION (RIGHT)
-drawBlock(100,760,160,4,5,"dry");
-drawBlock(120,760,360,4,5,"dry");
-drawBlock(140,760,560,4,5,"dry");
+    for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+            let sx = x + c * (STALL_SIZE + GAP);
+            let sy = y + r * (STALL_SIZE + GAP);
 
-// SEARCH
-document.getElementById("search").oninput=function(){
-  const val=this.value;
-  document.querySelectorAll(".stall").forEach(s=>{
-    s.style.stroke="#444";
-    if(s.dataset.no===val){
-      s.style.stroke="black";
-      s.style.strokeWidth=3;
+            const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+            rect.setAttribute("x", sx);
+            rect.setAttribute("y", sy);
+            rect.setAttribute("width", STALL_SIZE);
+            rect.setAttribute("height", STALL_SIZE);
+            rect.classList.add("stall");
+
+            let status = vendors[num] ? vendors[num].status : "vacant";
+            rect.classList.add(status);
+            rect.dataset.no = num;
+
+            rect.onclick = () => {
+                const v = vendors[rect.dataset.no];
+                document.getElementById("info").innerHTML = v ? 
+                    `<b>Stall ${rect.dataset.no}</b> | Vendor: ${v.name} | Status: <span style="text-transform:uppercase">${v.status}</span>` : 
+                    `<b>Stall ${rect.dataset.no}</b> | Status: Vacant`;
+            };
+
+            g.appendChild(rect);
+
+            const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            text.setAttribute("x", sx + 5);
+            text.setAttribute("y", sy + 25);
+            text.setAttribute("font-size", "10");
+            text.setAttribute("fill", "#333");
+            text.style.pointerEvents = "none";
+            text.textContent = num;
+            g.appendChild(text);
+
+            num++;
+        }
     }
-  });
+}
+
+// --- DEFINE MAP LAYOUT ---
+
+// 1. Vertical Main Aisle (Middle)
+drawWalkway(480, 80, 60, 750);
+
+// 2. Horizontal Corridors (Wet Section)
+drawWalkway(100, 320, 380, 40);
+drawWalkway(100, 560, 380, 40);
+
+// 3. Horizontal Corridors (Dry Section)
+drawWalkway(540, 320, 450, 40);
+drawWalkway(540, 560, 450, 40);
+
+// WET SECTION BLOCKS
+drawBlock(1, 150, 140, 4, 5, "wet"); 
+drawBlock(21, 150, 380, 4, 5, "wet");
+drawBlock(41, 150, 620, 4, 5, "wet");
+
+// DRY SECTION BLOCKS
+drawBlock(100, 650, 140, 4, 7, "dry");
+drawBlock(130, 650, 380, 4, 7, "dry");
+drawBlock(160, 650, 620, 4, 7, "dry");
+
+// SEARCH LOGIC
+document.getElementById("search").oninput = function() {
+    const val = this.value;
+    document.querySelectorAll(".stall").forEach(s => {
+        if(s.dataset.no === val && val !== "") {
+            s.style.stroke = "#000";
+            s.style.strokeWidth = "4";
+        } else {
+            s.style.stroke = "#444";
+            s.style.strokeWidth = "0.5";
+        }
+    });
 };
 
-// ZOOM + DRAG
-let scale=1,drag=false,startX,startY,offsetX=0,offsetY=0;
-const map=document.getElementById("map");
+// PAN & ZOOM LOGIC
+let scale = 1, drag = false, startX, startY, offsetX = 0, offsetY = 0;
+const map = document.getElementById("map");
 
-map.addEventListener("wheel",e=>{
-  e.preventDefault();
-  scale+=e.deltaY*-0.001;
-  scale=Math.min(Math.max(0.5,scale),2.5);
-  map.style.transform=`translate(${offsetX}px,${offsetY}px) scale(${scale})`;
+map.addEventListener("wheel", e => {
+    e.preventDefault();
+    scale += e.deltaY * -0.001;
+    scale = Math.min(Math.max(0.4, scale), 3);
+    map.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
 });
 
-map.addEventListener("mousedown",e=>{
-  drag=true;
-  startX=e.clientX-offsetX;
-  startY=e.clientY-offsetY;
-  map.style.cursor="grabbing";
+map.addEventListener("mousedown", e => {
+    if(e.target.classList.contains('stall')) return;
+    drag = true;
+    startX = e.clientX - offsetX;
+    startY = e.clientY - offsetY;
+    map.style.cursor = "grabbing";
 });
-window.addEventListener("mouseup",()=>{drag=false;map.style.cursor="grab";});
-window.addEventListener("mousemove",e=>{
-  if(!drag)return;
-  offsetX=e.clientX-startX;
-  offsetY=e.clientY-startY;
-  map.style.transform=`translate(${offsetX}px,${offsetY}px) scale(${scale})`;
+
+window.addEventListener("mouseup", () => { drag = false; map.style.cursor = "grab"; });
+window.addEventListener("mousemove", e => {
+    if (!drag) return;
+    offsetX = e.clientX - startX;
+    offsetY = e.clientY - startY;
+    map.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
 });
 </script>
 </body>
