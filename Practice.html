@@ -57,7 +57,7 @@ body{
   border:2px solid #333;
   background:#ddd;
   width:100%;
-  height:600px;
+  height:620px;
   position:relative;
   overflow:hidden;
   border-radius:10px;
@@ -72,24 +72,24 @@ body{
 /* STALL STYLE */
 .stall{
   fill:#fff;
-  stroke:#555;
+  stroke:#444;
   stroke-width:1;
   cursor:pointer;
 }
 .stall:hover{stroke:#000;stroke-width:2;}
 .occupied{fill:#9ec5ff;}
-.vacant{fill:#eaeaea;}
+.vacant{fill:#f2f2f2;}
 .violation{fill:#ff4d4d;}
 .reserved{fill:#ffd700;}
 
 /* SECTION COLORS */
-.wet { fill:#d0e7ff; }
-.dry { fill:#fff3cd; }
+.wet { fill:#cfe8ff; }
+.dry { fill:#fff2cc; }
 
 /* WALKWAYS */
 .walkway{
-  fill:#666;
-  opacity:.6;
+  fill:#888;
+  opacity:0.7;
 }
 
 /* LABELS */
@@ -123,7 +123,7 @@ body{
 
   <div class="main">
     <div class="topbar">
-      <h3>Barangay Market Map</h3>
+      <h3>Barangay Market Map (Wet vs Dry)</h3>
       <input id="search" placeholder="Search stall no..." style="padding:5px;">
     </div>
 
@@ -132,35 +132,38 @@ body{
         <svg id="map" width="1400" height="800">
 
           <!-- MARKET BORDER -->
-          <polygon points="50,50 1200,50 1350,250 1250,700 100,700 50,450"
+          <polygon points="50,50 1200,50 1350,250 1250,720 100,720 50,450"
                    fill="#f7f0c8" stroke="#333" stroke-width="4"/>
 
-          <!-- MAIN WALKWAYS -->
-          <rect x="600" y="80" width="70" height="580" class="walkway"/>
-          <rect x="80" y="350" width="1100" height="70" class="walkway"/>
-          <rect x="900" y="200" width="70" height="400" transform="rotate(25 900 200)" class="walkway"/>
+          <!-- MAIN WALKWAYS (GRAY) -->
+          <rect x="650" y="80" width="80" height="620" class="walkway"/> <!-- separator -->
+          <rect x="80" y="360" width="1100" height="80" class="walkway"/> <!-- horizontal -->
+          <rect x="300" y="120" width="60" height="500" class="walkway"/> <!-- wet inner -->
+          <rect x="950" y="120" width="60" height="500" class="walkway"/> <!-- dry inner -->
 
-          <!-- SECTION LABELS -->
-          <text x="150" y="110" class="label">FISH SECTION (WET)</text>
-          <text x="150" y="310" class="label">MEAT SECTION (WET)</text>
-          <text x="150" y="560" class="label">FRUIT & VEGETABLE (WET)</text>
+          <!-- LABELS -->
+          <text x="120" y="110" class="label">WET SECTION</text>
+          <text x="820" y="110" class="label">DRY SECTION</text>
 
-          <text x="750" y="110" class="label">GROCERY (DRY)</text>
-          <text x="750" y="310" class="label">DRY GOODS (DRY)</text>
-          <text x="750" y="560" class="label">TEXTILE (DRY)</text>
+          <text x="120" y="140" class="label">Fish</text>
+          <text x="120" y="300" class="label">Meat</text>
+          <text x="120" y="500" class="label">Fruits & Vegetables</text>
+          <text x="350" y="500" class="label">Carinderia</text>
 
-          <text x="1020" y="350" class="label">CARINDERIA (WET)</text>
+          <text x="820" y="140" class="label">Grocery</text>
+          <text x="820" y="300" class="label">Dry Goods</text>
+          <text x="820" y="500" class="label">Textile</text>
 
-          <!-- STALL BLOCKS -->
+          <!-- WET STALLS -->
           <g id="fish"></g>
           <g id="meat"></g>
           <g id="veg"></g>
+          <g id="carinderia"></g>
 
+          <!-- DRY STALLS -->
           <g id="grocery"></g>
           <g id="drygoods"></g>
           <g id="textile"></g>
-
-          <g id="carinderia" transform="rotate(25 950 420)"></g>
 
         </svg>
       </div>
@@ -172,10 +175,10 @@ body{
 
 <script>
 const vendors = {
-  3:{name:"Pedro Fish Vendor",status:"occupied"},
-  8:{name:"Maria Meat Shop",status:"occupied"},
-  15:{name:"Violation Stall",status:"violation"},
-  40:{name:"Reserved Stall",status:"reserved"},
+  2:{name:"Pedro Fish Vendor",status:"occupied"},
+  10:{name:"Maria Meat Shop",status:"occupied"},
+  20:{name:"Violation Stall",status:"violation"},
+  80:{name:"Reserved Stall",status:"reserved"},
 };
 
 /* CREATE STALL BLOCK */
@@ -217,24 +220,22 @@ function createBlock(groupId,start,x,y,rows,cols,dx,dy,sectionClass){
   }
 }
 
-/* WET SECTIONS */
-createBlock("fish",1,120,130,4,6,45,45,"wet");
-createBlock("meat",25,120,330,4,6,45,45,"wet");
-createBlock("veg",49,120,530,4,6,45,45,"wet");
+/* WET SIDE (LEFT) */
+createBlock("fish",1,120,160,4,5,45,45,"wet");
+createBlock("meat",21,120,320,4,5,45,45,"wet");
+createBlock("veg",41,120,520,4,5,45,45,"wet");
+createBlock("carinderia",61,360,520,3,4,45,45,"wet");
 
-/* DRY SECTIONS */
-createBlock("grocery",73,720,130,4,6,45,45,"dry");
-createBlock("drygoods",97,720,330,4,6,45,45,"dry");
-createBlock("textile",121,720,530,4,6,45,45,"dry");
-
-/* CARINDERIA (DIAGONAL) */
-createBlock("carinderia",145,950,350,4,4,45,45,"wet");
+/* DRY SIDE (RIGHT) */
+createBlock("grocery",100,760,160,4,5,45,45,"dry");
+createBlock("drygoods",120,760,320,4,5,45,45,"dry");
+createBlock("textile",140,760,520,4,5,45,45,"dry");
 
 /* SEARCH */
 document.getElementById("search").oninput=function(){
   const val=this.value;
   document.querySelectorAll(".stall").forEach(s=>{
-    s.style.stroke="#555";
+    s.style.stroke="#444";
     if(s.dataset.no===val){
       s.style.stroke="black";
       s.style.strokeWidth=3;
