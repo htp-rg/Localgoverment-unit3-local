@@ -202,7 +202,23 @@ nav { padding: 1rem; }
   border-radius:3px;
   border:1px solid #999;
 }
-
+.cr-male { background:#0a53c1; color:#fff; font-weight:bold; }
+.cr-female { background:#d63384; color:#fff; font-weight:bold; }
+.admin-stall {
+  background:#6c757d; /* gray for Admin */
+  color:#fff;
+  font-weight:bold;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:20px;
+  height:80px; /* bigger rectangle */
+}
+.admin-stall::before {
+  content: "👤"; /* person icon */
+  font-size:36px;
+  margin-right:8px;
+}
 </style>
 </head>
 
@@ -353,6 +369,8 @@ function createStalls(id,start,end,type,labelText=null){
 
   for(let i=start;i<=end;i++){
     const d=document.createElement("div");
+    if(labelText) d.textContent = labelText;
+else d.textContent = i;
     d.className=`stall ${type}`;
     d.textContent=i;
     d.dataset.no=i;
@@ -382,9 +400,9 @@ function createStalls(id,start,end,type,labelText=null){
     container.appendChild(d);
   }
 }
-createStalls("CrSection", 0, 0, "CR-Male"); 
-createStalls("CrSection", 0, 1, "CR-Female");
-createStalls("adminSection", 0, 0, "Admin"); 
+createStalls("CrSection", 0, 0, "cr-male", "Male"); 
+createStalls("CrSection", 1, 1, "cr-female", "Female");
+createStalls("adminSection", 0, 0, "admin-stall", "Admin"); 
 createStalls("fishSection",1,20,"fish");
 createStalls("meatSection",21,40,"meat");
 createStalls("drygoodsSection",41,65,"drygoods");
