@@ -382,7 +382,11 @@ else d.textContent = i;
       d.classList.add("parking-stall");
       d.textContent="PARK";
     }
-
+if(type==="comfortroom"){
+      d.classList.add("cr-stall");
+      d.textContent="MALE";
+   d.textContent="FEMALE":
+    }
     d.onclick=()=>{
       document.querySelectorAll(".stall").forEach(s=>s.classList.remove("active"));
       d.classList.add("active");
