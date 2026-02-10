@@ -87,14 +87,29 @@ svg { user-select:none; }
   box-shadow:var(--shadow);
   font-size:14px;
 }
+/* Legend */
 .legend{
+  margin-top:12px;
   display:flex;
-  gap:15px;
-  margin-top:8px;
+  flex-wrap:wrap;
+  gap:12px;
   font-size:12px;
 }
+.legend span{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.legend-box{
+  width:14px;
+  height:14px;
+  border-radius:3px;
+  border:1px solid #999;
+}
+
 .box{width:12px;height:12px;border:1px solid #333;}
 .legend-item{display:flex;align-items:center;gap:5px;}
+  
 </style>
 </head>
 <body>
