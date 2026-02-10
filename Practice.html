@@ -3,83 +3,79 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>LGU 3 Admin - Market Floor Plan</title>
+<title>Admin Dashboard - Market Blueprint</title>
 <style>
 :root {
-  --sidebar-bg: #2c599d;
-  --sidebar-hover: #1e3d6d;
-  --map-yellow: #fff9c4;
-  --text-gray: #5f6368;
-  --border-light: #dadce0;
+  --sidebar-bg: #3a537d;
+  --map-bg: #f9f9f9;
+  --floor-yellow: #fdf5cc;
+  --walkway-gray: #ffffff;
+  --text-main: #333;
+  --blue-accent: #3182ce;
 }
 
 * { box-sizing: border-box; }
-body { margin: 0; font-family: 'Segoe UI', Roboto, Arial, sans-serif; display: flex; height: 100vh; overflow: hidden; }
+body { margin: 0; font-family: 'Inter', sans-serif; display: flex; background: #eaecf4; height: 100vh; overflow: hidden; }
 
-/* SIDEBAR STYLES */
-.sidebar { width: 240px; background: var(--sidebar-bg); color: white; display: flex; flex-direction: column; flex-shrink: 0; }
-.brand { padding: 20px; font-weight: bold; font-size: 1.1rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
-nav { flex-grow: 1; padding: 10px 0; }
-.nav-item { 
-    display: flex; align-items: center; padding: 12px 20px; 
-    text-decoration: none; color: rgba(255,255,255,0.8); font-size: 0.9rem; transition: 0.2s;
-}
-.nav-item:hover, .nav-item.active { background: var(--sidebar-hover); color: white; }
-.nav-item i { margin-right: 15px; width: 20px; text-align: center; }
+/* SIDEBAR */
+.sidebar { width: 220px; background: var(--sidebar-bg); color: white; flex-shrink: 0; display: flex; flex-direction: column; }
+.brand { padding: 25px 20px; font-weight: 800; font-size: 1.1rem; border-bottom: 1px solid rgba(255,255,255,0.1); letter-spacing: 1px; }
+nav { padding: 10px 0; flex-grow: 1; }
+.nav-item { display: flex; align-items: center; padding: 12px 20px; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.85rem; transition: 0.3s; }
+.nav-item:hover, .nav-item.active { background: rgba(0,0,0,0.2); color: white; border-left: 4px solid #fff; }
+.badge { background: #f6ad55; color: #fff; border-radius: 10px; padding: 2px 8px; font-size: 10px; margin-left: auto; }
 
 /* MAIN CONTENT */
-.main { flex-grow: 1; display: flex; flex-direction: column; background: #f1f3f4; }
-.topbar { 
-    height: 64px; background: white; display: flex; align-items: center; 
-    padding: 0 24px; border-bottom: 1px solid var(--border-light); justify-content: space-between;
-}
-.search-container { position: relative; width: 400px; }
-#stallSearch { 
-    width: 100%; padding: 10px 15px 10px 40px; border-radius: 8px; 
-    border: 1px solid var(--border-light); background: #f1f3f4; outline: none;
-}
-.search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-gray); }
+.main { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
+.topbar { background: white; height: 60px; display: flex; align-items: center; padding: 0 25px; border-bottom: 1px solid #ddd; justify-content: space-between; }
+.search-bar { width: 350px; background: #f1f3f4; border: 1px solid #ccc; border-radius: 6px; padding: 8px 12px; font-size: 0.9rem; }
 
-/* ARCHITECTURAL MAP */
-.content { flex-grow: 1; padding: 24px; overflow: auto; display: flex; justify-content: center; }
-.map-canvas {
-    background: white; border-radius: 12px; border: 1px solid var(--border-light);
-    padding: 40px; position: relative; min-width: 1000px; height: fit-content; box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+/* FLOOR PLAN CANVAS */
+.content { padding: 30px; overflow: auto; display: flex; justify-content: center; }
+.map-container { 
+    background: white; border-radius: 15px; border: 1px solid #ccc; padding: 50px; 
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05); position: relative; width: 1100px;
 }
 
-.market-floor {
-    background: var(--map-yellow); border: 2px solid #333; border-radius: 15px;
-    display: grid; grid-template-columns: repeat(20, 1fr); grid-template-rows: repeat(12, 40px);
-    position: relative; padding: 10px;
+.market-frame {
+    background: var(--floor-yellow); border: 3px solid #444; border-radius: 40px;
+    display: grid; grid-template-columns: 1fr 60px 1fr; grid-template-rows: 1fr 60px 1fr;
+    position: relative; overflow: hidden;
 }
 
-/* DOT MARKERS FOR ARCHITECTURAL LOOK */
-.floor-dot {
-    width: 4px; height: 4px; background: black; border-radius: 50%;
-    position: absolute; z-index: 1;
+/* WALKWAYS */
+.walkway { 
+    background: var(--walkway-gray); border: 1px dashed #bbb; 
+    display: flex; align-items: center; justify-content: center; 
+    font-size: 11px; font-weight: bold; color: #777; letter-spacing: 2px;
+}
+.vertical-main { grid-column: 2; grid-row: 1 / span 3; border-left: 2px solid #555; border-right: 2px solid #555; }
+.horizontal-new { grid-column: 1 / span 3; grid-row: 2; border-top: 1px dashed #999; border-bottom: 1px dashed #999; }
+
+/* SECTIONS */
+.section-block { padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+.section-label { font-size: 12px; font-weight: 800; border-bottom: 2px solid #444; padding-bottom: 4px; color: #222; }
+.stall-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
+
+.stall { 
+    aspect-ratio: 1; background: white; border: 1px solid #999; 
+    display: flex; align-items: center; justify-content: center; 
+    font-size: 10px; cursor: pointer; color: #444;
+}
+.stall:hover { background: #edf2f7; border-color: var(--blue-accent); }
+.stall.active-target { background: #fc8181 !important; color: white; font-weight: bold; border: 2px solid #c53030; }
+
+/* ANGLED DRY SECTION */
+.angled-cluster { 
+    grid-column: 3; grid-row: 3; transform: rotate(-35deg) translate(20px, -30px);
+    background: #e2e8f0; padding: 10px; border: 2px solid #444;
 }
 
-/* WALKWAYS / CORRIDORS */
-.corridor-v { grid-column: 7 / span 1; grid-row: 1 / span 12; border-left: 1px dashed #999; border-right: 1px dashed #999; }
-.corridor-h { grid-column: 1 / span 20; grid-row: 6 / span 1; border-top: 1px dashed #999; border-bottom: 1px dashed #999; }
-
-/* STALL BLOCKS */
-.stall-block {
-    background: #e0e0e0; border: 1px solid #777; padding: 5px;
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; z-index: 2;
-}
-.stall {
-    width: 100%; aspect-ratio: 1; background: white; border: 0.5px solid #aaa;
-    font-size: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer;
-}
-.stall:hover { background: #bbdefb; }
-.stall.occupied { background: #90caf9; }
-.stall.active { border: 2px solid #2c599d; z-index: 10; transform: scale(1.2); background: white !important; }
-
-/* LEGEND/INFO OVERLAY */
-.info-overlay {
-    position: absolute; bottom: 20px; right: 20px; background: white;
-    padding: 15px; border-radius: 8px; border: 1px solid var(--border-light); box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+/* OVERLAY */
+.info-box {
+    position: absolute; bottom: 30px; right: 30px; width: 220px; 
+    background: white; border: 1px solid #ccc; border-radius: 8px; padding: 15px; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 </style>
 </head>
@@ -88,101 +84,102 @@ nav { flex-grow: 1; padding: 10px 0; }
 <aside class="sidebar">
     <div class="brand">LGU 3 ADMIN</div>
     <nav>
-        <a href="#" class="nav-item active"><i>📊</i> Dashboard</a>
-        <a href="#" class="nav-item"><i>👤</i> Vendor Management</a>
-        <a href="#" class="nav-item"><i>📦</i> Vendor Commodity</a>
-        <a href="#" class="nav-item"><i>🔍</i> Inspection</a>
-        <a href="#" class="nav-item"><i>⚙️</i> Settings</a>
-        <a href="#" class="nav-item" style="margin-top:auto"><i>🚪</i> Logout</a>
+        <a href="#" class="nav-item active">Dashboard</a>
+        <a href="#" class="nav-item">Active <span class="badge">315</span></a>
+        <a href="#" class="nav-item">Vendor Management</a>
+        <a href="#" class="nav-item">Vendor Commodity</a>
+        <a href="#" class="nav-item">Inspection</a>
+        <a href="#" class="nav-item">Settings</a>
+        <a href="#" class="nav-item" style="margin-top: auto;">Logout</a>
     </nav>
 </aside>
 
 <main class="main">
     <header class="topbar">
-        <h2 style="font-weight: 500;">Market Floor Plan</h2>
-        <div class="search-container">
-            <span class="search-icon">🔍</span>
-            <input type="text" id="stallSearch" placeholder="Search Stall No.">
-        </div>
+        <h2 style="margin:0; font-weight: 600;">Market Floor Plan</h2>
+        <input type="text" class="search-bar" id="search" placeholder="Search Stall No.">
     </header>
 
     <div class="content">
-        <div class="map-canvas">
-            <div class="market-floor" id="marketFloor">
-                <div class="corridor-v"></div>
-                <div class="corridor-h"></div>
-
-                <div class="stall-block" style="grid-column: 2 / span 4; grid-row: 2 / span 3;" id="fishSec"></div>
+        <div class="map-container">
+            <div class="market-frame">
                 
-                <div class="stall-block" style="grid-column: 9 / span 4; grid-row: 2 / span 3;" id="meatSec"></div>
-
-                <div class="stall-block" style="grid-column: 2 / span 4; grid-row: 8 / span 3;" id="drySec"></div>
-
-                <div class="stall-block" style="grid-column: 9 / span 4; grid-row: 8 / span 3;" id="grocSec"></div>
-
-                <div class="stall-block" style="grid-column: 15 / span 4; grid-row: 4 / span 6; transform: rotate(5deg);">
-                    <div class="stall">313</div><div class="stall">314</div>
-                    <div class="stall">315</div><div class="stall">316</div>
-                    <div class="stall">317</div><div class="stall">318</div>
+                <div class="section-block" style="grid-column:1; grid-row:1;">
+                    <div class="section-label">WET SECTION: FISH & MEAT</div>
+                    <div class="stall-grid" id="wet-stalls"></div>
                 </div>
+
+                <div class="section-block" style="grid-column:3; grid-row:1;">
+                    <div class="section-label">VEGETABLE & FRUITS</div>
+                    <div class="stall-grid" id="veg-stalls"></div>
+                </div>
+
+                <div class="walkway horizontal-new">NEW WALKWAY</div>
+                
+                <div class="walkway vertical-main" style="writing-mode: vertical-rl;">MAIN PASSAGEWAY</div>
+
+                <div class="section-block" style="grid-column:1; grid-row:3;">
+                    <div class="section-label">DRY GOODS & CARINDERIA</div>
+                    <div class="stall-grid" id="dry-stalls"></div>
+                </div>
+
+                <div class="angled-cluster">
+                    <div class="section-label" style="font-size: 10px;">TEXTILE SECTION</div>
+                    <div class="stall-grid" id="textile-stalls"></div>
+                </div>
+
             </div>
 
-            <div class="info-overlay" id="infoPanel">
-                <h4 style="margin:0 0 5px 0">Stall Information</h4>
-                <p id="details" style="margin:0; font-size: 0.85rem; color: var(--text-gray);">Select a stall to see details.</p>
+            <div class="info-box">
+                <h4 style="margin: 0 0 10px 0; font-size: 13px; color: #2d3748;">Stall Information</h4>
+                <div id="info-content" style="font-size: 12px; color: #718096;">
+                    Select a stall on the map to view vendor data.
+                </div>
             </div>
         </div>
     </div>
 </main>
 
 <script>
-// Mock data
-const vendors = {
-    32: { name: "Lily's Textile", status: "Occupied" },
-    18: { name: "Maria Meat Shop", status: "Occupied" }
+const vendorInfo = {
+    315: { name: "Lily's Textile", status: "Active", type: "Textile" }
 };
 
-// Generate dots for architectural feel
-const floor = document.getElementById('marketFloor');
-for(let i=0; i<100; i++) {
-    let dot = document.createElement('div');
-    dot.className = 'floor-dot';
-    dot.style.left = Math.random() * 100 + '%';
-    dot.style.top = Math.random() * 100 + '%';
-    floor.appendChild(dot);
-}
-
-function fillBlock(id, start, count) {
-    const block = document.getElementById(id);
-    for(let i=0; i<count; i++) {
-        let num = start + i;
-        let s = document.createElement('div');
-        s.className = 'stall' + (vendors[num] ? ' occupied' : '');
-        s.innerText = num;
-        s.onclick = () => {
-            document.querySelectorAll('.stall').forEach(el => el.classList.remove('active'));
-            s.classList.add('active');
-            const v = vendors[num];
-            document.getElementById('details').innerHTML = v ? 
-                `<strong>Stall ${num}</strong>: ${v.name} (${v.status})` : 
-                `<strong>Stall ${num}</strong>: Vacant`;
+function createStalls(id, start, count) {
+    const container = document.getElementById(id);
+    for (let i = 0; i < count; i++) {
+        const num = start + i;
+        const div = document.createElement('div');
+        div.className = 'stall';
+        if (num === 315) div.classList.add('active-target');
+        div.innerText = num;
+        
+        div.onclick = () => {
+            const info = vendorInfo[num] || { name: "N/A", status: "Vacant", type: "Unassigned" };
+            document.getElementById('info-content').innerHTML = `
+                <strong>Stall #${num}</strong><br>
+                Vendor: ${info.name}<br>
+                Type: ${info.type}<br>
+                Status: <span style="color:green">${info.status}</span>
+            `;
         };
-        block.appendChild(s);
+        container.appendChild(div);
     }
 }
 
-fillBlock('fishSec', 1, 12);
-fillBlock('meatSec', 13, 12);
-fillBlock('drySec', 25, 12);
-fillBlock('grocSec', 37, 12);
+// Populate sections
+createStalls('wet-stalls', 1, 15);      // Fish/Meat
+createStalls('veg-stalls', 50, 15);     // Fruit/Veg
+createStalls('dry-stalls', 100, 15);    // Dry/Grocery
+createStalls('textile-stalls', 310, 10); // Textile (includes 315)
 
 // Search
-document.getElementById('stallSearch').oninput = function(e) {
+document.getElementById('search').addEventListener('input', (e) => {
     const val = e.target.value;
     document.querySelectorAll('.stall').forEach(s => {
-        s.style.background = (val && s.innerText === val) ? "#fff176" : "";
+        s.style.background = (val && s.innerText === val) ? "#fbd38d" : "";
     });
-};
+});
 </script>
 </body>
 </html>
