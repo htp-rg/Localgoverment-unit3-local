@@ -16,7 +16,6 @@
   --shadow: 0 6px 24px rgba(0, 0, 0, .06);
 }
 
-/* GLOBAL */
 * { box-sizing: border-box; }
 body {
   margin: 0;
@@ -36,7 +35,6 @@ body {
 .sidebar {
   background: var(--blue);
   color: #fff;
-  border-right: 1px solid var(--border);
 }
 .brand {
   font-weight: 800;
@@ -63,7 +61,6 @@ nav { padding: 1rem; }
 .main {
   display: grid;
   grid-template-rows: 64px 1fr;
-  min-width: 0;
   background: #eaecf4;
 }
 
@@ -109,12 +106,11 @@ nav { padding: 1rem; }
   cursor: grab;
 }
 
-/* STALL STYLES */
+/* STALL */
 .stall {
   stroke: #444;
   stroke-width: 0.5;
   cursor: pointer;
-  transition: fill 0.2s;
 }
 .stall:hover {
   stroke-width: 2;
@@ -131,11 +127,10 @@ nav { padding: 1rem; }
   font-size: 16px;
   font-weight: bold;
   fill: var(--blue);
-  text-transform: uppercase;
   letter-spacing: 1px;
 }
 
-/* INFO PANEL */
+/* INFO */
 .info-panel {
   margin-top: 12px;
   background: #fff;
@@ -169,57 +164,92 @@ nav { padding: 1rem; }
 
 <div class="app">
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="brand">LGU 3 ADMIN SYSTEM</div>
-    <nav>
-      <a href="admindashboard.html" class="nav-item">Dashboard</a>
-      <a href="adminvendor.html" class="nav-item">Vendor Management</a>
-      <a href="admincommodity.html" class="nav-item">Commodity and Price Monitoring</a>
-      <a href="admininspection.html" class="nav-item">Inspection and Compliance</a>
-      <a href="reports.html" class="nav-item">Reports and AI Analytics</a>
-      <a href="adminsettings.html" class="nav-item">Settings</a>
-      <a href="main.html" class="nav-item" style="margin-top:1.5rem;font-weight:bold;">Logout</a>
-    </nav>
-  </aside>
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="brand">LGU 3 ADMIN SYSTEM</div>
+  <nav>
+    <a href="#" class="nav-item active">Market Map</a>
+    <a href="admindashboard.html" class="nav-item">Dashboard</a>
+    <a href="adminvendor.html" class="nav-item">Vendor Management</a>
+    <a href="admininspection.html" class="nav-item">Inspection & Compliance</a>
+    <a href="reports.html" class="nav-item">Reports & AI Analytics</a>
+    <a href="adminsettings.html" class="nav-item">Settings</a>
+    <a href="main.html" class="nav-item" style="margin-top:1.5rem;font-weight:bold;">Logout</a>
+  </nav>
+</aside>
 
-  <!-- MAIN CONTENT -->
-  <section class="main">
-    <header class="topbar">
-      <h3>Market Layout Manager</h3>
-      <input id="search" placeholder="Search stall no..."
-        style="padding:8px;border:1px solid #ddd;border-radius:6px;width:200px;">
-    </header>
+<!-- MAIN -->
+<section class="main">
+  <header class="topbar">
+    <h3>Barangay Market Layout Manager</h3>
+    <input id="search" placeholder="Search stall no..."
+      style="padding:8px;border:1px solid #ddd;border-radius:6px;width:200px;">
+  </header>
 
-    <div class="content">
+  <div class="content">
 
-      <div class="map-wrapper">
-        <svg id="map" width="1400" height="900">
-          <polygon points="50,50 1200,50 1350,250 1250,850 100,850 50,450"
-            fill="#fff" stroke="#b7b9cc" stroke-width="2"/>
+    <div class="map-wrapper">
+      <svg id="map" width="1400" height="900">
 
-          <text x="150" y="110" class="label">Wet Section</text>
-          <text x="650" y="110" class="label">Dry Section</text>
+        <!-- MARKET BOUNDARY -->
+        <polygon points="50,50 1200,50 1350,250 1250,850 100,850 50,450"
+          fill="#fff" stroke="#b7b9cc" stroke-width="2"/>
 
-          <g id="walkways"></g>
-          <g id="wetStalls"></g>
-          <g id="dryStalls"></g>
-        </svg>
-      </div>
+        <!-- MAIN LABELS -->
+        <text x="200" y="100" class="label">WET SECTION</text>
+        <text x="750" y="100" class="label">DRY SECTION</text>
 
-      <div class="info-panel" id="info">
-        <strong>Unit Details:</strong> Click a stall on the map to view data.
-      </div>
+        <!-- WET SUBSECTIONS -->
+        <text x="160" y="140" font-size="14" fill="#2c3e50">FISH SECTION</text>
+        <text x="160" y="380" font-size="14" fill="#2c3e50">MEAT SECTION</text>
+        <text x="160" y="620" font-size="14" fill="#2c3e50">FRUITS & VEGETABLES</text>
 
-      <div class="legend">
-        <div class="legend-item"><div class="box vacant"></div> Vacant</div>
-        <div class="legend-item"><div class="box occupied"></div> Occupied</div>
-        <div class="legend-item"><div class="box reserved"></div> Reserved</div>
-        <div class="legend-item"><div class="box violation"></div> Violation</div>
-      </div>
+        <!-- DRY SUBSECTIONS -->
+        <text x="680" y="140" font-size="14" fill="#2c3e50">GROCERY SECTION</text>
+        <text x="680" y="380" font-size="14" fill="#2c3e50">DRY GOODS</text>
+        <text x="680" y="620" font-size="14" fill="#2c3e50">CARINDERIA</text>
+        <text x="980" y="620" font-size="14" fill="#2c3e50">TEXTILE SECTION</text>
 
+        <!-- FACILITIES -->
+        <rect x="60" y="60" width="120" height="50" fill="#e3f2fd" stroke="#4e73df"/>
+        <text x="70" y="90" font-size="12" fill="#4e73df">ADMIN OFFICE</text>
+
+        <rect x="60" y="780" width="80" height="40" fill="#e8f5e9" stroke="#2e7d32"/>
+        <text x="70" y="805" font-size="12" fill="#2e7d32">CR MALE</text>
+
+        <rect x="150" y="780" width="90" height="40" fill="#fce4ec" stroke="#c2185b"/>
+        <text x="160" y="805" font-size="12" fill="#c2185b">CR FEMALE</text>
+
+        <rect x="600" y="50" width="120" height="30" fill="#fff3cd" stroke="#f0ad4e"/>
+        <text x="620" y="70" font-size="12" fill="#856404">ENTRANCE</text>
+
+        <rect x="1050" y="820" width="120" height="30" fill="#fff3cd" stroke="#f0ad4e"/>
+        <text x="1080" y="840" font-size="12" fill="#856404">EXIT</text>
+
+        <rect x="1200" y="400" width="120" height="30" fill="#ffebee" stroke="#c62828"/>
+        <text x="1210" y="420" font-size="12" fill="#c62828">EMERGENCY EXIT</text>
+
+        <!-- WALKWAYS & STALLS -->
+        <g id="walkways"></g>
+        <g id="wetStalls"></g>
+        <g id="dryStalls"></g>
+
+      </svg>
     </div>
-  </section>
+
+    <div class="info-panel" id="info">
+      <strong>Unit Details:</strong> Click a stall on the map to view data.
+    </div>
+
+    <div class="legend">
+      <div class="legend-item"><div class="box vacant"></div> Vacant</div>
+      <div class="legend-item"><div class="box occupied"></div> Occupied</div>
+      <div class="legend-item"><div class="box reserved"></div> Reserved</div>
+      <div class="legend-item"><div class="box violation"></div> Violation</div>
+    </div>
+
+  </div>
+</section>
 </div>
 
 <script>
@@ -294,14 +324,14 @@ drawWalkway(100, 560, 380, 40);
 drawWalkway(540, 320, 450, 40);
 drawWalkway(540, 560, 450, 40);
 
-// BLOCKS
-drawBlock(1, 150, 140, 4, 5, "wet");
-drawBlock(21, 150, 380, 4, 5, "wet");
-drawBlock(41, 150, 620, 4, 5, "wet");
+// STALL BLOCKS
+drawBlock(1, 150, 160, 4, 5, "wet"); 
+drawBlock(21, 150, 400, 4, 5, "wet");
+drawBlock(41, 150, 640, 4, 5, "wet");
 
-drawBlock(100, 650, 140, 4, 7, "dry");
-drawBlock(130, 650, 380, 4, 7, "dry");
-drawBlock(160, 650, 620, 4, 7, "dry");
+drawBlock(100, 650, 160, 4, 7, "dry");
+drawBlock(130, 650, 400, 4, 7, "dry");
+drawBlock(160, 650, 640, 4, 7, "dry");
 
 // SEARCH
 document.getElementById("search").oninput = function() {
