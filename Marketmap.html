@@ -9,7 +9,8 @@
 :root {
   --blue: #0a53c1;
   --border: #e6e8eb;
-  --walkway-color: #555;
+  --walkway-color: #d9d9d9; /* LIGHT GRAY WALKWAY */
+  --road-color: #bfbfbf;
 }
 
 /* GLOBAL */
@@ -42,6 +43,55 @@ body {
   position:relative;
 }
 
+/* WALKWAYS */
+.walkway{
+  color:#333;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:12px;
+  font-weight:bold;
+  background:var(--walkway-color);
+}
+.vertical-spine{grid-column:2;grid-row:1/span 10;}
+.horizontal-walkway{
+  grid-column:1/span 3;
+  height:40px;
+  border-top:2px solid #aaa;
+  border-bottom:2px solid #aaa;
+}
+
+/* SIDE ROADS TO PARKING & LOADING */
+.side-road-left,
+.side-road-right{
+  position:absolute;
+  top:50%;
+  width:140px;
+  height:50px;
+  background:var(--road-color);
+  transform:translateY(-50%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:12px;
+  font-weight:bold;
+  border:2px dashed #999;
+}
+
+.side-road-left{left:-140px;}
+.side-road-right{right:-140px;}
+
+/* ARROWS */
+.arrow{
+  width:0;
+  height:0;
+  border-top:8px solid transparent;
+  border-bottom:8px solid transparent;
+}
+.arrow-left{border-right:12px solid #555;}
+.arrow-right{border-left:12px solid #555;}
+
+/* SECTIONS */
 .section{
   background:#fff;
   border:1px solid #ccc;
@@ -49,6 +99,7 @@ body {
 }
 .section-title{font-weight:bold;text-align:center;margin-bottom:6px;}
 
+/* STALLS */
 .stall-grid{
   display:grid;
   grid-template-columns:repeat(5,1fr);
@@ -78,23 +129,6 @@ body {
 .vacant{opacity:.5;}
 .violation{background:red!important;color:#fff;}
 .reserved{background:gold!important;}
-
-/* WALKWAYS */
-.walkway{
-  color:#fff;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-size:12px;
-  font-weight:bold;
-}
-.vertical-spine{grid-column:2;grid-row:1/span 10;}
-.horizontal-walkway{
-  grid-column:1/span 3;
-  height:40px;
-  border-top:2px solid #444;
-  border-bottom:2px solid #444;
-}
 
 /* ENTRANCE / EXIT */
 .entrance,.exit{
@@ -130,39 +164,31 @@ body {
   border-right:8px solid transparent;
   border-top:10px solid red;
 }
-/* PARKING AREA */
-.parking {
-  position: absolute;
-  right: -140px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: #2f80ed;
-  color: white;
-  padding: 10px 14px;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: bold;
-  writing-mode: vertical-rl;
-  text-align: center;
-  box-shadow: 0 4px 10px rgba(0,0,0,.2);
+
+/* PARKING & LOADING BOXES */
+.parking,
+.loading-bay{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  color:white;
+  padding:10px 14px;
+  border-radius:8px;
+  font-size:12px;
+  font-weight:bold;
+  text-align:center;
+  box-shadow:0 4px 10px rgba(0,0,0,.2);
 }
 
-/* LOADING BAY */
-.loading-bay {
-  position: absolute;
-  left: -140px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: #f2994a;
-  color: white;
-  padding: 10px 14px;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: bold;
-  writing-mode: vertical-rl;
-  text-align: center;
-  box-shadow: 0 4px 10px rgba(0,0,0,.2);
+.parking{
+  right:-300px;
+  background:#2f80ed;
 }
+.loading-bay{
+  left:-300px;
+  background:#f2994a;
+}
+
 /* INFO PANEL */
 .info-panel{
   margin-top:15px;
@@ -200,10 +226,20 @@ body {
 <div class="market-map" id="marketMap">
 
 <div class="entrance">ENTRANCE</div>
-<!-- PARKING AREA --> 
-  <div class="parking">🅿 PARKING AREA</div>
-  <!-- LOADING BAY -->
-  <div class="loading-bay">🚚 LOADING BAY</div>
+
+<!-- SIDE ROADS -->
+<div class="side-road-left">
+  <div class="arrow arrow-left"></div>
+</div>
+
+<div class="side-road-right">
+  <div class="arrow arrow-right"></div>
+</div>
+
+<!-- PARKING & LOADING -->
+<div class="loading-bay">🚚 LOADING BAY</div>
+<div class="parking">🅿 PARKING AREA</div>
+
 <div class="walkway vertical-spine"></div>
 
 <div class="section" style="grid-column:1;">
@@ -261,7 +297,6 @@ const vendors = {
   15:{name:"Violation Stall",section:"Fish",status:"Violation"}
 };
 
-// CREATE STALLS
 function createStalls(id,start,end,type){
   const container=document.getElementById(id);
   for(let i=start;i<=end;i++){
