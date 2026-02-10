@@ -95,20 +95,21 @@ nav { padding: 1rem; }
 }
 .section-title{font-weight:bold;text-align:center;margin-bottom:6px;}
 
-.stall-grid{
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:4px;
+.stall-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
 }
-.stall{
-  border:1px solid #999;
-  border-radius:4px;
-  font-size:10px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-  background:#fff;
+.stall {
+  border: 1px solid #999;
+  border-radius: 4px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: #fff;
+  height: 50px;  
 }
 .stall.active{outline:3px solid var(--blue);}
 
@@ -355,50 +356,45 @@ const vendors = {
  91:{name:"Aira Carenderia",section:"Carenderia",status:"Occupied"}
 };
 
-function createStalls(id,start,end,type,labelText=null){
-  const container=document.getElementById(id);
-  container.innerHTML="";
+function createStalls(id, start, end, type, labelText=null) {
+  const container = document.getElementById(id);
+  
+  // Remove the line: container.innerHTML = "";  // <- only clear once outside
+  // We'll clear it before first call only
 
-  if(type==="loading"){
-    const d=document.createElement("div");
-    d.className="stall loading-bay-stall";
-    d.textContent="LOADING BAY";
-    container.appendChild(d);
-    return;
-  }
+  for (let i = start; i <= end; i++) {
+    const d = document.createElement("div");
+    d.className = `stall ${type}`;
+    d.dataset.no = i;
 
-  for(let i=start;i<=end;i++){
-    const d=document.createElement("div");
-    if(labelText) d.textContent = labelText;
-else d.textContent = i;
-    d.className=`stall ${type}`;
-    d.textContent=i;
-    d.dataset.no=i;
+    if (labelText) d.textContent = labelText;
+    else d.textContent = i;
 
-    if(vendors[i]) d.classList.add(vendors[i].status.toLowerCase());
+    if (vendors[i]) d.classList.add(vendors[i].status.toLowerCase());
     else d.classList.add("vacant");
 
-    if(type==="parking"){
+    if (type === "parking") {
       d.classList.add("parking-stall");
-      d.textContent="PARK";
+      d.textContent = "PARK";
     }
 
-    d.onclick=()=>{
-      document.querySelectorAll(".stall").forEach(s=>s.classList.remove("active"));
+    d.onclick = () => {
+      document.querySelectorAll(".stall").forEach(s => s.classList.remove("active"));
       d.classList.add("active");
 
-      const v=vendors[i];
-      document.getElementById("stallInfo").innerHTML=v?
+      const v = vendors[i];
+      document.getElementById("stallInfo").innerHTML = v ?
         `<b>STALL:</b> ${i}<br>
          <b>VENDOR:</b> ${v.name}<br>
          <b>SECTION:</b> ${v.section}<br>
          <b>STATUS:</b> ${v.status}`
         :
-        `<b>STALL:</b> ${type==="parking"?"PARKING":i}<br><b>STATUS:</b> VACANT`;
+        `<b>STALL:</b> ${type === "parking" ? "PARKING" : i}<br><b>STATUS:</b> VACANT`;
     };
 
     container.appendChild(d);
   }
+document.getElementById("CrSection").innerHTML = "";
 }
 createStalls("CrSection", 1, 1, "cr-male", "Male"); 
 createStalls("CrSection", 2, 2, "cr-female", "Female");
