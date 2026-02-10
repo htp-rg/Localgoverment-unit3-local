@@ -7,60 +7,51 @@
 
 <style>
 :root {
-  --text:#111;
-  --blue:#4e73df;
-  --border:#e6e8eb;
-  --shadow:0 6px 24px rgba(0,0,0,.06);
+  --text: #111111;
+  --blue: #0a53c1;
+  --ink-20: #f4f6f8;
+  --white: #ffffff;
+  --border: #e6e8eb;
+  --shadow: 0 6px 24px rgba(0, 0, 0, .06);
 }
+.status-approved { color: green; font-weight: 600; }
+.status-declined { color: red; font-weight: 600; }
 
-*{box-sizing:border-box;}
-body{
-  margin:0;
-  font-family:Arial, sans-serif;
-  background:#f4f6f9;
-  overflow:hidden;
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Inter, system-ui, sans-serif;
+  background: var(--white);
+  color: var(--text);
 }
+.app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
 
-.app{
-  display:grid;
-  grid-template-columns:240px 1fr;
-  height:100vh;
+.sidebar {
+  border-right: 1px solid var(--border);
+  background: #4e73df;
 }
+.brand {
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+nav { padding: 1rem; }
+.nav-item {
+  display: block; padding: .6rem;
+  border-radius: 8px; text-decoration: none; color: var(--text);
+}
+.nav-item:hover, .nav-item.active { background: var(--ink-20); }
 
-/* SIDEBAR */
-.sidebar{
-  background:var(--blue);
-  color:#fff;
+.main { display: grid; grid-template-rows: 64px 1fr; min-width: 0; }
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 1rem; border-bottom: 1px solid var(--border);
 }
-.brand{
-  font-weight:bold;
-  padding:1rem;
-  border-bottom:1px solid rgba(255,255,255,.2);
-}
-nav{padding:1rem;}
-.nav-item{
-  display:block;
-  padding:.6rem;
-  border-radius:8px;
-  text-decoration:none;
-  color:#fff;
-  margin-bottom:6px;
-}
-.nav-item:hover{background:rgba(255,255,255,.15);}
-
-/* MAIN */
-.main{
-  display:grid;
-  grid-template-rows:60px 1fr;
-  background:#eaecf4;
-}
-.topbar{
-  background:#fff;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 1rem;
-  border-bottom:1px solid var(--border);
+.btn {
+  border: 1px solid var(--text);
+  background: transparent; padding: .4rem .8rem;
+  border-radius: 8px; cursor: pointer;
 }
 .content{
   padding:1rem;
