@@ -215,6 +215,55 @@ function loadVendors() {
   });
 }
 
+document.querySelector("#vendorEngagementsTable tbody").addEventListener("dblclick", function(e){
+  const cell = e.target;
+  if(cell.tagName !== "TD") return;
+
+  const originalValue = cell.innerText;
+  const row = cell.parentElement;
+  const rowIndex = row.rowIndex - 1; // minus header
+  const colIndex = cell.cellIndex;
+
+  const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors));
+
+ 
+  if(cell.querySelector("input")) return;
+
+  const input = document.createElement("input");
+  input.type = "text";
+  input.value = originalValue;
+  input.style.width = "100%";
+  input.style.padding = "4px";
+
+  cell.innerHTML = "";
+  cell.appendChild(input);
+  input.focus();
+
+  function saveEdit(){
+    const newValue = input.value.trim() || originalValue;
+    cell.innerHTML = newValue;
+
+  
+    const fields = ["name","contact","business","permit","email","status"];
+    vendors[rowIndex][fields[colIndex]] = newValue;
+
+  
+    if(fields[colIndex] === "status"){
+      cell.className = newValue === "Accepted"
+        ? "status-approved"
+        : "status-declined";
+    }
+
+    localStorage.setItem(STORAGE_KEYS.vendors, JSON.stringify(vendors));
+  }
+
+  input.addEventListener("blur", saveEdit);
+  input.addEventListener("keydown", function(ev){
+    if(ev.key === "Enter"){
+      input.blur();
+    }
+  });
+});
 
 document.getElementById("searchInput").addEventListener("keyup", function() {
   const filter = this.value.toLowerCase();
