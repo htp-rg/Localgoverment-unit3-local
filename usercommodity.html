@@ -202,7 +202,8 @@ th { font-size: .85rem; opacity: .7; }
     </div>
   </div>
 </div>
-    
+    <button class="btn" onclick="openPriceIndex()">Daily Price Index</button>
+
      <table id="commodityTable" style="display:none;">
         <tbody></tbody>
        </table>
@@ -328,7 +329,12 @@ let chart = new Chart(ctx, {
     });
     modal.style.display = "flex";
   });
-
+function openPriceIndex(){
+  window.open(
+    "https://www.da.gov.ph/wp-content/uploads/2026/01/Daily-Price-Index-January-15-2026.pdf",
+    "_blank"
+  );
+}
   closeModal.addEventListener("click", () => (modal.style.display = "none"));
   window.addEventListener("click", e => {
     if (e.target === modal) modal.style.display = "none";
