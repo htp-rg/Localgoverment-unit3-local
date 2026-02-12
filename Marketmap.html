@@ -434,16 +434,19 @@ const vendors = {
   5:{name:"Pedro Fish Vendor",section:"Fish",status:"Occupied"},
   12:{name:"Faye Fish Vendor",section:"Fish",status:"Occupied"},
   23:{name:"Maria Meat Shop",section:"Meat",status:"Occupied"},
-   36:{name:"Rona Meat Shop",section:"Meat",status:"Occupied"},
+  36:{name:"Rona Meat Shop",section:"Meat",status:"Occupied"},
   68:{name:"Evelyn Grocery",section:"Grocery",status:"Occupied"},
-  48:{name:"Dry Goods",section:"drygoods",status:"Reserved"},
-    61:{name:"Dry Goods",section:"drygoods",status:"Occupied"},
-     60:{name:"Dry Goods",section:"drygoods",status:"Occupied"},
+  48:{name:"Dry Goods",section:"Drygoods",status:"Reserved"},
+  61:{name:"Dry Goods",section:"Drygoods",status:"Occupied"},
+  60:{name:"Dry Goods",section:"Drygoods",status:"Occupied"},
   80:{name:"Lily Textile",section:"Textile",status:"Occupied"},
   87:{name:"Lloyd Textile",section:"Textile",status:"Reserved"},
   15:{name:"Violation Stall",section:"Fish",status:"Violation"},
- 91:{name:"Aira Carenderia",section:"Carenderia",status:"Occupied"},
+  91:{name:"Aira Carenderia",section:"Carenderia",status:"Occupied"},
 };
+
+let currentSelectedStall = null;
+
 
 function createStalls(id,start,end,type,labelText=null){
   const container=document.getElementById(id);
@@ -459,81 +462,90 @@ function createStalls(id,start,end,type,labelText=null){
 
   for(let i=start;i<=end;i++){
     const d=document.createElement("div");
-    if(labelText) d.textContent = labelText;
-else d.textContent = i;
     d.className=`stall ${type}`;
-    d.textContent=i;
     d.dataset.no=i;
-
-    if(vendors[i]) d.classList.add(vendors[i].status.toLowerCase());
-    else d.classList.add("vacant");
 
     if(type==="parking"){
       d.classList.add("parking-stall");
       d.textContent="PARK";
+    } else {
+      d.textContent=labelText ? labelText : i;
     }
+
+    if(vendors[i]) d.classList.add(vendors[i].status.toLowerCase());
+    else d.classList.add("vacant");
+
     d.onclick=()=>{
-  document.querySelectorAll(".stall").forEach(s=>s.classList.remove("active"));
-  d.classList.add("active");
+      document.querySelectorAll(".stall").forEach(s=>s.classList.remove("active"));
+      d.classList.add("active");
 
-  const v=vendors[i];
-  currentSelectedStall = i;
+      const v=vendors[i];
+      currentSelectedStall = i;
 
-  document.getElementById("stallInfo").innerHTML = v ?
-    `<b>STALL:</b> ${i}<br>
-     <b>VENDOR:</b> ${v.name}<br>
-     <b>SECTION:</b> ${v.section}<br>
-     <b>STATUS:</b> ${v.status}
-     <br><br>
-     <button onclick="openEditModal(${i})" class="btn">Edit Stall</button>`
-    :
-    `<b>STALL:</b> ${i}<br>
-     <b>STATUS:</b> VACANT
-     <br><br>
-     <button onclick="openEditModal(${i})" class="btn">Edit Stall</button>`;
+      document.getElementById("stallInfo").innerHTML = v ?
+        `<b>STALL:</b> ${i}<br>
+         <b>VENDOR:</b> ${v.name}<br>
+         <b>SECTION:</b> ${v.section}<br>
+         <b>STATUS:</b> ${v.status}
+         <br><br>
+         <button onclick="openEditModal(${i})" class="btn">Edit Stall</button>`
+        :
+        `<b>STALL:</b> ${i}<br>
+         <b>STATUS:</b> VACANT
+         <br><br>
+         <button onclick="openEditModal(${i})" class="btn">Edit Stall</button>`;
+    };
+
+    container.appendChild(d);
+  }
 }
-    
-    let currentSelectedStall = null;
+
 
 function openEditModal(stallNo){
-  const modal = document.getElementById("editModal");
-  modal.style.display = "flex";
+  document.getElementById("editModal").style.display="flex";
+  document.getElementById("editStallNo").value=stallNo;
 
-  document.getElementById("editStallNo").value = stallNo;
-
-  const v = vendors[stallNo];
-
-  document.getElementById("editVendorName").value = v ? v.name : "";
-  document.getElementById("editSection").value = v ? v.section : "";
-  document.getElementById("editStatus").value = v ? v.status : "Vacant";
+  const v=vendors[stallNo];
+  document.getElementById("editVendorName").value=v?v.name:"";
+  document.getElementById("editSection").value=v?v.section:"";
+  document.getElementById("editStatus").value=v?v.status:"Vacant";
 }
 
 function closeModal(){
-  document.getElementById("editModal").style.display = "none";
+  document.getElementById("editModal").style.display="none";
 }
 
 function saveStall(){
-  const stallNo = document.getElementById("editStallNo").value;
-  const name = document.getElementById("editVendorName").value;
-  const section = document.getElementById("editSection").value;
-  const status = document.getElementById("editStatus").value;
+  const stallNo=document.getElementById("editStallNo").value;
+  const name=document.getElementById("editVendorName").value;
+  const section=document.getElementById("editSection").value;
+  const status=document.getElementById("editStatus").value;
 
-  if(status === "Vacant"){
+  if(status==="Vacant"){
     delete vendors[stallNo];
   } else {
-    vendors[stallNo] = {
-      name: name || "Unnamed Vendor",
-      section: section || "Unknown",
-      status: status
+    vendors[stallNo]={
+      name:name||"Unnamed Vendor",
+      section:section||"Unknown",
+      status:status
     };
   }
 
   closeModal();
   refreshStalls();
 }
-createStalls("CrSection", 1, 1, "cr-male", "Male"); 
-createStalls("CrSection", 2, 2, "cr-female", "Female");
-createStalls("adminSection", 0, 0, "admin-stall", "Admin"); 
+
+
+function refreshStalls(){
+  createStalls("fishSection",1,20,"fish");
+  createStalls("meatSection",21,40,"meat");
+  createStalls("drygoodsSection",41,65,"drygoods");
+  createStalls("grocerySection",66,75,"grocery");
+  createStalls("textileSection",76,90,"textile");
+  createStalls("carinderiaSection",91,100,"carinderia");
+}
+
+
 createStalls("fishSection",1,20,"fish");
 createStalls("meatSection",21,40,"meat");
 createStalls("drygoodsSection",41,65,"drygoods");
@@ -541,7 +553,8 @@ createStalls("grocerySection",66,75,"grocery");
 createStalls("textileSection",76,90,"textile");
 createStalls("carinderiaSection",91,100,"carinderia");
 createStalls("loadingSection",0,0,"loading");
-createStalls("parkingSection",101,111,"parking"); 
+createStalls("parkingSection",101,111,"parking");
+
 
 document.getElementById("searchStall").oninput=function(){
   const val=this.value;
@@ -550,32 +563,35 @@ document.getElementById("searchStall").oninput=function(){
     if(val && s.dataset.no===val) s.style.background="yellow";
   });
 };
-// First, clear CR section
-document.getElementById("CrSection").innerHTML = "";
 
-// Create Male stall
-const maleStall = document.createElement("div");
-maleStall.className = "stall cr-male";
-maleStall.textContent = "MALE";
-maleStall.dataset.no = "CR1";
-maleStall.onclick = () => {
-    document.querySelectorAll(".stall").forEach(s=>s.classList.remove("active"));
-    maleStall.classList.add("active");
-    document.getElementById("stallInfo").innerHTML = `<b>STALL:</b> CR1<br><b>SECTION:</b> Comfort Room<br><b>TYPE:</b> MALE`;
+
+document.getElementById("CrSection").innerHTML="";
+
+const maleStall=document.createElement("div");
+maleStall.className="stall cr-male";
+maleStall.textContent="MALE";
+maleStall.onclick=()=>{
+  document.querySelectorAll(".stall").forEach(s=>s.classList.remove("active"));
+  maleStall.classList.add("active");
+  document.getElementById("stallInfo").innerHTML=
+  `<b>STALL:</b> CR1<br><b>SECTION:</b> Comfort Room<br><b>TYPE:</b> MALE`;
 };
 document.getElementById("CrSection").appendChild(maleStall);
 
-// Create Female stall
-const femaleStall = document.createElement("div");
-femaleStall.className = "stall cr-female";
-femaleStall.textContent = "FEMALE";
-femaleStall.dataset.no = "CR2";
-femaleStall.onclick = () => {
-    document.querySelectorAll(".stall").forEach(s=>s.classList.remove("active"));
-    femaleStall.classList.add("active");
-    document.getElementById("stallInfo").innerHTML = `<b>STALL:</b> CR2<br><b>SECTION:</b> Comfort Room<br><b>TYPE:</b> FEMALE`;
+const femaleStall=document.createElement("div");
+femaleStall.className="stall cr-female";
+femaleStall.textContent="FEMALE";
+femaleStall.onclick=()=>{
+  document.querySelectorAll(".stall").forEach(s=>s.classList.remove("active"));
+  femaleStall.classList.add("active");
+  document.getElementById("stallInfo").innerHTML=
+  `<b>STALL:</b> CR2<br><b>SECTION:</b> Comfort Room<br><b>TYPE:</b> FEMALE`;
 };
 document.getElementById("CrSection").appendChild(femaleStall);
+
+
+createStalls("adminSection",0,0,"admin-stall","ADMIN");
+
 
 let scale=1;
 const map=document.getElementById("marketMap");
@@ -584,6 +600,5 @@ document.getElementById("zoomIn").onclick=()=>{scale+=0.1;applyZoom();}
 document.getElementById("zoomOut").onclick=()=>{scale=Math.max(0.5,scale-0.1);applyZoom();}
 document.getElementById("resetZoom").onclick=()=>{scale=1;applyZoom();}
 </script>
-
 </body>
 </html>
