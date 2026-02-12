@@ -230,9 +230,88 @@ nav { padding: 1rem; }
   font-size:36px;
   margin-right:8px;
 }
+  .modal-overlay{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.4);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:999;
+}
+
+.modal{
+  background:#fff;
+  width:400px;
+  padding:20px;
+  border-radius:10px;
+  box-shadow:0 10px 30px rgba(0,0,0,.2);
+}
+
+.modal h3{
+  margin-top:0;
+}
+
+.modal input, .modal select{
+  width:100%;
+  padding:8px;
+  margin-bottom:10px;
+  border-radius:6px;
+  border:1px solid #ccc;
+}
+
+.modal-buttons{
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+}
+
+.modal-buttons button{
+  padding:6px 12px;
+  border-radius:6px;
+  cursor:pointer;
+  border:none;
+}
+
+.save-btn{
+  background:#0a53c1;
+  color:#fff;
+}
+
+.cancel-btn{
+  background:#ccc;
+}
 </style>
 </head>
+<div class="modal-overlay" id="editModal">
+  <div class="modal">
+    <h3>Edit Stall Information</h3>
 
+    <input type="hidden" id="editStallNo">
+
+    <label>Vendor Name</label>
+    <input type="text" id="editVendorName">
+
+    <label>Section</label>
+    <input type="text" id="editSection">
+
+    <label>Status</label>
+    <select id="editStatus">
+      <option value="Occupied">Occupied</option>
+      <option value="Vacant">Vacant</option>
+      <option value="Reserved">Reserved</option>
+      <option value="Violation">Violation</option>
+    </select>
+
+    <div class="modal-buttons">
+      <button class="cancel-btn" onclick="closeModal()">Cancel</button>
+      <button class="save-btn" onclick="saveStall()">Save</button>
+    </div>
+  </div>
+</div>
 <body>
 <div class="app">
   <aside class="sidebar">
@@ -394,21 +473,63 @@ else d.textContent = i;
       d.textContent="PARK";
     }
     d.onclick=()=>{
-      document.querySelectorAll(".stall").forEach(s=>s.classList.remove("active"));
-      d.classList.add("active");
+  document.querySelectorAll(".stall").forEach(s=>s.classList.remove("active"));
+  d.classList.add("active");
 
-      const v=vendors[i];
-      document.getElementById("stallInfo").innerHTML=v?
-        `<b>STALL:</b> ${i}<br>
-         <b>VENDOR:</b> ${v.name}<br>
-         <b>SECTION:</b> ${v.section}<br>
-         <b>STATUS:</b> ${v.status}`
-        :
-        `<b>STALL:</b> ${type==="parking"?"PARKING":i}<br><b>STATUS:</b> VACANT`;
+  const v=vendors[i];
+  currentSelectedStall = i;
+
+  document.getElementById("stallInfo").innerHTML = v ?
+    `<b>STALL:</b> ${i}<br>
+     <b>VENDOR:</b> ${v.name}<br>
+     <b>SECTION:</b> ${v.section}<br>
+     <b>STATUS:</b> ${v.status}
+     <br><br>
+     <button onclick="openEditModal(${i})" class="btn">Edit Stall</button>`
+    :
+    `<b>STALL:</b> ${i}<br>
+     <b>STATUS:</b> VACANT
+     <br><br>
+     <button onclick="openEditModal(${i})" class="btn">Edit Stall</button>`;
+};
+    
+    let currentSelectedStall = null;
+
+function openEditModal(stallNo){
+  const modal = document.getElementById("editModal");
+  modal.style.display = "flex";
+
+  document.getElementById("editStallNo").value = stallNo;
+
+  const v = vendors[stallNo];
+
+  document.getElementById("editVendorName").value = v ? v.name : "";
+  document.getElementById("editSection").value = v ? v.section : "";
+  document.getElementById("editStatus").value = v ? v.status : "Vacant";
+}
+
+function closeModal(){
+  document.getElementById("editModal").style.display = "none";
+}
+
+function saveStall(){
+  const stallNo = document.getElementById("editStallNo").value;
+  const name = document.getElementById("editVendorName").value;
+  const section = document.getElementById("editSection").value;
+  const status = document.getElementById("editStatus").value;
+
+  if(status === "Vacant"){
+    delete vendors[stallNo];
+  } else {
+    vendors[stallNo] = {
+      name: name || "Unnamed Vendor",
+      section: section || "Unknown",
+      status: status
     };
-
-    container.appendChild(d);
   }
+
+  closeModal();
+  refreshStalls();
 }
 createStalls("CrSection", 1, 1, "cr-male", "Male"); 
 createStalls("CrSection", 2, 2, "cr-female", "Female");
