@@ -205,7 +205,7 @@ function loadVendors() {
   const tbody = document.querySelector("#vendorEngagementsTable tbody");
   tbody.innerHTML = "";
 
-  // Filter only Accepted vendors
+ 
   const acceptedVendors = vendors.filter(v => v.status === "Accepted");
 
   acceptedVendors.forEach(v => {
@@ -214,6 +214,7 @@ function loadVendors() {
       <td>${v.name}</td>
       <td>${v.contact}</td>
       <td>${v.business}</td>
+       <td>${v.payment}</td>
       <td>${v.permit}</td>
       <td>${v.email}</td>
       <td class="status-approved">✔ Accepted</td>
@@ -255,7 +256,7 @@ document.querySelector("#vendorEngagementsTable tbody").addEventListener("dblcli
     cell.innerHTML = newValue;
 
   
-    const fields = ["name","contact","business","permit","email","status"];
+    const fields = ["name","contact","business","permit","payment","email","status"];
     vendors[rowIndex][fields[colIndex]] = newValue;
 
   
@@ -304,9 +305,9 @@ new Chart(document.getElementById("vendorChart"), {
 
 const complaints = {
   "RPT-001":"Vendor delayed chicken delivery",
-  "RPT-002":"Incomplete Takoyaki supplies",
-  "RPT-003":"Catering delivery arrived late",
-  "RPT-004":"Rental items missing on arrival"
+  "RPT-002":"Incomplete fish supplies",
+  "RPT-003":"Fruit delivery arrived late",
+  "RPT-004":"Grocery items missing on arrival"
 };
 const select = document.getElementById("complaintSelect");
 Object.keys(complaints).forEach(ref=>{
