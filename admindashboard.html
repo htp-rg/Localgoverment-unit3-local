@@ -144,6 +144,7 @@ th { font-size: .85rem; opacity: .7; }
               <th>Contact No.</th>
               <th>Nature of Business</th>
               <th>Business Permit</th>
+              <th>Monthly Payment</th>
               <th>Email</th>
               <th>Status</th>
             </tr>
@@ -188,10 +189,8 @@ const STORAGE_KEYS = { vendors: "vendor_engagements" };
 
 if (!localStorage.getItem(STORAGE_KEYS.vendors)) {
   localStorage.setItem(STORAGE_KEYS.vendors, JSON.stringify([
-    { name:"Gacusan, Aira Jane", contact:"0912-345-6789", business:"Takoyaki Store", permit:"BP-00123", email:"aira.gacusan@example.com", status:"Accepted" },
-    { name:"Furigay, Neri Jane", contact:"0923-456-7890", business:"Sound Equipment", permit:"BP-00456", email:"neri.furigay@example.com", status:"Declined" },
-    { name:"Pena, Rona Mae", contact:"0934-567-8901", business:"Tables and Chairs Rental", permit:"BP-00789", email:"rona.pena@example.com", status:"Accepted" },
-    { name:"Dacoco, Jonathan", contact:"0945-678-9012", business:"Atan’s Meat Shop", permit:"BP-00999", email:"jonathan.dacoco@example.com", status:"Declined" }
+  { name: "Gacusan, Aira Jane", contact: "0912-345-6789", nature: "Fish Store", permit: "BP-00123", payment: "3,000", email: "aira.gacusan@example.com", status: "Approved" },
+    { name: "Pena, Rona Mae", contact: "0934-567-8901", nature: "Meat Shop", permit: "BP-00789", payment: "3,000", email: "rona.pena@example.com", status: "Approved" },
   ]));
 }
 
