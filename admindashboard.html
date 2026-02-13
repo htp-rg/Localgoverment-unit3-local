@@ -201,22 +201,29 @@ if (!localStorage.getItem(STORAGE_KEYS.vendors)) {
 
 
 function loadVendors() {
-  const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors));
+  const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors)) || [];
   const tbody = document.querySelector("#vendorEngagementsTable tbody");
   tbody.innerHTML = "";
-  vendors.forEach(v => {
+
+  // Filter only Accepted vendors
+  const acceptedVendors = vendors.filter(v => v.status === "Accepted");
+
+  acceptedVendors.forEach(v => {
     const tr = document.createElement("tr");
-    const cls = v.status==="Accepted" ? "status-approved" : "status-declined";
     tr.innerHTML = `
       <td>${v.name}</td>
       <td>${v.contact}</td>
       <td>${v.business}</td>
       <td>${v.permit}</td>
       <td>${v.email}</td>
-      <td class="${cls}">${v.status}</td>
+      <td class="status-approved">✔ Accepted</td>
     `;
     tbody.appendChild(tr);
   });
+
+  if (acceptedVendors.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#777;">No accepted vendors found.</td></tr>`;
+  }
 }
 
 document.querySelector("#vendorEngagementsTable tbody").addEventListener("dblclick", function(e){
