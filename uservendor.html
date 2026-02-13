@@ -1,246 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>User Vendor Management</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Login</title>
 <style>
-:root {
-  --text: #111111;
-  --blue: #0a53c1;
-  --ink-20: #f4f6f8;
-  --white: #ffffff;
-  --border: #e6e8eb;
-  --shadow: 0 6px 24px rgba(0, 0, 0, .06);
-}
-
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  font-family: Inter, system-ui, sans-serif;
-  background: var(--white);
-  color: var(--text);
-}
-.app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
-
-.sidebar {
-  border-right: 1px solid var(--border);
-  background: #4e73df; 
-}
-.brand {
-  font-weight: 800;
-  text-transform: uppercase;
-  padding: 1rem;
-  border-bottom: 1px solid var(--border);
-  color: var(--black);
-}
-nav { padding: 1rem; }
-.nav-item {
-  display: block; padding: .6rem;
-  border-radius: 8px; text-decoration: none; color: var(--text);
-}
-.nav-item:hover, .nav-item.active { background: var(--ink-20); }
-
-.main { display: grid; grid-template-rows: 64px 1fr; min-width: 0; }
-.topbar {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 1rem; border-bottom: 1px solid var(--border);
-}
-.btn {
-  border: 1px solid var(--text);
-  background: transparent; padding: .4rem .8rem;
-  border-radius: 8px; cursor: pointer;
-}
-.content { padding: 1rem; overflow: auto; }
-.card {
-  border: 1px solid var(--border);
-  border-radius: 12px; padding: 1rem;
-  box-shadow: var(--shadow);
-}
-
-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
-th, td {
-  border-bottom: 1px solid var(--border);
-  padding: .6rem; text-align: left;
-}
-th { font-size: .85rem; opacity: .7; }
-
-.star { color: gold; font-size: 1.2rem; }
-
-.menu-container {
-  position: relative;
-  display: inline-block;
-}
-.dropdown {
-  display: none;
-  position: absolute;
-  top: 110%;
-  right: 0;
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  box-shadow: var(--shadow);
-  min-width: 220px;
-  z-index: 1000;
-}
-.dropdown p {
-  margin: 0;
-  padding: 0.8rem;
-  font-weight: bold;
-  border-bottom: 1px solid var(--border);
-}
-.dropdown a {
+   .logo {
   display: block;
-  padding: 0.8rem;
-  text-decoration: none;
-  color: var(--text);
-  border-bottom: 1px solid var(--border);
+  margin: 15px auto; 
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
-.dropdown a:hover { background: var(--ink-20); }
-.dropdown a:last-child { border-bottom: none; }
-.dropdown.show { display: block; }
-
-.search { margin-bottom: 1rem; }
-.search input { width: 90%; padding: .5rem; border-radius: 8px; border: 1px solid var(--border); }
-
-.modal {
-  display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,0.5); justify-content: center; align-items: center;
-}
-.modal-content {
-  background: var(--white); padding: 1rem; border-radius: 12px;
-  width: 300px; text-align: center; box-shadow: var(--shadow);
-}
-.modal-content h2 { margin-bottom: 1rem; }
-.modal-content select { padding: .5rem; border-radius: 8px; margin-bottom: 1rem; }
- .status-approved { color: green; font-weight: 600; }
-.status-declined { color: red; font-weight: 600; }
-.status-pending { color: orange; font-weight: 600; }
-
+  body { font-family: Arial, sans-serif; background: #f2f2f2; margin: 0; padding: 0; }
+  .container {
+    max-width: 400px; margin: 60px auto; padding: 20px;
+    border-radius: 8px; background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  h1, h2 { text-align: center; color: #333; }
+  label { display: block; margin-top: 15px; font-weight: bold; }
+  input, button {
+    padding: 10px; border-radius: 5px; border: 1px solid #ccc;
+    width: 100%; margin-top: 5px; font-size: 14px; box-sizing: border-box;
+  }
+  button { cursor: pointer; border: none; color: #fff; }
+  #sendCodeBtn { background: #4285f4; margin-top: 10px; }
+  #resendBtn { background: orange; margin-top: 5px; display: none; }
+  #loginForm button[type="submit"] { background: green; margin-top: 15px; }
+  #timer { text-align: center; font-size: 12px; color: #555; margin-top: 5px; }
+  #message { text-align: center; margin-top: 10px; color: red; }
+  .back-link {
+    display: block; margin-top: 1rem; text-align: center;
+    color: #0a53c1; text-decoration: none; font-size: 0.9rem;
+  }
+  .back-link:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
-<div class="app">
-  <aside class="sidebar open" id="sidebar">
-    <div class="brand">LGU 3 USER SYSTEM</div>
-    <nav>
-             <a href="Marketmap.html" class="nav-item">Market Map</a>
-      <a href="userdashboard.html" class="nav-item">Dashboard</a>
-      <a href="uservendor.html" class="nav-item active">Vendor Management</a>
-      <a href="usercommodity.html" class="nav-item">Commodity and Price Monitoring</a>
-      <a href="userinspection.html" class="nav-item">Inspection and Compliance</a>
-      <a href="usersettings.html" class="nav-item">Settings</a>
-      <a href="main.html" class="nav-item logout-btn" style="margin-top: 2rem; font-weight: bold;">Logout</a>
-    </nav>
-  </aside>
 
+<div class="container">
+  <h1>MARKET AND TRADE MONITORING SYSTEM</h1>
+   <div style="display:flex; justify-content:center; align-items:center; flex-direction:column;">
+  <img src="logo.jfif" alt="System Logo" class="logo">
+  <h2>Login as User</h2>
 
-<section class="main">
-  <header class="topbar">
-  <div style="display:flex; align-items:center; gap:0.8rem;">
-    <button class="btn" id="backBtn">← Back</button>
-    <h2>Vendor Management</h2>
-  </div>
-  <button class="btn" id="exportBtn">Export</button>
-</header>
+  <form id="loginForm">
+    <label for="email">Email:</label>
+    <input type="email" id="email" required placeholder="Enter your email">
 
-  <div class="content">
-     <h2>Approved Vendors</h2>
-<table>
-  <thead> ... </thead>
-  <tbody id="approvedTable"></tbody>
-</table>
+    <label for="password">Password:</label>
+    <input type="password" id="password" required placeholder="Enter your password">
 
-<h2>Declined Vendors</h2>
-<table>
-  <thead> ... </thead>
-  <tbody id="declinedTable"></tbody>
-</table>
+    <input type="text" id="codeInput" placeholder="Enter OTP">
 
-<h2>Pending Vendors</h2>
-<table>
-  <thead> ... </thead>
-  <tbody id="pendingTable"></tbody>
-</table>
+    <button type="button" id="sendCodeBtn">Send Code</button>
+    <div id="timer"></div>
+    <button type="button" id="resendBtn">Resend Code</button>
+
+    <button type="submit">Login</button>
+  </form>
+
+  <div id="message"></div>
+
+  <a href="userregister.html" class="back-link">Don't have an account? Register</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
 <script>
-const STORAGE_KEYS = { vendors: "vendor_engagements", user: "logged_in_user" };
+emailjs.init("mY_toPKtedJGvIWt9"); // Your EmailJS public key
 
-function loadUserVendor() {
-  const loggedInUser = JSON.parse(localStorage.getItem(STORAGE_KEYS.user) || "{}");
-  const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
+let otp = null;
+let otpExpiry = null;
+let timerInterval = null;
 
-  const approvedTable = document.getElementById("approvedTable");
-  const declinedTable = document.getElementById("declinedTable");
-  const pendingTable = document.getElementById("pendingTable");
+const sendBtn = document.getElementById("sendCodeBtn");
+const resendBtn = document.getElementById("resendBtn");
+const timerDiv = document.getElementById("timer");
+const messageDiv = document.getElementById("message");
 
-  approvedTable.innerHTML = "";
-  declinedTable.innerHTML = "";
-  pendingTable.innerHTML = "";
+function startTimer() {
+  let timeLeft = 60;
+  sendBtn.disabled = true;
+  timerDiv.textContent = `Please wait ${timeLeft}s to resend OTP`;
 
-  if (!loggedInUser.email) return;
-
-  const userVendors = vendors.filter(v => v.ownerEmail === loggedInUser.email);
-
-  userVendors.forEach(v => {
-    const row = `
-      <tr>
-        <td>${v.name}</td>
-        <td>${v.contact}</td>
-        <td>${v.nature}</td>
-        <td>${v.permit}</td>
-        <td>${v.email}</td>
-        <td class="${getStatusClass(v.status)}">${v.status}</td>
-      </tr>
-    `;
-
-    if (v.status === "Approved") {
-      approvedTable.innerHTML += row;
-    } else if (v.status === "Declined") {
-      declinedTable.innerHTML += row;
-    } else {
-      pendingTable.innerHTML += row;
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    timerDiv.textContent = `Please wait ${timeLeft}s to resend OTP`;
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      sendBtn.disabled = false;
+      resendBtn.style.display = "block";
+      timerDiv.textContent = "";
     }
-  });
+  }, 1000);
 }
 
-function getStatusClass(status) {
-  if (status === "Approved") return "status-approved";
-  if (status === "Declined") return "status-declined";
-  return "status-pending";
-}
-  if (!loggedInUser.email) {
-    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#777;">Please log in to view your vendor profile.</td></tr>`;
-    return;
-  }
+function sendOTP(email) {
+  otp = Math.floor(100000 + Math.random() * 900000);
+  otpExpiry = new Date(Date.now() + 15 * 60 * 1000);
 
-  const userVendor = vendors.find(v => v.email === loggedInUser.email);
+  const templateParams = {
+    to_email: email,
+    passcode: otp,
+    time: otpExpiry.toLocaleTimeString()
+  };
 
-  if (!userVendor) {
-    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#777;">No vendor record found for your account (${loggedInUser.email}).</td></tr>`;
-    return;
-  }
-
-  const statusClass = userVendor.status === "Approved" ? "status-approved" : "status-declined";
-  const statusSymbol = userVendor.status === "Approved" ? "✔" : "✖";
-
-  const row = document.createElement("tr");
-  row.innerHTML = `
-    <td>${userVendor.name}</td>
-    <td>${userVendor.contact}</td>
-    <td>${userVendor.nature}</td>
-    <td>${userVendor.permit}</td>
-    <td>${userVendor.email}</td>
-    <td class="${statusClass}">${statusSymbol} ${userVendor.status}</td>
-  `;
-  tbody.appendChild(row);
+  emailjs.send('service_da66ha6', 'template_0mebf9d', templateParams)
+    .then(() => {
+      messageDiv.style.color = "green";
+      messageDiv.textContent = `OTP sent to ${email}`;
+      startTimer();
+    })
+    .catch(err => {
+      console.error(err);
+      messageDiv.style.color = "red";
+      messageDiv.textContent = "Failed to send OTP.";
+    });
 }
 
-document.getElementById("backBtn").addEventListener("click", () => {
-  window.location.href = "userdashboard.html"; 
+sendBtn.addEventListener("click", () => {
+  const email = document.getElementById("email").value.trim();
+  if (!email) return alert("Please enter your email first");
+  sendOTP(email);
 });
 
-window.onload = () => {
-  loadUserVendor(); 
-};
+resendBtn.addEventListener("click", () => {
+  const email = document.getElementById("email").value.trim();
+  if (!email) return alert("Please enter your email first");
+  sendOTP(email);
+  resendBtn.style.display = "none";
+});
+
+document.getElementById("loginForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const password = document.getElementById("password").value;
+  const codeInput = document.getElementById("codeInput").value.trim();
+  const correctPassword = "stall#12five";
+
+  if (!otp) {
+    messageDiv.textContent = "Please request OTP first.";
+    return;
+  }
+  if (new Date() > otpExpiry) {
+    messageDiv.textContent = "OTP expired! Request again.";
+    return;
+  }
+  if (password === correctPassword && codeInput == otp) {
+ 
+    messageDiv.style.color = "green";
+    messageDiv.textContent = "Login successful! Redirecting...";
+    setTimeout(() => {
+      window.location.href = "userdashboard.html";
+    }, 1200);
+  } else {
+    messageDiv.textContent = "Invalid password or OTP.";
+  }
+});
 </script>
+</body>
+</html>
