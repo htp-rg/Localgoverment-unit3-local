@@ -155,6 +155,7 @@ th { font-size: .85rem; opacity: .7; }
           <th>Contact No.</th>
           <th>Nature of Business</th>
           <th>Business Permit</th>
+          <th>Monthly Payment>
           <th>Email</th>
           <th>Status</th>
         </tr>
@@ -163,16 +164,18 @@ th { font-size: .85rem; opacity: .7; }
         <tr>
           <td>Gacusan, Aira Jane</td>
           <td>0912-345-6789</td>
-          <td>Takoyaki Store</td>
+          <td>Fish Store</td>
           <td>BP-00123</td>
+          <td>3,000</td>
           <td>aira.gacusan@example.com</td>
           <td class="status-approved">✔ Accepted</td>
         </tr>
         <tr>
           <td>Pena, Rona Mae</td>
           <td>0934-567-8901</td>
-          <td>Tables and Chairs Rental</td>
+          <td>Meat Shop</td>
           <td>BP-00789</td>
+          <td>3,000</td>
           <td>rona.pena@example.com</td>
           <td class="status-approved">✔ Accepted</td>
         </tr>
@@ -198,8 +201,9 @@ th { font-size: .85rem; opacity: .7; }
         <tr>
           <td>Furigay, Neri Jane</td>
           <td>0923-456-7890</td>
-          <td>Sound Equipment</td>
+          <td>Manukan ni neri</td>
           <td>BP-00456</td>
+          <td>4,000</td>
           <td>neri.furigay@example.com</td>
           <td class="status-declined">✖ Declined</td>
         </tr>
@@ -208,6 +212,7 @@ th { font-size: .85rem; opacity: .7; }
           <td>0945-678-9012</td>
           <td>Atan’s Meat Shop</td>
           <td>BP-00999</td>
+          <td>3,000</td>
           <td>jonathan.dacoco@example.com</td>
           <td class="status-declined">✖ Declined</td>
         </tr>
@@ -233,8 +238,9 @@ th { font-size: .85rem; opacity: .7; }
         <tr>
           <td>Marata, Samuel</td>
           <td>0999-123-4567</td>
-          <td>Food Cart</td>
+          <td>Fruit Cart</td>
           <td>BP-01000</td>
+          <td>3,000</td>
           <td>marata@example.com</td>
           <td style="color:orange;font-weight:600;">⏳ Pending</td>
         </tr>
@@ -242,35 +248,27 @@ th { font-size: .85rem; opacity: .7; }
     </table>
   </div>
 
-</div>
-<div class="modal" id="notifModal">
-  <div class="modal-content">
-    <h3>Pending Vendor Approval</h3>
-    <div id="notifList"></div>
-    <button class="btn" id="closeNotifBtn">Close</button>
-  </div>
-</div>
-
 <script>
 window.onload = () => {
   const STORAGE_KEYS = { vendors: "vendor_engagements", pending: "pending_vendors" };
 
  function loadVendors() {
   const defaultVendors = [
-    { name: "Gacusan, Aira Jane", contact: "0912-345-6789", nature: "Takoyaki Store", permit: "BP-00123", email: "aira.gacusan@example.com", status: "Approved" },
-    { name: "Furigay, Neri Jane", contact: "0923-456-7890", nature: "Sound Equipment", permit: "BP-00456", email: "neri.furigay@example.com", status: "Declined" },
-    { name: "Pena, Rona Mae", contact: "0934-567-8901", nature: "Tables and Chairs Rental", permit: "BP-00789", email: "rona.pena@example.com", status: "Approved" },
-    { name: "Dacoco, Jonathan", contact: "0945-678-9012", nature: "Atan’s Meat Shop", permit: "BP-00999", email: "jonathan.dacoco@example.com", status: "Declined" },
-    { name: "New Vendor, Sample", contact: "0999-111-2222", nature: "Food Stall", permit: "BP-01010", email: "pending@example.com", status: "Pending" }
+    { name: "Gacusan, Aira Jane", contact: "0912-345-6789", nature: "Fish Store", permit: "BP-00123", payment: "3,000", email: "aira.gacusan@example.com", status: "Approved" },
+    { name: "Pena, Rona Mae", contact: "0934-567-8901", nature: "Meat Shop", permit: "BP-00789", payment: "3,000", email: "rona.pena@example.com", status: "Approved" },
+    { name: "Furigay, Neri Jane", contact: "0923-456-7890", nature: "Manukan ni neri", permit: "BP-00456", payment: "4,000", email: "neri.furigay@example.com", status: "Declined" },
+    { name: "Dacoco, Jonathan", contact: "0945-678-9012", nature: "Atan’s Meat Shop", permit: "BP-00999", payment: "3,000", email: "jonathan.dacoco@example.com", status: "Declined" },
+    { name: "Marata, Samuel", contact: "0999-123-4567", nature: "Fruit Cart", permit: "BP-01000", payment: "3,000", email: "marata@example.com", status: "Pending" }
   ];
 
-  const approvedTable = document.getElementById("approvedTable");
-  const declinedTable = document.getElementById("declinedTable");
-  const pendingTable = document.getElementById("pendingTable");
 
-  approvedTable.innerHTML = "";
-  declinedTable.innerHTML = "";
-  pendingTable.innerHTML = "";
+  const approvedTable = document.querySelector("#approvedTable tbody");
+  const declinedTable = document.querySelector("#declinedTable tbody");
+  const pendingTable = document.querySelector("#pendingTable tbody");
+
+  if (approvedTable) approvedTable.innerHTML = "";
+  if (declinedTable) declinedTable.innerHTML = "";
+  if (pendingTable) pendingTable.innerHTML = "";
 
   defaultVendors.forEach(vendor => {
     const row = `
@@ -279,18 +277,17 @@ window.onload = () => {
         <td>${vendor.contact}</td>
         <td>${vendor.nature}</td>
         <td>${vendor.permit}</td>
+        <td>${vendor.payment}</td>
         <td>${vendor.email}</td>
-        <td class="${getStatusClass(vendor.status)}">${vendor.status}</td>
+        <td class="${getStatusClass(vendor.status)}">${vendor.status === "Approved" ? "✔ Accepted" : vendor.status === "Declined" ? "✖ Declined" : "⏳ Pending"}</td>
       </tr>
     `;
 
-    if (vendor.status === "Approved") {
+    if (vendor.status === "Approved" && approvedTable) {
       approvedTable.innerHTML += row;
-    } 
-    else if (vendor.status === "Declined") {
+    } else if (vendor.status === "Declined" && declinedTable) {
       declinedTable.innerHTML += row;
-    } 
-    else {
+    } else if (vendor.status === "Pending" && pendingTable) {
       pendingTable.innerHTML += row;
     }
   });
@@ -301,7 +298,7 @@ function getStatusClass(status) {
   if (status === "Declined") return "status-declined";
   return "status-pending";
 }
-
+  
 loadVendors();
 
 
