@@ -147,11 +147,24 @@ if(!localStorage.getItem(STORAGE_KEYS.vendors)){
   ]));
 }
 
-function loadVendors(){
-  const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors)) || [];
 
-  /* Accepted vendors only */
-  const accepted = vendors.filter(v => v.status === "Accepted");
+  function normalizeVendor(v){
+  return {
+    ...v,
+    nature: v.nature || v.businessType || "—",
+    permit: v.permit || v.permitNo || "—",
+    payment: v.payment || "—",
+    status: v.status || "Pending"
+  };
+}
+
+function loadVendors(){
+  const rawVendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors)) || [];
+
+  // normalize + accepted only
+  const accepted = rawVendors
+    .map(normalizeVendor)
+    .filter(v => v.status === "Accepted");
 
   const tbody = document.querySelector("#vendorEngagementsTable tbody");
   tbody.innerHTML = "";
@@ -169,12 +182,12 @@ function loadVendors(){
   accepted.forEach(v => {
     tbody.innerHTML += `
       <tr>
-        <td>${v.name || "—"}</td>
-        <td>${v.contact || "—"}</td>
-        <td>${v.nature || "—"}</td>
-        <td>${v.permit || "—"}</td>
-        <td>${v.payment || "—"}</td>
-        <td>${v.email || "—"}</td>
+        <td>${v.name}</td>
+        <td>${v.contact}</td>
+        <td>${v.nature}</td>
+        <td>${v.permit}</td>
+        <td>${v.payment}</td>
+        <td>${v.email}</td>
         <td class="status-accepted">✔ Accepted</td>
       </tr>
     `;
