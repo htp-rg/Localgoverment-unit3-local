@@ -18,85 +18,30 @@
 .status-declined { color: red; font-weight: 600; }
 
 * { box-sizing: border-box; }
-body {
-  margin: 0;
-  font-family: Inter, system-ui, sans-serif;
-  background: var(--white);
-  color: var(--text);
-}
+body { margin: 0; font-family: Inter, system-ui, sans-serif; background: var(--white); color: var(--text); }
 .app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
-
-.sidebar {
-  border-right: 1px solid var(--border);
-  background: #4e73df;
-}
-.brand {
-  font-weight: 800;
-  text-transform: uppercase;
-  padding: 1rem;
-  border-bottom: 1px solid var(--border);
-}
+.sidebar { border-right: 1px solid var(--border); background: #4e73df; }
+.brand { font-weight: 800; text-transform: uppercase; padding: 1rem; border-bottom: 1px solid var(--border); }
 nav { padding: 1rem; }
-.nav-item {
-  display: block; padding: .6rem;
-  border-radius: 8px; text-decoration: none; color: var(--text);
-}
+.nav-item { display: block; padding: .6rem; border-radius: 8px; text-decoration: none; color: var(--text); }
 .nav-item:hover, .nav-item.active { background: var(--ink-20); }
-
 .main { display: grid; grid-template-rows: 64px 1fr; min-width: 0; }
-.topbar {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 1rem; border-bottom: 1px solid var(--border);
-}
-.btn {
-  border: 1px solid var(--text);
-  background: transparent; padding: .4rem .8rem;
-  border-radius: 8px; cursor: pointer;
-}
+.topbar { display: flex; align-items: center; justify-content: space-between; padding: 0 1rem; border-bottom: 1px solid var(--border); }
+.btn { border: 1px solid var(--text); background: transparent; padding: .4rem .8rem; border-radius: 8px; cursor: pointer; }
 .content { padding: 1rem; overflow: auto; }
-
-.grid {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-}
-
-.card {
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1rem;
-  box-shadow: var(--shadow);
-}
-
+.grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.card { border: 1px solid var(--border); border-radius: 12px; padding: 1rem; box-shadow: var(--shadow); }
 .card.blue1 { background: #e3f2fd; color: #0a53c1; }
 .card.blue2 { background: #90caf9; color: #0a53c1; }
 .card.blue3 { background: #42a5f5; color: #fff; }
-
-.card.chart-container {
-  height: 300px;
-}
-
+.card.chart-container { height: 300px; }
 table { width: 100%; border-collapse: collapse; margin-top: 0.5rem; }
-th, td {
-  border-bottom: 1px solid var(--border);
-  padding: .6rem; text-align: left;
-}
+th, td { border-bottom: 1px solid var(--border); padding: .6rem; text-align: left; }
 th { font-size: .85rem; opacity: .7; }
-
-.chat-message {
-  max-width: 70%;
-  padding: .5rem .8rem;
-  border-radius: 12px;
-  font-size: 0.9rem;
-}
+.chat-message { max-width: 70%; padding: .5rem .8rem; border-radius: 12px; font-size: 0.9rem; }
 .chat-user { background: #0a53c1; color: white; align-self: flex-end; }
 .chat-bot { background: #e6e6e6; color: #111; align-self: flex-start; }
-.chat-timestamp { font-size: 0.7rem; opacity: 0.6; text-align: right; }
-  table td:nth-child(4) {
-  color: #ff00ff;   
-  font-weight: 600;
-}
-
+table td:nth-child(4) { color: #ff00ff; font-weight: 600; }
 </style>
 </head>
 <body>
@@ -104,7 +49,7 @@ th { font-size: .85rem; opacity: .7; }
   <aside class="sidebar">
     <div class="brand">LGU 3 ADMIN SYSTEM</div>
     <nav>
-       <a href="Marketmap.html" class="nav-item">Market Map</a>
+      <a href="Marketmap.html" class="nav-item">Market Map</a>
       <a href="admindashboard.html" class="nav-item active">Dashboard</a>
       <a href="adminvendor.html" class="nav-item">Vendor Management</a>
       <a href="admincommodity.html" class="nav-item">Commodity and Price Monitoring</a>
@@ -123,23 +68,20 @@ th { font-size: .85rem; opacity: .7; }
     <div class="content">
       <h1>Dashboard</h1>
 
-    
       <div class="grid">
         <div class="card blue1"><h3>Price Variance / Cost Savings</h3><p>₱12,500</p><small>+8% vs last month</small></div>
         <div class="card blue2"><h3>Defect Rate / Compliance Score</h3><p>2%</p><small>-1 pt</small></div>
         <div class="card blue3"><h3>Vendor Performance Score</h3><p>87/100</p><small>Stable</small></div>
       </div>
 
-   
       <div class="card chart-container">
         <h3>Price Chain Flow (Last 6 Weeks)</h3>
         <canvas id="pipelineChart"></canvas>
       </div>
 
-   
       <div class="card" style="margin-top:1.5rem;">
         <div style="display:flex;justify-content:space-between;align-items:center;">
-          <h3>Registered Vendors</h3>
+          <h3>Registered Vendors (Approved Only)</h3>
           🔎 <input id="searchInput" type="search" placeholder="Search vendors…">
         </div>
         <table id="vendorEngagementsTable">
@@ -158,9 +100,7 @@ th { font-size: .85rem; opacity: .7; }
         </table>
       </div>
 
-      <h2 style="margin-top:2rem;"> </h2>
-
-      <div class="grid">
+      <div class="grid" style="margin-top:2rem;">
         <div class="card">
           <h3>Vendor Performance Dashboard</h3>
           <canvas id="vendorChart"></canvas>
@@ -192,40 +132,40 @@ th { font-size: .85rem; opacity: .7; }
 const STORAGE_KEYS = { vendors: "vendor_engagements" };
 
 
-if (!localStorage.getItem(STORAGE_KEYS.vendors)) {
+if(!localStorage.getItem(STORAGE_KEYS.vendors)){
   localStorage.setItem(STORAGE_KEYS.vendors, JSON.stringify([
-  { name: "Gacusan, Aira Jane", contact: "0912-345-6789", nature: "Fish Store", permit: "BP-00123", payment: "3,000", email: "aira.gacusan@example.com", status: "Approved" },
-    { name: "Pena, Rona Mae", contact: "0934-567-8901", nature: "Meat Shop", permit: "BP-00789", payment: "3,000", email: "rona.pena@example.com", status: "Approved" },
+    { name:"Gacusan, Aira Jane", contact:"0912-345-6789", nature:"Fish Store", permit:"BP-00123", payment:"3,000", email:"aira.gacusan@example.com", status:"Approved" },
+    { name:"Pena, Rona Mae", contact:"0934-567-8901", nature:"Meat Shop", permit:"BP-00789", payment:"3,000", email:"rona.pena@example.com", status:"Approved" }
   ]));
 }
 
 
-function loadVendors() {
+function loadVendors(){
   const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors)) || [];
+  const approvedVendors = vendors.filter(v=>v.status === "Approved");
   const tbody = document.querySelector("#vendorEngagementsTable tbody");
   tbody.innerHTML = "";
 
- 
-  const acceptedVendors = vendors.filter(v => v.status === "Accepted");
+  if(approvedVendors.length === 0){
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:#777;">No approved vendors found.</td></tr>`;
+    return;
+  }
 
-  acceptedVendors.forEach(v => {
+  approvedVendors.forEach(v=>{
     const tr = document.createElement("tr");
     tr.innerHTML = `
-     <td>${v.name}</td>
+      <td>${v.name}</td>
       <td>${v.contact}</td>
       <td>${v.nature}</td>
       <td>${v.permit}</td>
       <td>${v.payment}</td>
       <td>${v.email}</td>
-      <td class="status-approved">✔ Accepted</td>
+      <td class="status-approved">${v.status}</td>
     `;
     tbody.appendChild(tr);
   });
-
-  if (acceptedVendors.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#777;">No accepted vendors found.</td></tr>`;
-  }
 }
+
 
 document.querySelector("#vendorEngagementsTable tbody").addEventListener("dblclick", function(e){
   const cell = e.target;
@@ -233,12 +173,9 @@ document.querySelector("#vendorEngagementsTable tbody").addEventListener("dblcli
 
   const originalValue = cell.innerText;
   const row = cell.parentElement;
-  const rowIndex = row.rowIndex - 1; // minus header
-  const colIndex = cell.cellIndex;
+  const rowIndex = Array.from(row.parentElement.children).indexOf(row); // dynamic row index
+  const approvedVendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors)).filter(v=>v.status==="Approved");
 
-  const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors));
-
- 
   if(cell.querySelector("input")) return;
 
   const input = document.createElement("input");
@@ -255,29 +192,23 @@ document.querySelector("#vendorEngagementsTable tbody").addEventListener("dblcli
     const newValue = input.value.trim() || originalValue;
     cell.innerHTML = newValue;
 
-  
     const fields = ["name","contact","nature","permit","payment","email","status"];
-    vendors[rowIndex][fields[colIndex]] = newValue;
+    const allVendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors));
+    const vendor = approvedVendors[rowIndex];
+    const globalIndex = allVendors.findIndex(v=>v.name===vendor.name && v.email===vendor.email); // find original
+    allVendors[globalIndex][fields[cell.cellIndex]] = newValue;
 
-  
-    if(fields[colIndex] === "status"){
-      cell.className = newValue === "Accepted"
-        ? "status-approved"
-        : "status-declined";
-    }
-
-    localStorage.setItem(STORAGE_KEYS.vendors, JSON.stringify(vendors));
+    localStorage.setItem(STORAGE_KEYS.vendors, JSON.stringify(allVendors));
   }
 
   input.addEventListener("blur", saveEdit);
-  input.addEventListener("keydown", function(ev){
-    if(ev.key === "Enter"){
-      input.blur();
-    }
+  input.addEventListener("keydown", e=>{
+    if(e.key==="Enter") input.blur();
   });
 });
 
-document.getElementById("searchInput").addEventListener("keyup", function() {
+
+document.getElementById("searchInput").addEventListener("keyup", function(){
   const filter = this.value.toLowerCase();
   document.querySelectorAll("#vendorEngagementsTable tbody tr").forEach(r=>{
     r.style.display = r.innerText.toLowerCase().includes(filter) ? "" : "none";
@@ -285,21 +216,14 @@ document.getElementById("searchInput").addEventListener("keyup", function() {
 });
 
 
-new Chart(document.getElementById("pipelineChart"), {
+new Chart(document.getElementById("pipelineChart"),{
   type:"line",
-  data:{
-    labels:["Week 1","Week 2","Week 3","Week 4","Week 5","Week 6"],
-    datasets:[{data:[5,8,6,10,7,9],borderColor:"#0a53c1",fill:true}]
-  }
+  data:{ labels:["Week 1","Week 2","Week 3","Week 4","Week 5","Week 6"], datasets:[{data:[5,8,6,10,7,9], borderColor:"#0a53c1", fill:true}] }
 });
-
-new Chart(document.getElementById("vendorChart"), {
+new Chart(document.getElementById("vendorChart"),{
   type:"bar",
-  data:{
-     labels:["Fish","Meat Shop","Grocery","Textile"],
-    datasets:[{data:[87,65,72,90],backgroundColor:"#0a53c1"}]
-  },
-  options:{scales:{y:{beginAtZero:true,max:100}}}
+  data:{ labels:["Fish","Meat Shop","Grocery","Textile"], datasets:[{data:[87,65,72,90], backgroundColor:"#0a53c1"}] },
+  options:{ scales:{y:{beginAtZero:true,max:100}} }
 });
 
 
@@ -311,31 +235,30 @@ const complaints = {
 };
 const select = document.getElementById("complaintSelect");
 Object.keys(complaints).forEach(ref=>{
-  const opt=document.createElement("option");
-  opt.value=ref; opt.textContent=ref;
+  const opt = document.createElement("option"); opt.value=ref; opt.textContent=ref;
   select.appendChild(opt);
 });
-document.getElementById("viewComplaintBtn").onclick=()=>{
-  const ref=select.value;
+document.getElementById("viewComplaintBtn").onclick=()=> {
+  const ref = select.value;
   document.getElementById("complaintMessage").textContent = complaints[ref] || "";
 };
 
 
 function addMessage(sender,text){
   const div=document.createElement("div");
-  div.className="chat-message "+(sender==="user"?"chat-user":"chat-bot");
+  div.className = "chat-message "+(sender==="user"?"chat-user":"chat-bot");
   div.innerHTML=text;
   document.getElementById("chatboxContainer").appendChild(div);
 }
 document.getElementById("chatSendBtn").onclick=()=>{
-  const input=document.getElementById("chatInput");
-  const msg=input.value.trim();
+  const input = document.getElementById("chatInput");
+  const msg = input.value.trim();
   if(!msg) return;
   addMessage("user",msg);
   let reply="🤖 Ask about status, performance, or complaints.";
-  if(msg.includes("status")) reply="Most vendors are performing well.";
-  if(msg.includes("performance")) reply="Average vendor performance is 85%.";
-  if(msg.includes("complaint")) reply="There are 4 active complaints.";
+  if(msg.toLowerCase().includes("status")) reply="Most vendors are performing well.";
+  if(msg.toLowerCase().includes("performance")) reply="Average vendor performance is 85%.";
+  if(msg.toLowerCase().includes("complaint")) reply="There are 4 active complaints.";
   setTimeout(()=>addMessage("bot",reply),400);
   input.value="";
 };
