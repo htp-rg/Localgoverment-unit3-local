@@ -133,7 +133,7 @@ table td:nth-child(7) { font-weight: 600; }
 <script>
 const STORAGE_KEYS = { vendors: "vendor_engagements" };
 
-// Initialize vendors if not in localStorage
+
 if (!localStorage.getItem(STORAGE_KEYS.vendors)) {
   localStorage.setItem(STORAGE_KEYS.vendors, JSON.stringify([
     { name: "Gacusan, Aira Jane", contact: "0912-345-6789", nature: "Fish Store", permit: "BP-00123", payment: "3,000", email: "aira.gacusan@example.com", status: "Approved" },
@@ -141,13 +141,13 @@ if (!localStorage.getItem(STORAGE_KEYS.vendors)) {
   ]));
 }
 
-// Load vendors into table (show only Approved vendors)
+
 function loadVendors() {
   const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors)) || [];
   const tbody = document.querySelector("#vendorEngagementsTable tbody");
   tbody.innerHTML = "";
 
-  const approvedVendors = vendors.filter(v => v.status === "Approved");
+  const approvedVendors = vendors.filter(v => v.status === "Accepted");
 
   if (approvedVendors.length === 0) {
     tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#777;">No approved vendors found.</td></tr>`;
