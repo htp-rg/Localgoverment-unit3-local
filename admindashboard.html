@@ -14,7 +14,10 @@
   --border: #e6e8eb;
   --shadow: 0 6px 24px rgba(0, 0, 0, .06);
 }
-.status-approved { color: green; font-weight: 600; }
+.status-accepted {
+  color: green;
+  font-weight: 600;
+}
 .status-declined { color: red; font-weight: 600; }
 
 * { box-sizing: border-box; }
@@ -143,31 +146,36 @@ if(!localStorage.getItem(STORAGE_KEYS.vendors)){
 function loadVendors(){
   const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors)) || [];
 
- 
-  const approved = vendors.filter(v => v.status === "Accepted");
+  /* Accepted vendors only */
+  const accepted = vendors.filter(v => v.status === "Accepted");
 
   const tbody = document.querySelector("#vendorEngagementsTable tbody");
   tbody.innerHTML = "";
 
-  if(!approved.length){
-    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center">No approved vendors</td></tr>`;
+  if (!accepted.length) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="7" style="text-align:center;color:#777;">
+          No accepted vendors
+        </td>
+      </tr>`;
     return;
   }
 
-  approved.forEach(v=>{
+  accepted.forEach(v => {
     tbody.innerHTML += `
-    <tr>
-      <td>${v.name}</td>
-      <td>${v.contact}</td>
-      <td>${v.nature || "—"}</td>
-      <td>${v.permit}</td>
-      <td>${v.payment || "—"}</td>
-      <td>${v.email}</td>
-      <td class="status-accepted">✔ Accepted</td>
-    </tr>`;
+      <tr>
+        <td>${v.name || "—"}</td>
+        <td>${v.contact || "—"}</td>
+        <td>${v.nature || "—"}</td>
+        <td>${v.permit || "—"}</td>
+        <td>${v.payment || "—"}</td>
+        <td>${v.email || "—"}</td>
+        <td class="status-accepted">✔ Accepted</td>
+      </tr>
+    `;
   });
 }
-
 document.querySelector("#vendorEngagementsTable tbody").addEventListener("dblclick", function(e){
   const cell = e.target;
   if(cell.tagName !== "TD") return;
