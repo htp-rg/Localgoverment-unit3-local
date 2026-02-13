@@ -113,6 +113,10 @@ th { font-size: .85rem; opacity: .7; }
 }
 .modal-content h2 { margin-bottom: 1rem; }
 .modal-content select { padding: .5rem; border-radius: 8px; margin-bottom: 1rem; }
+ .status-approved { color: green; font-weight: 600; }
+.status-declined { color: red; font-weight: 600; }
+.status-pending { color: orange; font-weight: 600; }
+
 </style>
 </head>
 <body>
@@ -141,35 +145,70 @@ th { font-size: .85rem; opacity: .7; }
 </header>
 
   <div class="content">
-      <div class="card">
-        <h1>Registered Vendors</h1>
-        <table id="vendorEngagementsTable">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Contact No.</th>
-              <th>Nature of Business</th>
-              <th>Business Permit</th>
-              <th>Email</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-</div>
+     <h2>Approved Vendors</h2>
+<table>
+  <thead> ... </thead>
+  <tbody id="approvedTable"></tbody>
+</table>
+
+<h2>Declined Vendors</h2>
+<table>
+  <thead> ... </thead>
+  <tbody id="declinedTable"></tbody>
+</table>
+
+<h2>Pending Vendors</h2>
+<table>
+  <thead> ... </thead>
+  <tbody id="pendingTable"></tbody>
+</table>
+
 <script>
 const STORAGE_KEYS = { vendors: "vendor_engagements", user: "logged_in_user" };
 
 function loadUserVendor() {
   const loggedInUser = JSON.parse(localStorage.getItem(STORAGE_KEYS.user) || "{}");
   const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
-  const tbody = document.querySelector("#vendorEngagementsTable tbody");
 
-  tbody.innerHTML = "";
+  const approvedTable = document.getElementById("approvedTable");
+  const declinedTable = document.getElementById("declinedTable");
+  const pendingTable = document.getElementById("pendingTable");
 
+  approvedTable.innerHTML = "";
+  declinedTable.innerHTML = "";
+  pendingTable.innerHTML = "";
+
+  if (!loggedInUser.email) return;
+
+  const userVendors = vendors.filter(v => v.ownerEmail === loggedInUser.email);
+
+  userVendors.forEach(v => {
+    const row = `
+      <tr>
+        <td>${v.name}</td>
+        <td>${v.contact}</td>
+        <td>${v.nature}</td>
+        <td>${v.permit}</td>
+        <td>${v.email}</td>
+        <td class="${getStatusClass(v.status)}">${v.status}</td>
+      </tr>
+    `;
+
+    if (v.status === "Approved") {
+      approvedTable.innerHTML += row;
+    } else if (v.status === "Declined") {
+      declinedTable.innerHTML += row;
+    } else {
+      pendingTable.innerHTML += row;
+    }
+  });
+}
+
+function getStatusClass(status) {
+  if (status === "Approved") return "status-approved";
+  if (status === "Declined") return "status-declined";
+  return "status-pending";
+}
   if (!loggedInUser.email) {
     tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#777;">Please log in to view your vendor profile.</td></tr>`;
     return;
