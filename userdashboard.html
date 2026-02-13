@@ -254,7 +254,7 @@ new Chart(document.getElementById("pipelineChart"), {
 new Chart(document.getElementById("vendorChart"), {
   type:"bar",
   data:{
-    labels:["Takoyaki","Meat Shop","Catering","Rental"],
+    labels:["Fish","Meat Shop","Grocery","Textile"],
     datasets:[{data:[87,65,72,90],backgroundColor:"#0a53c1"}]
   },
   options:{scales:{y:{beginAtZero:true,max:100}}}
@@ -263,9 +263,9 @@ new Chart(document.getElementById("vendorChart"), {
 
 const complaints = {
   "RPT-001":"Vendor delayed chicken delivery",
-  "RPT-002":"Incomplete Takoyaki supplies",
-  "RPT-003":"Catering delivery arrived late",
-  "RPT-004":"Rental items missing on arrival"
+  "RPT-002":"Incomplete Fish supplies",
+  "RPT-003":"meat delivery arrived late",
+  "RPT-004":"Grocery items missing on arrival"
 };
 const select = document.getElementById("complaintSelect");
 Object.keys(complaints).forEach(ref=>{
