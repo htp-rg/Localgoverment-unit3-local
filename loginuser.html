@@ -71,7 +71,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
 <script>
-emailjs.init("mY_toPKtedJGvIWt9"); 
+emailjs.init("rmTZmSimwN_68ZgFp"); 
 
 let otp = null;
 let otpExpiry = null;
@@ -139,7 +139,7 @@ document.getElementById("loginForm").addEventListener("submit", (e) => {
   e.preventDefault();
   const password = document.getElementById("password").value;
   const codeInput = document.getElementById("codeInput").value.trim();
-  const correctPassword = "stall#12five.";
+  const correctPassword = "stall#12five";
 
   if (!otp) {
     messageDiv.textContent = "Please request OTP first.";
