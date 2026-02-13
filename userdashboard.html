@@ -41,7 +41,7 @@ th { font-size: .85rem; opacity: .7; }
 .chat-message { max-width: 70%; padding: .5rem .8rem; border-radius: 12px; font-size: 0.9rem; }
 .chat-user { background: #0a53c1; color: white; align-self: flex-end; }
 .chat-bot { background: #e6e6e6; color: #111; align-self: flex-start; }
-table td:nth-child(4) { color: #ff00ff; font-weight: 600; }
+table td:nth-child(7) { font-weight: 600; }
 </style>
 </head>
 <body>
@@ -133,7 +133,7 @@ table td:nth-child(4) { color: #ff00ff; font-weight: 600; }
 <script>
 const STORAGE_KEYS = { vendors: "vendor_engagements" };
 
-
+// Initialize vendors if not in localStorage
 if (!localStorage.getItem(STORAGE_KEYS.vendors)) {
   localStorage.setItem(STORAGE_KEYS.vendors, JSON.stringify([
     { name: "Gacusan, Aira Jane", contact: "0912-345-6789", nature: "Fish Store", permit: "BP-00123", payment: "3,000", email: "aira.gacusan@example.com", status: "Approved" },
@@ -141,20 +141,20 @@ if (!localStorage.getItem(STORAGE_KEYS.vendors)) {
   ]));
 }
 
+// Load vendors into table (show only Approved vendors)
 function loadVendors() {
   const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors)) || [];
   const tbody = document.querySelector("#vendorEngagementsTable tbody");
   tbody.innerHTML = "";
 
- 
-  const acceptedVendors = vendors.filter(v => v.status === "Accepted");
+  const approvedVendors = vendors.filter(v => v.status === "Approved");
 
-  if (acceptedVendors.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#777;">No accepted vendors found.</td></tr>`;
+  if (approvedVendors.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#777;">No approved vendors found.</td></tr>`;
     return;
   }
 
-  acceptedVendors.forEach(v => {
+  approvedVendors.forEach(v => {
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td>${v.name}</td>
@@ -169,12 +169,7 @@ function loadVendors() {
   });
 }
 
-  if (vendors.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#777;">No vendors found.</td></tr>`;
-  }
-}
-
-
+// Search vendors
 document.getElementById("searchInput").addEventListener("keyup", function() {
   const filter = this.value.toLowerCase();
   document.querySelectorAll("#vendorEngagementsTable tbody tr").forEach(r=>{
@@ -182,7 +177,7 @@ document.getElementById("searchInput").addEventListener("keyup", function() {
   });
 });
 
-
+// Charts
 new Chart(document.getElementById("pipelineChart"), {
   type:"line",
   data:{ labels:["Week 1","Week 2","Week 3","Week 4","Week 5","Week 6"], datasets:[{data:[5,8,6,10,7,9],borderColor:"#0a53c1",fill:true}] }
@@ -193,7 +188,7 @@ new Chart(document.getElementById("vendorChart"), {
   options:{ scales:{ y:{ beginAtZero:true,max:100 } } }
 });
 
-
+// Complaints
 const complaints = { "RPT-001":"Vendor delayed chicken delivery", "RPT-002":"Incomplete Fish supplies", "RPT-003":"Meat delivery arrived late", "RPT-004":"Grocery items missing on arrival" };
 const select = document.getElementById("complaintSelect");
 Object.keys(complaints).forEach(ref=>{
@@ -204,7 +199,7 @@ document.getElementById("viewComplaintBtn").onclick=()=>{
   document.getElementById("complaintMessage").textContent = complaints[ref] || "";
 };
 
-
+// Chat support
 function addMessage(sender,text){
   const div=document.createElement("div");
   div.className="chat-message "+(sender==="user"?"chat-user":"chat-bot");
@@ -212,7 +207,8 @@ function addMessage(sender,text){
   document.getElementById("chatboxContainer").appendChild(div);
 }
 document.getElementById("chatSendBtn").onclick=()=>{
-  const input=document.getElementById("chatInput"); const msg=input.value.trim();
+  const input=document.getElementById("chatInput"); 
+  const msg=input.value.trim();
   if(!msg) return;
   addMessage("user",msg);
   let reply="🤖 Ask about status, performance, or complaints.";
@@ -223,6 +219,7 @@ document.getElementById("chatSendBtn").onclick=()=>{
   input.value="";
 };
 
+// Load vendors on page load
 loadVendors();
 </script>
 </body>
