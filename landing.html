@@ -10,7 +10,7 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: Arial, sans-serif;
+      font-family: 'Courier New', Courier, monospace; /* Pixel-like font */
     }
 
     body {
@@ -27,12 +27,20 @@
       border-radius: 20px;
       padding: 40px 30px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-      max-width: 700px;
+      max-width: 800px;
       width: 90%;
     }
 
-    h1 {
-      font-size: 1.6rem;
+    .welcome {
+      font-size: 3rem; /* Bigger pixel-type font */
+      color: #0a53c1;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .title {
+      font-size: 1.4rem;
       color: #0a53c1;
       margin-bottom: 30px;
       line-height: 1.4;
@@ -68,8 +76,11 @@
     }
 
     @media (max-width: 500px) {
-      h1 {
-        font-size: 1.2rem;
+      .welcome {
+        font-size: 2rem;
+      }
+      .title {
+        font-size: 1rem;
       }
       .stall-img {
         width: 150px;
@@ -83,9 +94,9 @@
 </head>
 <body>
   <div class="container">
-    <h1>Welcome to Local Government Unit 3: Market and Trade Monitoring with MarketIQ Intelligent Analytics and Predictive AI</h1>
-    <a href="Main.html" class="start-btn">Start Now</a>
+    <div class="welcome">Welcome</div>
+    <div class="title">Local Government Unit 3: Market and Trade Monitoring with MarketIQ Intelligent Analytics and Predictive AI</div>
+    <a href="main.html" class="start-btn">Start Now</a>
   </div>
 </body>
 </html>
-
