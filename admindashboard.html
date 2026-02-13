@@ -142,16 +142,16 @@ if(!localStorage.getItem(STORAGE_KEYS.vendors)){
 
 function loadVendors(){
   const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors)) || [];
-  const approvedVendors = vendors.filter(v=>v.status === "Approved");
+  const acceptedVendors = vendors.filter(v=>v.status === "Accepted");
   const tbody = document.querySelector("#vendorEngagementsTable tbody");
   tbody.innerHTML = "";
 
-  if(approvedVendors.length === 0){
-    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:#777;">No approved vendors found.</td></tr>`;
+  if(acceptedVendors.length === 0){
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:#777;">No accepted vendors found.</td></tr>`;
     return;
   }
 
-  approvedVendors.forEach(v=>{
+  acceptedVendors.forEach(v=>{
     const tr = document.createElement("tr");
     tr.innerHTML = `
       <td>${v.name}</td>
@@ -166,15 +166,14 @@ function loadVendors(){
   });
 }
 
-
 document.querySelector("#vendorEngagementsTable tbody").addEventListener("dblclick", function(e){
   const cell = e.target;
   if(cell.tagName !== "TD") return;
 
   const originalValue = cell.innerText;
   const row = cell.parentElement;
-  const rowIndex = Array.from(row.parentElement.children).indexOf(row); // dynamic row index
-  const approvedVendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors)).filter(v=>v.status==="Approved");
+  const rowIndex = Array.from(row.parentElement.children).indexOf(row);
+  const acceptedVendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors)).filter(v=>v.status==="Accepted");
 
   if(cell.querySelector("input")) return;
 
@@ -194,8 +193,8 @@ document.querySelector("#vendorEngagementsTable tbody").addEventListener("dblcli
 
     const fields = ["name","contact","nature","permit","payment","email","status"];
     const allVendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors));
-    const vendor = approvedVendors[rowIndex];
-    const globalIndex = allVendors.findIndex(v=>v.name===vendor.name && v.email===vendor.email); // find original
+    const vendor = acceptedVendors[rowIndex];
+    const globalIndex = allVendors.findIndex(v=>v.name===vendor.name && v.email===vendor.email);
     allVendors[globalIndex][fields[cell.cellIndex]] = newValue;
 
     localStorage.setItem(STORAGE_KEYS.vendors, JSON.stringify(allVendors));
@@ -214,7 +213,6 @@ document.getElementById("searchInput").addEventListener("keyup", function(){
     r.style.display = r.innerText.toLowerCase().includes(filter) ? "" : "none";
   });
 });
-
 
 new Chart(document.getElementById("pipelineChart"),{
   type:"line",
