@@ -361,8 +361,8 @@ document.getElementById("exportBtn").onclick = function() {
   if (vendors.length === 0) return alert("No data to export.");
 
   const csvContent = [
-    ["Name", "Contact", "Nature", "Permit", "Email", "Status"],
-    ...vendors.map(v => [v.name, v.contact, v.nature, v.permit, v.email, v.status])
+    ["Name", "Contact", "Nature", "Permit", "Payment", "Email", "Status"],
+    ...vendors.map(v => [v.name, v.contact, v.nature, v.permit, v.payment, v.email, v.status])
   ].map(e => e.join(",")).join("\n");
 
   const blob = new Blob([csvContent], { type: "text/csv" });
