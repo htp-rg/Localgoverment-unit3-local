@@ -138,16 +138,27 @@ const STORAGE_KEYS = { vendors: "vendor_engagements" };
 if(!localStorage.getItem(STORAGE_KEYS.vendors)){
   localStorage.setItem(STORAGE_KEYS.vendors, JSON.stringify([
     { name:"Gacusan, Aira Jane", contact:"0912-345-6789", nature:"Fish Store", permit:"BP-00123", payment:"3,000", email:"aira.gacusan@example.com", status:"Accepted" },
-    { name:"Pena, Rona Mae", contact:"0934-567-8901", nature:"Meat Shop", permit:"BP-00789", payment:"3,000", email:"rona.pena@example.com", status:"Accpeted" }
+    { name:"Pena, Rona Mae", contact:"0934-567-8901", nature:"Meat Shop", permit:"BP-00789", payment:"3,000", email:"rona.pena@example.com", status:"Accepted" }
   ]));
 }
 
+  function normalizeVendor(v){
+  return {
+    ...v,
+    nature: v.nature || v.businessType || "—",
+    permit: v.permit || v.permitNo || "—",
+    payment: v.payment || "—",
+    status: v.status || "Pending"
+  };
+}
 
 function loadVendors(){
-  const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors)) || [];
+  const rawVendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors)) || [];
 
-  /* Accepted vendors only */
-  const accepted = vendors.filter(v => v.status === "Accepted");
+  // normalize + accepted only
+  const accepted = rawVendors
+    .map(normalizeVendor)
+    .filter(v => v.status === "Accepted");
 
   const tbody = document.querySelector("#vendorEngagementsTable tbody");
   tbody.innerHTML = "";
@@ -165,12 +176,12 @@ function loadVendors(){
   accepted.forEach(v => {
     tbody.innerHTML += `
       <tr>
-        <td>${v.name || "—"}</td>
-        <td>${v.contact || "—"}</td>
-        <td>${v.nature || "—"}</td>
-        <td>${v.permit || "—"}</td>
-        <td>${v.payment || "—"}</td>
-        <td>${v.email || "—"}</td>
+        <td>${v.name}</td>
+        <td>${v.contact}</td>
+        <td>${v.nature}</td>
+        <td>${v.permit}</td>
+        <td>${v.payment}</td>
+        <td>${v.email}</td>
         <td class="status-accepted">✔ Accepted</td>
       </tr>
     `;
