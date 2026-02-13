@@ -289,27 +289,34 @@ function badgeFor(value) {
 }
 
 function loadInspectionData() {
-  const loggedInUser = JSON.parse(localStorage.getItem("loggedUser"));
+
+  const loggedInUser = JSON.parse(localStorage.getItem("loggedUser") || "null");
   const storedData = JSON.parse(localStorage.getItem(INSPECTION_KEY) || "[]");
   const dataToShow = storedData.length ? storedData : sampleData;
   const container = document.getElementById("inspectionContainer");
+
   container.innerHTML = "<h1>Inspection & Compliance Summary</h1>";
 
-  if (!loggedInUser || !loggedInUser.email) {
-    container.innerHTML += `<p style="text-align:center; color:#777;">Please log in to view your inspection record.</p>`;
+  if (!loggedInUser?.email) {
+    container.innerHTML += `
+      <p style="text-align:center; color:#777;">
+        Please log in to view your inspection record.
+      </p>`;
     return;
   }
 
-  const userData = dataToShow.filter(
-    entry => entry.email === loggedInUser.email || entry.name === loggedInUser.name
+  const userData = dataToShow.filter(entry =>
+    entry.name === loggedInUser.name
   );
 
-  if (userData.length === 0) {
-    container.innerHTML += `<p style="text-align:center; color:#777;">No inspection record found for your account (${loggedInUser.email}).</p>`;
+  if (!userData.length) {
+    container.innerHTML += `
+      <p style="text-align:center; color:#777;">
+        No inspection record found for ${loggedInUser.name}.
+      </p>`;
     return;
   }
 
- 
   userData.forEach(entry => {
     const card = document.createElement("div");
     card.className = "card";
