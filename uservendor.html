@@ -145,30 +145,115 @@ th { font-size: .85rem; opacity: .7; }
 </header>
 
   <div class="content">
-     <h2>Approved Vendors</h2>
-<table>
-  <thead> ... </thead>
-  <tbody id="approvedTable"></tbody>
-</table>
+       <div class="card" style="margin-bottom:1.5rem;">
+    <h1>Accepted Vendors</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Contact No.</th>
+          <th>Nature of Business</th>
+          <th>Business Permit</th>
+          <th>Email</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Gacusan, Aira Jane</td>
+          <td>0912-345-6789</td>
+          <td>Takoyaki Store</td>
+          <td>BP-00123</td>
+          <td>aira.gacusan@example.com</td>
+          <td class="status-approved">✔ Accepted</td>
+        </tr>
+        <tr>
+          <td>Pena, Rona Mae</td>
+          <td>0934-567-8901</td>
+          <td>Tables and Chairs Rental</td>
+          <td>BP-00789</td>
+          <td>rona.pena@example.com</td>
+          <td class="status-approved">✔ Accepted</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-<h2>Declined Vendors</h2>
-<table>
-  <thead> ... </thead>
-  <tbody id="declinedTable"></tbody>
-</table>
 
-<h2>Pending Vendors</h2>
-<table>
-  <thead> ... </thead>
-  <tbody id="pendingTable"></tbody>
-</table>
+  <div class="card" style="margin-bottom:1.5rem;">
+    <h1>Declined Vendors</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Contact No.</th>
+          <th>Nature of Business</th>
+          <th>Business Permit</th>
+          <th>Email</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Furigay, Neri Jane</td>
+          <td>0923-456-7890</td>
+          <td>Sound Equipment</td>
+          <td>BP-00456</td>
+          <td>neri.furigay@example.com</td>
+          <td class="status-declined">✖ Declined</td>
+        </tr>
+        <tr>
+          <td>Dacoco, Jonathan</td>
+          <td>0945-678-9012</td>
+          <td>Atan’s Meat Shop</td>
+          <td>BP-00999</td>
+          <td>jonathan.dacoco@example.com</td>
+          <td class="status-declined">✖ Declined</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+  <div class="card">
+    <h1>Pending Vendors</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Contact No.</th>
+          <th>Nature of Business</th>
+          <th>Business Permit</th>
+          <th>Email</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Marata, Samuel</td>
+          <td>0999-123-4567</td>
+          <td>Food Cart</td>
+          <td>BP-01000</td>
+          <td>marata@example.com</td>
+          <td style="color:orange;font-weight:600;">⏳ Pending</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
 
 <script>
 const STORAGE_KEYS = { vendors: "vendor_engagements", user: "logged_in_user" };
 
-function loadUserVendor() {
-  const loggedInUser = JSON.parse(localStorage.getItem(STORAGE_KEYS.user) || "{}");
-  const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors) || "[]");
+function loadVendors() {
+  const defaultVendors = [
+    { name: "Gacusan, Aira Jane", contact: "0912-345-6789", nature: "Takoyaki Store", permit: "BP-00123", email: "aira.gacusan@example.com", status: "Approved" },
+    { name: "Furigay, Neri Jane", contact: "0923-456-7890", nature: "Sound Equipment", permit: "BP-00456", email: "neri.furigay@example.com", status: "Declined" },
+    { name: "Pena, Rona Mae", contact: "0934-567-8901", nature: "Tables and Chairs Rental", permit: "BP-00789", email: "rona.pena@example.com", status: "Approved" },
+    { name: "Dacoco, Jonathan", contact: "0945-678-9012", nature: "Atan’s Meat Shop", permit: "BP-00999", email: "jonathan.dacoco@example.com", status: "Declined" },
+    { name: "New Vendor, Sample", contact: "0999-111-2222", nature: "Food Stall", permit: "BP-01010", email: "pending@example.com", status: "Pending" }
+  ];
 
   const approvedTable = document.getElementById("approvedTable");
   const declinedTable = document.getElementById("declinedTable");
@@ -178,27 +263,25 @@ function loadUserVendor() {
   declinedTable.innerHTML = "";
   pendingTable.innerHTML = "";
 
-  if (!loggedInUser.email) return;
-
-  const userVendors = vendors.filter(v => v.ownerEmail === loggedInUser.email);
-
-  userVendors.forEach(v => {
+  defaultVendors.forEach(vendor => {
     const row = `
       <tr>
-        <td>${v.name}</td>
-        <td>${v.contact}</td>
-        <td>${v.nature}</td>
-        <td>${v.permit}</td>
-        <td>${v.email}</td>
-        <td class="${getStatusClass(v.status)}">${v.status}</td>
+        <td>${vendor.name}</td>
+        <td>${vendor.contact}</td>
+        <td>${vendor.nature}</td>
+        <td>${vendor.permit}</td>
+        <td>${vendor.email}</td>
+        <td class="${getStatusClass(vendor.status)}">${vendor.status}</td>
       </tr>
     `;
 
-    if (v.status === "Approved") {
+    if (vendor.status === "Approved") {
       approvedTable.innerHTML += row;
-    } else if (v.status === "Declined") {
+    } 
+    else if (vendor.status === "Declined") {
       declinedTable.innerHTML += row;
-    } else {
+    } 
+    else {
       pendingTable.innerHTML += row;
     }
   });
@@ -209,6 +292,9 @@ function getStatusClass(status) {
   if (status === "Declined") return "status-declined";
   return "status-pending";
 }
+
+loadVendors();`
+
   if (!loggedInUser.email) {
     tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#777;">Please log in to view your vendor profile.</td></tr>`;
     return;
