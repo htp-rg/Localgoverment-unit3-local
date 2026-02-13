@@ -13,170 +13,32 @@
   --border: #e6e8eb;
   --shadow: 0 6px 24px rgba(0, 0, 0, .06);
 }
-  
-table {
-  width: 95%; 
-  margin: 1rem auto; 
-  border-collapse: separate;
-  border-spacing: 0;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: var(--shadow);
-  background: #fff;
-}
-
-th, td {
-  padding: 0.2rem;
-  text-align: left;
-  font-size: 0.85rem;
-  border-bottom: 1px solid #e6e8eb;
-}
-thead {
-  background: #0a53c1;
-  color: white;
-}
-
-tbody tr:nth-child(even) {
-  background: #f8faff;
-}
-
-tbody tr:hover {
-  background: #e8f0ff;
-  transform: scale(1.01);
-  transition: all 0.2s ease;
-}
-
-td:last-child {
-  font-size: 0.8rem;
-  color: #666;
-}
-
-
-.badge {
-  display: inline-block;
-  padding: 0.3rem 0.6rem;
-  border-radius: 8px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: white;
-  text-align: center;
-  min-width: 80px;
-}
-
+table { width: 95%; margin: 1rem auto; border-collapse: separate; border-spacing: 0; border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); background: #fff; }
+th, td { padding: 0.2rem; text-align: left; font-size: 0.85rem; border-bottom: 1px solid #e6e8eb; }
+thead { background: var(--blue); color: white; }
+tbody tr:nth-child(even) { background: #f8faff; }
+tbody tr:hover { background: #e8f0ff; transform: scale(1.01); transition: all 0.2s ease; }
+td:last-child { font-size: 0.8rem; color: #666; }
+.badge { display: inline-block; padding: 0.3rem 0.6rem; border-radius: 8px; font-size: 0.8rem; font-weight: 600; color: white; text-align: center; min-width: 80px; }
 .badge.very-good { background: #2ecc71; }  
 .badge.good { background: #27ae60; }       
 .badge.fair { background: #f1c40f; }      
 .badge.poor { background: #e67e22; }        
 .badge.very-poor { background: #e74c3c; }   
-
-@media (max-width: 900px) {
-  table {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-}
+@media (max-width: 900px) { table { display: block; overflow-x: auto; white-space: nowrap; } }
 * { box-sizing: border-box; }
-body {
-  margin: 0;
-  font-family: Inter, system-ui, sans-serif;
-  background: var(--white);
-  color: var(--text);
-}
+body { margin: 0; font-family: Inter, system-ui, sans-serif; background: var(--white); color: var(--text); }
 .app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
-
-.sidebar {
-  border-right: 1px solid var(--border);
-  background: #4e73df; 
-}
-.brand {
-  font-weight: 800;
-  text-transform: uppercase;
-  padding: 1rem;
-  border-bottom: 1px solid var(--border);
-}
+.sidebar { border-right: 1px solid var(--border); background: #4e73df; }
+.brand { font-weight: 800; text-transform: uppercase; padding: 1rem; border-bottom: 1px solid var(--border); }
 nav { padding: 1rem; }
-.nav-item {
-  display: block; padding: .6rem;
-  border-radius: 8px; text-decoration: none; color: var(--text);
-}
+.nav-item { display: block; padding: .6rem; border-radius: 8px; text-decoration: none; color: var(--text); }
 .nav-item:hover, .nav-item.active { background: var(--ink-20); }
-
 .main { display: grid; grid-template-rows: 64px 1fr; min-width: 0; }
-.topbar {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 1rem; border-bottom: 1px solid var(--border);
-}
-.btn {
-  border: 1px solid var(--text);
-  background: transparent; padding: .4rem .8rem;
-  border-radius: 8px; cursor: pointer;
-}
+.topbar { display: flex; align-items: center; justify-content: space-between; padding: 0 1rem; border-bottom: 1px solid var(--border); }
+.btn { border: 1px solid var(--text); background: transparent; padding: .4rem .8rem; border-radius: 8px; cursor: pointer; }
 .content { padding: 1rem; overflow: auto; }
-.card {
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 0.8rem 1rem;
-  box-shadow: var(--shadow);
-}
-
-.menu-containr {
-  position: relative;
-  display: inline-block;
-}
-.dropdown {
-  display: none;
-  position: absolute;
-  top: 110%;
-  right: 0;
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  box-shadow: var(--shadow);
-  min-width: 220px;
-  z-index: 1000;
-}
-.dropdown p {
-  margin: 0;
-  padding: 0.8rem;
-  font-weight: bold;
-  border-bottom: 1px solid var(--border);
-}
-.dropdown a {
-  display: block;
-  padding: 0.8rem;
-  text-decoration: none;
-  color: var(--text);
-  border-bottom: 1px solid var(--border);
-}
-.dropdown a:hover { background: var(--ink-20); }
-.dropdown a:last-child { border-bottom: none; }
-.dropdown.show { display: block; }
-
-.search { margin-bottom: 1rem; }
-.search input { width: 90%; padding: .5rem; border-radius: 8px; border: 1px solid var(--border); }
-.modal {
-  display: none; 
-  position: fixed; 
-  z-index: 10000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0,0,0,0.4); 
-  justify-content: center;
-  align-items: center;
-}
-
-.modal-content {
-  background-color: var(--white);
-  padding: 1.5rem;
-  border-radius: 12px;
-  max-width: 400px;
-  width: 90%;
-  box-shadow: var(--shadow);
-}
+.card { border: 1px solid var(--border); border-radius: 12px; padding: 0.8rem 1rem; box-shadow: var(--shadow); }
 </style>
 </head>
 <body>
@@ -184,7 +46,7 @@ nav { padding: 1rem; }
   <aside class="sidebar open" id="sidebar">
     <div class="brand">LGU 3 USER SYSTEM</div>
     <nav>
-             <a href="Marketmap.html" class="nav-item">Market Map</a>
+      <a href="Marketmap.html" class="nav-item">Market Map</a>
       <a href="userdashboard.html" class="nav-item">Dashboard</a>
       <a href="uservendor.html" class="nav-item">Vendor Management</a>
       <a href="usercommodity.html" class="nav-item">Commodity and Price Monitoring</a>
@@ -198,82 +60,26 @@ nav { padding: 1rem; }
     <header class="topbar">
       <div style="display:flex; align-items:center; gap:0.5rem;">
         <button class="btn" id="backBtn">← Back</button>
-          </div>
+      </div>
       <div>
         <button class="btn" id="exportBtn">Export</button>
       </div>
     </header>
 
-  <div class="content" id="inspectionContainer">
+    <div class="content" id="inspectionContainer">
       <h1>Inspection & Compliance Summary</h1>
     </div>
   </section>
 </div>
 
 <script>
-const INSPECTION_KEY = "inspection_data"; user: "logged_in_user"
+const INSPECTION_KEY = "inspection_data";
 
 const sampleData = [
-  {
-    name: "Gacusan, Aira Jane",
-    type: "Takoyaki Store",
-    interior: "Very Good",
-    merchandise: "Good",
-    fire: "Good",
-    health: "Very Good",
-    guidelines: "Good",
-    sanitizers: "Very Good",
-    distancing: "Good",
-    staffing: "Good",
-    hygiene: "Very Good",
-    dresscode: "Good",
-    submittedAt: "Oct 15, 2025 10:30 AM"
-  },
-  {
-    name: "Furigay, Neri Jane",
-    type: "Sound Equipment",
-    interior: "Good",
-    merchandise: "Fair",
-    fire: "Good",
-    health: "Fair",
-    guidelines: "Good",
-    sanitizers: "Fair",
-    distancing: "Good",
-    staffing: "Fair",
-    hygiene: "Good",
-    dresscode: "Fair",
-    submittedAt: "Oct 15, 2025 11:10 AM"
-  },
-  {
-    name: "Pena, Rona Mae",
-    type: "Tables and Chairs Rental",
-    interior: "Very Good",
-    merchandise: "Good",
-    fire: "Very Good",
-    health: "Very Good",
-    guidelines: "Very Good",
-    sanitizers: "Good",
-    distancing: "Very Good",
-    staffing: "Good",
-    hygiene: "Good",
-    dresscode: "Very Good",
-    submittedAt: "Oct 16, 2025 09:45 AM"
-  },
-  {
-    name: "Dacoco, Jonathan",
-    type: "Atan’s Meat Shop",
-    interior: "Good",
-    merchandise: "Good",
-    fire: "Fair",
-    health: "Good",
-    guidelines: "Good",
-    sanitizers: "Fair",
-    distancing: "Good",
-    staffing: "Fair",
-    hygiene: "Good",
-    dresscode: "Fair",
-    submittedAt: "Oct 16, 2025 08:20 AM"
-  }
+  { name: "Gacusan, Aira Jane", type: "Takoyaki Store", interior: "Very Good", merchandise: "Good", fire: "Good", health: "Very Good", guidelines: "Good", sanitizers: "Very Good", distancing: "Good", staffing: "Good", hygiene: "Very Good", dresscode: "Good", submittedAt: "Oct 15, 2025 10:30 AM" },
+  { name: "Furigay, Neri Jane", type: "Sound Equipment", interior: "Good", merchandise: "Fair", fire: "Good", health: "Fair", guidelines: "Good", sanitizers: "Fair", distancing: "Good", staffing: "Fair", hygiene: "Good", dresscode: "Fair", submittedAt: "Oct 15, 2025 11:10 AM" },
+  { name: "Pena, Rona Mae", type: "Tables and Chairs Rental", interior: "Very Good", merchandise: "Good", fire: "Very Good", health: "Very Good", guidelines: "Very Good", sanitizers: "Good", distancing: "Very Good", staffing: "Good", hygiene: "Good", dresscode: "Very Good", submittedAt: "Oct 16, 2025 09:45 AM" },
+  { name: "Dacoco, Jonathan", type: "Atan’s Meat Shop", interior: "Good", merchandise: "Good", fire: "Fair", health: "Good", guidelines: "Good", sanitizers: "Fair", distancing: "Good", staffing: "Fair", hygiene: "Good", dresscode: "Fair", submittedAt: "Oct 16, 2025 08:20 AM" }
 ];
 
 function badgeFor(value) {
@@ -289,31 +95,21 @@ function badgeFor(value) {
 }
 
 function loadInspectionData() {
-
   const loggedInUser = JSON.parse(localStorage.getItem("loggedUser") || "null");
   const storedData = JSON.parse(localStorage.getItem(INSPECTION_KEY) || "[]");
   const dataToShow = storedData.length ? storedData : sampleData;
   const container = document.getElementById("inspectionContainer");
-
   container.innerHTML = "<h1>Inspection & Compliance Summary</h1>";
 
-  if (!loggedInUser?.email) {
-    container.innerHTML += `
-      <p style="text-align:center; color:#777;">
-        Please log in to view your inspection record.
-      </p>`;
+  if (!loggedInUser?.name) {
+    container.innerHTML += `<p style="text-align:center; color:#777;">Please log in to view your inspection record.</p>`;
     return;
   }
 
-  const userData = dataToShow.filter(entry =>
-    entry.name === loggedInUser.name
-  );
+  const userData = dataToShow.filter(entry => entry.name.toLowerCase() === loggedInUser.name.toLowerCase());
 
   if (!userData.length) {
-    container.innerHTML += `
-      <p style="text-align:center; color:#777;">
-        No inspection record found for ${loggedInUser.name}.
-      </p>`;
+    container.innerHTML += `<p style="text-align:center; color:#777;">No inspection record found for ${loggedInUser.name}.</p>`;
     return;
   }
 
@@ -321,23 +117,13 @@ function loadInspectionData() {
     const card = document.createElement("div");
     card.className = "card";
     card.innerHTML = `
-      <h2 style="background:#0a53c1; color:white; padding:0.6rem 1rem; border-radius:8px;">
+      <h2 style="background:${getComputedStyle(document.documentElement).getPropertyValue('--blue')}; color:white; padding:0.6rem 1rem; border-radius:8px;">
         ${entry.name} – ${entry.type}
       </h2>
       <table>
         <thead>
           <tr>
-            <th>Interior</th>
-            <th>Merchandise</th>
-            <th>Fire Safety</th>
-            <th>Health</th>
-            <th>Guidelines</th>
-            <th>Sanitizers</th>
-            <th>Distancing</th>
-            <th>Staffing</th>
-            <th>Hygiene</th>
-            <th>Dress Code</th>
-            <th>Submitted</th>
+            <th>Interior</th><th>Merchandise</th><th>Fire Safety</th><th>Health</th><th>Guidelines</th><th>Sanitizers</th><th>Distancing</th><th>Staffing</th><th>Hygiene</th><th>Dress Code</th><th>Submitted</th>
           </tr>
         </thead>
         <tbody>
@@ -355,14 +141,13 @@ function loadInspectionData() {
             <td>${entry.submittedAt || '-'}</td>
           </tr>
         </tbody>
-      </table>
-    `;
+      </table>`;
     container.appendChild(card);
   });
 }
-  
+
 function setupLogout() {
-  const logoutLink = document.querySelector('a[href="main.html"]');
+  const logoutLink = document.querySelector('.logout-btn');
   logoutLink.addEventListener("click", function (e) {
     e.preventDefault();
     localStorage.removeItem("loggedUser");
@@ -370,7 +155,9 @@ function setupLogout() {
   });
 }
 
-
+// Run on page load
 loadInspectionData();
 setupLogout();
 </script>
+</body>
+</html>
