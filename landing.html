@@ -1,240 +1,219 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LGU3 MarketIQ</title>
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 *{
   margin:0;
   padding:0;
   box-sizing:border-box;
-  font-family:'Courier New', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
 body{
-  background:#cce6ff;
-  height:100vh;
-  overflow:hidden;
+  background:#f5f9ff;
+  color:#1b2b4b;
+}
+
+/* NAVBAR */
+.navbar{
+  width:100%;
+  padding:20px 8%;
   display:flex;
-  justify-content:center;
+  justify-content:space-between;
   align-items:center;
+  background:white;
+  box-shadow:0 2px 10px rgba(0,0,0,0.05);
 }
 
-/* SKY */
-.sky{
-  position:absolute;
-  width:100%;
-  height:100%;
-  background:linear-gradient(#cce6ff 60%, #a8d8ff);
-  z-index:0;
-}
-
-/* TREES */
-.tree{
-  position:absolute;
-  bottom:45%;
-  width:120px;
-  height:120px;
-  background:#2e8b57;
-  border-radius:50%;
-  box-shadow:
-    -40px 20px #2e8b57,
-    40px 20px #2e8b57;
-}
-
-.tree::after{
-  content:'';
-  position:absolute;
-  bottom:-40px;
-  left:50px;
-  width:20px;
-  height:40px;
-  background:#8b5a2b;
-}
-
-.tree.left{ left:5%; }
-.tree.right{ right:5%; }
-
-/* MARKET FLOOR */
-.market-ground{
-  position:absolute;
-  bottom:0;
-  width:100%;
-  height:45%;
-  background:#e6d2b5;
-  z-index:1;
-}
-
-/* STALL */
-.stall{
-  position:absolute;
-  bottom:45%;
-  width:220px;
-  height:160px;
-  background:#8b5a2b;
-  border:6px solid #5a381f;
-  z-index:2;
-}
-
-/* ROOF STRIPES */
-.stall::before{
-  content:'';
-  position:absolute;
-  top:-50px;
-  left:-6px;
-  width:100%;
-  height:50px;
-  background:repeating-linear-gradient(
-    45deg,
-    #ff4d4d,
-    #ff4d4d 15px,
-    #ffffff 15px,
-    #ffffff 30px
-  );
-  border:6px solid #5a381f;
-}
-
-/* TABLE */
-.table{
-  position:absolute;
-  bottom:20px;
-  left:20px;
-  width:180px;
-  height:60px;
-  background:#a0522d;
-}
-
-/* CRATES */
-.crate{
-  width:40px;
-  height:40px;
-  position:absolute;
-  bottom:0;
-  border:3px solid #5a381f;
-}
-
-.red{ background:#ff4d4d; }
-.green{ background:#33cc33; }
-.orange{ background:#ff9900; }
-
-.crate:nth-child(1){ left:10px;}
-.crate:nth-child(2){ left:60px;}
-.crate:nth-child(3){ left:110px;}
-.crate:nth-child(4){ left:160px;}
-
-/* PEOPLE */
-.person{
-  position:absolute;
-  bottom:0;
-  width:25px;
-  height:50px;
-  background:#0066cc;
-  animation:walk 18s linear infinite;
-  z-index:3;
-}
-
-.person::before{
-  content:'';
-  position:absolute;
-  top:-20px;
-  left:7px;
-  width:12px;
-  height:12px;
-  background:#ffcc99;
-}
-
-.person:nth-child(1){
-  animation-duration:15s;
-}
-.person:nth-child(2){
-  animation-duration:20s;
-  background:#cc3366;
-}
-
-@keyframes walk{
-  0%{ left:-50px;}
-  100%{ left:110%;}
-}
-
-/* CENTER CARD */
-.container{
-  position:relative;
-  z-index:10;
-  background:rgba(255,255,255,0.95);
-  padding:50px 40px;
-  border-radius:20px;
-  text-align:center;
-  width:90%;
-  max-width:800px;
-  box-shadow:0 15px 40px rgba(0,0,0,0.2);
-}
-
-.welcome{
-  font-size:4rem;
+.logo{
+  font-weight:800;
+  font-size:20px;
   color:#0a53c1;
-  margin-bottom:20px;
 }
 
-.title{
-  font-size:1.2rem;
-  color:#0a53c1;
-  margin-bottom:30px;
-}
-
-.start-btn{
-  background:#0a53c1;
-  color:white;
-  padding:15px 30px;
-  border:none;
-  border-radius:10px;
+.nav-links a{
   text-decoration:none;
-  font-size:1rem;
+  margin-left:30px;
+  color:#444;
+  font-weight:500;
   transition:0.3s;
 }
 
-.start-btn:hover{
+.nav-links a:hover{
+  color:#0a53c1;
+}
+
+/* HERO SECTION */
+.hero{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:80px 8%;
+  min-height:90vh;
+}
+
+.hero-left{
+  max-width:600px;
+}
+
+.hero-left h1{
+  font-size:52px;
+  font-weight:800;
+  color:#0a53c1;
+  margin-bottom:25px;
+  line-height:1.2;
+}
+
+.hero-left p{
+  font-size:18px;
+  color:#555;
+  margin-bottom:40px;
+}
+
+.hero-buttons a{
+  text-decoration:none;
+  padding:14px 28px;
+  border-radius:8px;
+  font-weight:600;
+  margin-right:15px;
+  transition:0.3s;
+}
+
+.btn-primary{
+  background:#0a53c1;
+  color:white;
+}
+
+.btn-primary:hover{
   background:#083b8a;
+}
+
+.btn-secondary{
+  border:2px solid #0a53c1;
+  color:#0a53c1;
+}
+
+.btn-secondary:hover{
+  background:#0a53c1;
+  color:white;
+}
+
+/* HERO IMAGE AREA */
+.hero-right{
+  width:45%;
+  display:flex;
+  justify-content:center;
+}
+
+.dashboard-preview{
+  width:100%;
+  max-width:500px;
+  height:320px;
+  background:linear-gradient(135deg, #0a53c1, #4da3ff);
+  border-radius:20px;
+  box-shadow:0 20px 40px rgba(0,0,0,0.15);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:white;
+  font-size:22px;
+  font-weight:600;
+}
+
+/* TRUSTED SECTION */
+.trusted{
+  text-align:center;
+  padding:60px 8%;
+  background:white;
+}
+
+.trusted h3{
+  margin-bottom:30px;
+  color:#888;
+  font-weight:600;
+  letter-spacing:1px;
+}
+
+.trusted-logos{
+  display:flex;
+  justify-content:center;
+  gap:60px;
+  flex-wrap:wrap;
+  font-weight:700;
+  color:#0a53c1;
+  opacity:0.8;
+}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .hero{
+    flex-direction:column;
+    text-align:center;
+  }
+
+  .hero-right{
+    width:100%;
+    margin-top:40px;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<div class="sky"></div>
-
-<div class="tree left"></div>
-<div class="tree right"></div>
-
-<div class="market-ground"></div>
-
-<!-- Stalls -->
-<div class="stall" style="left:15%;">
-  <div class="table"></div>
-</div>
-
-<div class="stall" style="right:15%;">
-  <div class="table"></div>
-</div>
-
-<!-- Crates in front -->
-<div class="crate red"></div>
-<div class="crate green"></div>
-<div class="crate orange"></div>
-<div class="crate red"></div>
-
-<!-- People -->
-<div class="person"></div>
-<div class="person"></div>
-
-<!-- Landing Card -->
-<div class="container">
-  <div class="welcome">Welcome</div>
-  <div class="title">
-    Local Government Unit 3: Market and Trade Monitoring with MarketIQ Intelligent Analytics and Predictive AI
+<!-- NAVBAR -->
+<div class="navbar">
+  <div class="logo">LGU3 MarketIQ</div>
+  <div class="nav-links">
+    <a href="#">Features</a>
+    <a href="#">Analytics</a>
+    <a href="#">Reports</a>
+    <a href="main.html">Get Started</a>
   </div>
-  <a href="main.html" class="start-btn">Start Now</a>
 </div>
+
+<!-- HERO -->
+<section class="hero">
+
+  <div class="hero-left">
+    <h1>Market & Trade Monitoring Made Intelligent</h1>
+    <p>
+      Empower Local Government Unit 3 with real-time analytics,
+      predictive AI, and smart trade monitoring solutions designed
+      for data-driven decision making.
+    </p>
+
+    <div class="hero-buttons">
+      <a href="main.html" class="btn-primary">Start Now</a>
+      <a href="#" class="btn-secondary">Learn More</a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="dashboard-preview">
+      MarketIQ Analytics Dashboard
+    </div>
+  </div>
+
+</section>
+
+<!-- TRUSTED SECTION -->
+<section class="trusted">
+  <h3>POWERED BY DATA • DRIVEN BY AI • BUILT FOR LGUs</h3>
+  <div class="trusted-logos">
+    <div>Market Intelligence</div>
+    <div>Predictive Analytics</div>
+    <div>Trade Monitoring</div>
+    <div>AI Insights</div>
+  </div>
+</section>
 
 </body>
 </html>
