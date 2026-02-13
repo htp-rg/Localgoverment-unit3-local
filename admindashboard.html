@@ -134,35 +134,37 @@ const STORAGE_KEYS = { vendors: "vendor_engagements" };
 
 if(!localStorage.getItem(STORAGE_KEYS.vendors)){
   localStorage.setItem(STORAGE_KEYS.vendors, JSON.stringify([
-    { name:"Gacusan, Aira Jane", contact:"0912-345-6789", nature:"Fish Store", permit:"BP-00123", payment:"3,000", email:"aira.gacusan@example.com", status:"Approved" },
-    { name:"Pena, Rona Mae", contact:"0934-567-8901", nature:"Meat Shop", permit:"BP-00789", payment:"3,000", email:"rona.pena@example.com", status:"Approved" }
+    { name:"Gacusan, Aira Jane", contact:"0912-345-6789", nature:"Fish Store", permit:"BP-00123", payment:"3,000", email:"aira.gacusan@example.com", status:"Accepted" },
+    { name:"Pena, Rona Mae", contact:"0934-567-8901", nature:"Meat Shop", permit:"BP-00789", payment:"3,000", email:"rona.pena@example.com", status:"Accpeted" }
   ]));
 }
 
 
 function loadVendors(){
   const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors)) || [];
-  const acceptedVendors = vendors.filter(v=>v.status === "Accepted");
+
+ 
+  const approved = vendors.filter(v => v.status === "Accepted");
+
   const tbody = document.querySelector("#vendorEngagementsTable tbody");
   tbody.innerHTML = "";
 
-  if(acceptedVendors.length === 0){
-    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:#777;">No accepted vendors found.</td></tr>`;
+  if(!approved.length){
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center">No approved vendors</td></tr>`;
     return;
   }
 
-  acceptedVendors.forEach(v=>{
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
+  approved.forEach(v=>{
+    tbody.innerHTML += `
+    <tr>
       <td>${v.name}</td>
       <td>${v.contact}</td>
-      <td>${v.nature}</td>
+      <td>${v.nature || "—"}</td>
       <td>${v.permit}</td>
-      <td>${v.payment}</td>
+      <td>${v.payment || "—"}</td>
       <td>${v.email}</td>
-      <td class="status-approved">${v.status}</td>
-    `;
-    tbody.appendChild(tr);
+      <td class="status-accepted">✔ Accepted</td>
+    </tr>`;
   });
 }
 
