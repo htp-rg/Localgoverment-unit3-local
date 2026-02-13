@@ -146,10 +146,16 @@ function loadVendors() {
   const tbody = document.querySelector("#vendorEngagementsTable tbody");
   tbody.innerHTML = "";
 
+ 
+  const acceptedVendors = vendors.filter(v => v.status === "Accepted");
 
-  vendors.forEach(v => {
+  if (acceptedVendors.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#777;">No accepted vendors found.</td></tr>`;
+    return;
+  }
+
+  acceptedVendors.forEach(v => {
     const tr = document.createElement("tr");
-    const statusClass = v.status === "Approved";
     tr.innerHTML = `
       <td>${v.name}</td>
       <td>${v.contact}</td>
@@ -157,10 +163,11 @@ function loadVendors() {
       <td>${v.permit}</td>
       <td>${v.payment}</td>
       <td>${v.email}</td>
-      <td class="${statusClass}">✔ ${v.status}</td>
+      <td class="status-approved">✔ ${v.status}</td>
     `;
     tbody.appendChild(tr);
   });
+}
 
   if (vendors.length === 0) {
     tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:#777;">No vendors found.</td></tr>`;
