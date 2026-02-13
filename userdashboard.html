@@ -135,16 +135,16 @@ const STORAGE_KEYS = { vendors:"vendor_engagements" };
 
 if(!localStorage.getItem(STORAGE_KEYS.vendors)){
   localStorage.setItem(STORAGE_KEYS.vendors, JSON.stringify([
-    {name:"Gacusan, Aira Jane",contact:"0912-345-6789",nature:"Fish Store",permit:"BP-00123",payment:"3000",email:"aira.gacusan@example.com",status:"Approved"},
-    {name:"Pena, Rona Mae",contact:"0934-567-8901",nature:"Meat Shop",permit:"BP-00789",payment:"3000",email:"rona.pena@example.com",status:"Approved"}
+    {name:"Gacusan, Aira Jane",contact:"0912-345-6789",nature:"Fish Store",permit:"BP-00123",payment:"3000",email:"aira.gacusan@example.com",status:"Accepted"},
+    {name:"Pena, Rona Mae",contact:"0934-567-8901",nature:"Meat Shop",permit:"BP-00789",payment:"3000",email:"rona.pena@example.com",status:"Accepted"}
   ]));
 }
 
 function loadVendors(){
   const vendors = JSON.parse(localStorage.getItem(STORAGE_KEYS.vendors)) || [];
 
-  /* ✅ FIX: Approved only */
-  const approved = vendors.filter(v => v.status === "Approved");
+ 
+  const approved = vendors.filter(v => v.status === "Accepted");
 
   const tbody = document.querySelector("#vendorEngagementsTable tbody");
   tbody.innerHTML = "";
@@ -163,7 +163,7 @@ function loadVendors(){
       <td>${v.permit}</td>
       <td>${v.payment || "—"}</td>
       <td>${v.email}</td>
-      <td class="status-approved">✔ Approved</td>
+      <td class="status-accepted">✔ Accepted</td>
     </tr>`;
   });
 }
