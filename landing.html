@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LGU3 MarketIQ Landing</title>
+<title>LGU3 MarketIQ</title>
 
 <style>
 *{
@@ -16,99 +15,146 @@
 body{
   background:#cce6ff;
   height:100vh;
+  overflow:hidden;
   display:flex;
   justify-content:center;
   align-items:center;
-  overflow:hidden;
 }
 
-/* PIXEL MARKET AREA */
-.market{
+/* SKY */
+.sky{
+  position:absolute;
+  width:100%;
+  height:100%;
+  background:linear-gradient(#cce6ff 60%, #a8d8ff);
+  z-index:0;
+}
+
+/* TREES */
+.tree{
+  position:absolute;
+  bottom:45%;
+  width:120px;
+  height:120px;
+  background:#2e8b57;
+  border-radius:50%;
+  box-shadow:
+    -40px 20px #2e8b57,
+    40px 20px #2e8b57;
+}
+
+.tree::after{
+  content:'';
+  position:absolute;
+  bottom:-40px;
+  left:50px;
+  width:20px;
+  height:40px;
+  background:#8b5a2b;
+}
+
+.tree.left{ left:5%; }
+.tree.right{ right:5%; }
+
+/* MARKET FLOOR */
+.market-ground{
   position:absolute;
   bottom:0;
   width:100%;
-  height:60%;
-  display:flex;
-  justify-content:center;
-  align-items:flex-end;
-  gap:60px;
+  height:45%;
+  background:#e6d2b5;
+  z-index:1;
 }
 
 /* STALL */
 .stall{
-  width:140px;
-  height:120px;
+  position:absolute;
+  bottom:45%;
+  width:220px;
+  height:160px;
   background:#8b5a2b;
-  position:relative;
-  border:4px solid #5a381f;
-  animation:float 3s ease-in-out infinite alternate;
+  border:6px solid #5a381f;
+  z-index:2;
 }
 
-/* ROOF */
+/* ROOF STRIPES */
 .stall::before{
   content:'';
   position:absolute;
-  top:-35px;
-  left:0;
+  top:-50px;
+  left:-6px;
   width:100%;
-  height:35px;
+  height:50px;
   background:repeating-linear-gradient(
     45deg,
     #ff4d4d,
-    #ff4d4d 10px,
-    #fff 10px,
-    #fff 20px
+    #ff4d4d 15px,
+    #ffffff 15px,
+    #ffffff 30px
   );
-  border:4px solid #5a381f;
+  border:6px solid #5a381f;
 }
 
-/* VEGETABLE BOXES */
-.box{
-  width:25px;
-  height:25px;
+/* TABLE */
+.table{
   position:absolute;
-  bottom:10px;
-  animation:bounce 2s infinite alternate;
+  bottom:20px;
+  left:20px;
+  width:180px;
+  height:60px;
+  background:#a0522d;
 }
 
-.red{ background:#ff4d4d; left:15px;}
-.green{ background:#33cc33; left:50px;}
-.yellow{ background:#ffcc00; left:85px;}
+/* CRATES */
+.crate{
+  width:40px;
+  height:40px;
+  position:absolute;
+  bottom:0;
+  border:3px solid #5a381f;
+}
+
+.red{ background:#ff4d4d; }
+.green{ background:#33cc33; }
+.orange{ background:#ff9900; }
+
+.crate:nth-child(1){ left:10px;}
+.crate:nth-child(2){ left:60px;}
+.crate:nth-child(3){ left:110px;}
+.crate:nth-child(4){ left:160px;}
 
 /* PEOPLE */
 .person{
-  width:20px;
-  height:40px;
-  background:#0066cc;
   position:absolute;
   bottom:0;
-  left:-50px;
-  animation:walk 15s linear infinite;
+  width:25px;
+  height:50px;
+  background:#0066cc;
+  animation:walk 18s linear infinite;
+  z-index:3;
 }
 
 .person::before{
   content:'';
   position:absolute;
   top:-20px;
-  left:5px;
-  width:10px;
-  height:10px;
+  left:7px;
+  width:12px;
+  height:12px;
   background:#ffcc99;
 }
 
+.person:nth-child(1){
+  animation-duration:15s;
+}
+.person:nth-child(2){
+  animation-duration:20s;
+  background:#cc3366;
+}
+
 @keyframes walk{
-  0%{ transform:translateX(0); }
-  100%{ transform:translateX(120vw); }
-}
-
-@keyframes bounce{
-  0%{ transform:translateY(0);}
-  100%{ transform:translateY(-5px);}
-}
-
-@keyframes float{
-  0%{ transform:translateY(0);}
-  100%{ transform:translateY(-8px);}
+  0%{ left:-50px;}
+  100%{ left:110%;}
 }
 
 /* CENTER CARD */
@@ -131,7 +177,7 @@ body{
 }
 
 .title{
-  font-size:1.3rem;
+  font-size:1.2rem;
   color:#0a53c1;
   margin-bottom:30px;
 }
@@ -152,24 +198,36 @@ body{
 }
 </style>
 </head>
+
 <body>
 
-<div class="market">
-  <div class="stall">
-    <div class="box red"></div>
-    <div class="box green"></div>
-    <div class="box yellow"></div>
-  </div>
+<div class="sky"></div>
 
-  <div class="stall">
-    <div class="box green"></div>
-    <div class="box red"></div>
-    <div class="box yellow"></div>
-  </div>
+<div class="tree left"></div>
+<div class="tree right"></div>
 
-  <div class="person"></div>
+<div class="market-ground"></div>
+
+<!-- Stalls -->
+<div class="stall" style="left:15%;">
+  <div class="table"></div>
 </div>
 
+<div class="stall" style="right:15%;">
+  <div class="table"></div>
+</div>
+
+<!-- Crates in front -->
+<div class="crate red"></div>
+<div class="crate green"></div>
+<div class="crate orange"></div>
+<div class="crate red"></div>
+
+<!-- People -->
+<div class="person"></div>
+<div class="person"></div>
+
+<!-- Landing Card -->
 <div class="container">
   <div class="welcome">Welcome</div>
   <div class="title">
