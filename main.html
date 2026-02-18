@@ -12,31 +12,51 @@ body{
   background:#f5f9ff;
   color:#1b2b4b;
   margin:0;
-  font-family:Inter,system-ui;
+  font-family: Inter, system-ui, sans-serif;
   display:flex;
   justify-content:center;
   align-items:center;
   height:100vh;
 }
+
 .card{
-  background: #1b2b4b;
+  background:#ffffff;             
+  border:2px solid #1e4fd8;         
   padding:2rem;
   border-radius:14px;
   width:360px;
+  box-shadow:0 8px 25px rgba(0,0,0,0.08);
 }
-h1{text-align:center;color:#0b2c6f}
-input,select,button{
-  width:80%;
+
+h1{
+  text-align:center;
+  color:#0b2c6f;
+}
+
+input, select, button{
+  width:100%;
   padding:.7rem;
   margin:.5rem 0;
   border-radius:10px;
-  border:1px solid #ccc;
+  border:1px solid #cbd5e1;
+  font-size:.95rem;
 }
+
+input:focus, select:focus{
+  outline:none;
+  border-color:#1e4fd8;
+}
+
 button{
   background:#1e4fd8;
   color:#fff;
   font-weight:600;
   border:none;
+  cursor:pointer;
+}
+
+button:hover{
+  background:#163db3;
 }
 #msg{text-align:center;color:red;font-weight:600}
 </style>
