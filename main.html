@@ -62,28 +62,36 @@ button{
 
 <script>
 const accounts = {
-  staff:{email:"barangaylogin@gmail.com",pass:"Barangay.login1"},
-  market:{email:"market.3lgu@gmail.com",pass:"marketadmin"},
-  admin:{email:"orariojames2@gmail.com",pass:"orariojames"},
-  user:{email:"staffnumb125@gmail.com",pass:"stall#12five"}
+  staff:  { email: "barangaylogin@gmail.com", pass: "Barangay.login1" },
+  market: { email: "market.3lgu@gmail.com", pass: "marketadmin" },
+  admin:  { email: "orariojames2@gmail.com", pass: "orariojames" },
+  user:   { email: "staffnumb125@gmail.com", pass: "stall#12five" }
 };
 
-function login(){
-  const email=email.value.trim();
-  const pass=password.value;
-  const role=roleSelect=role.value;
+function login() {
+  const emailInput = document.getElementById("email").value.trim();
+  const passwordInput = document.getElementById("password").value;
+  const roleInput = document.getElementById("role").value;
+  const msg = document.getElementById("msg");
 
-  if(!accounts[role]){
-    msg.textContent="Select a role";
+  msg.textContent = "";
+
+  if (!roleInput) {
+    msg.textContent = "Please select a role";
     return;
   }
 
-  if(email===accounts[role].email && pass===accounts[role].pass){
-    localStorage.setItem("role",role);
-    localStorage.setItem("email",email);
-    window.location.href="otp.html";
-  }else{
-    msg.textContent="Invalid credentials";
+  const account = accounts[roleInput];
+
+  if (
+    emailInput === account.email &&
+    passwordInput === account.pass
+  ) {
+    localStorage.setItem("role", roleInput);
+    localStorage.setItem("email", emailInput);
+    window.location.href = "otp.html";
+  } else {
+    msg.textContent = "Invalid email or password";
   }
 }
 </script>
