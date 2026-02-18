@@ -9,28 +9,72 @@
 
 <style>
 body{
+  background:#f5f9ff;
+  color:#1b2b4b;
   margin:0;
-  font-family:Inter,system-ui;
-  background:linear-gradient(135deg,#0b2c6f,#1e4fd8);
+  font-family: Inter, system-ui, sans-serif;
   display:flex;
   justify-content:center;
   align-items:center;
   height:100vh;
 }
+
 .card{
-  background:#fff;
+  background:#ffffff;             
+  border:2px solid #1e4fd8;         
   padding:2rem;
   border-radius:14px;
   width:360px;
+  box-shadow:0 8px 25px rgba(0,0,0,0.08);
 }
-input,button{
-  width:100%;
+
+h1{
+  text-align:center;
+  color:#0b2c6f;
+}
+
+input,
+select,
+button{
+  width:85%;
   padding:.7rem;
-  margin:.5rem 0;
+  margin:.5rem auto;
+  display:block;
   border-radius:10px;
+  border:1px solid #cbd5e1;
+  font-size:.95rem;
+
+  box-sizing:border-box;
+  appearance:none;
+  -webkit-appearance:none;
+  -moz-appearance:none;
 }
-button{background:#1e4fd8;color:#fff;border:none;font-weight:600}
-#msg{text-align:center;font-weight:600}
+
+input:focus, select:focus{
+  outline:none;
+  border-color:#1e4fd8;
+}
+
+button{
+  background:#1e4fd8;
+  color:#fff;
+  font-weight:600;
+  border:none;
+  cursor:pointer;
+}
+
+button:hover{
+  background:#163db3;
+}
+
+  select{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%231e4fd8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right .8rem center;
+  background-size:14px;
+  padding-right:2.2rem;
+}
+#msg{text-align:center;color:red;font-weight:600}
 </style>
 </head>
 
